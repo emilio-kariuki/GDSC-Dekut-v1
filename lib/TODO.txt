@@ -1,0 +1,72 @@
+GDSC Application:
+    -An application to keep track of all the activities in the tech community
+
+User Interface:
+
+    1. Login:
+        - Username form
+        - Email form
+        - Password form
+        - Text for navigation to register page
+        - Buttons to login with either google or twitter
+
+    2. Register: 
+        - Username form
+        - Email form
+        - Password form
+        - Confirm Password form
+        - Text for navigation to Login page
+        - Buttons to register with either google or twitter
+
+    3. Events:
+        - Event Card:
+            - Title of Event
+            - Venue of Event
+            - Date of Event
+            - Registration link represented with an icon
+            - Image containing the poster of the event 
+            - Organizers
+            - Description of the event
+            - Button to register or click link
+        
+        - Slider:
+            - New Events in the campus
+            - Events outside the campus tech community
+        
+        - Layout:
+            - Appear in a list
+            - Old events to be in a grid list
+        
+        - Notification Icon:
+            - An icon that allows you to turn on or off a Notification
+            - Check the latest notifications
+
+    4. Resources:
+        - Resources Card:
+            - Stack/Technology
+            - Resource title
+            - Short Description
+            - Senders Name
+            - Resource Image
+
+    5. Profile:
+        - choose Image
+        - Name
+        - Whatsapp number
+        - stack/Technology
+        - Add a post
+            - choose a category
+                - Resource
+                - event
+                 
+    6. Annoucements:
+        - News of the community
+        
+    
+            
+
+         
+
+    
+
+    
