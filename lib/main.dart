@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:gdsc_app/UI/Authentication/SignUp/Sign_up.dart';
 import 'package:get/get.dart';
 
 void main()async{
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(GetMaterialApp(
-    home: Home(),
+  runApp(const GetMaterialApp(
+    home: Register(),
     debugShowCheckedModeBanner: false
   ));
 
