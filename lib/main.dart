@@ -1,12 +1,62 @@
+
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gdsc_app/UI/Authentication/Login/login_page.dart';
 import 'package:gdsc_app/UI/Authentication/SignUp/Sign_up.dart';
+import 'package:gdsc_app/UI/Events/Events.dart';
 import 'package:get/get.dart';
 
-void main()async{
-  WidgetsFlutterBinding.ensureInitialized();
-  runApp(const GetMaterialApp(
-    home: Register(),
-    debugShowCheckedModeBanner: false
-  ));
+import 'UI/Authentication/user_logic.dart';
 
+String userID = '';
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      // Initialize FlutterFire:
+      future: Authentication.initializeFirebase(context: context),
+      builder: (context, snapshot) {
+        // Check for errors
+        if (snapshot.hasError) {
+          return Container();
+        }
+
+        // Once complete, show your application
+        if (snapshot.connectionState == ConnectionState.done) {
+          User? user = FirebaseAuth.instance.currentUser;
+          if (user != null) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                primarySwatch: Colors.blue,
+              ),
+              home: const Home(),
+              color: Colors.blue,
+            );
+          } else {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                primarySwatch: Colors.blue,
+              ),
+              home: const Login(),
+              color: Colors.blue,
+            );
+          }
+        }
+
+        // Otherwise, show something whilst waiting for initialization to complete
+        return Container();
+      },
+    );
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -89,6 +90,19 @@ class Components {
       ),
     );
   }
+
+ static showMessage(String message){
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: const Color.fromARGB(255, 0, 188, 25),
+        textColor: Colors.white,
+        fontSize: 16.0
+    );
+  }
+ 
 
   static Widget showImage(String imageName) {
     return Padding(

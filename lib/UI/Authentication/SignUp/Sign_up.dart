@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:gdsc_app/UI/Authentication/user_logic.dart';
 import 'package:gdsc_app/Util/App_Constants.dart';
 import 'package:gdsc_app/Util/App_components.dart';
 import 'package:gdsc_app/Util/dimensions.dart';
@@ -58,11 +59,24 @@ class _RegisterState extends State<Register> {
                 Components.button(
                   Constants.signUp,
                   () {
-                    print("Sign up");
+                    if (username.text.isEmpty &&
+                        email.text.isEmpty &&
+                        password.text.isEmpty &&
+                        confirmPassword.text.isEmpty) {
+                      Components.showMessage(Constants.empty);
+                    }else{
+                      if(password.text == confirmPassword.text){
+                        Authentication.registerWithEmail(username.text, email.text, password.text);
+                        Get.offAll(()=> const Login());
+                      }else{
+                        Components.showMessage(Constants.passwordMatch);
+                      }
+                    }
                   },
                 ),
                 Components.spacerHeight(Dimensions.PADDING_SIZE_SMALL),
-                Components.accountText(Constants.haveAccount, Constants.login, () => Get.offAll(() => const Login()))
+                Components.accountText(Constants.haveAccount, Constants.login,
+                    () => Get.offAll(() => const Login()))
               ],
             ),
           ),

@@ -13,4 +13,6 @@ class Constants {
   static String register = "Register";
   static String haveAccount = "Already have an account? ";
   static String noAccount = "Don't have an account? ";
+  static String empty = "Fill Empty Fields!";
+  static String passwordMatch = "Password does not match!";
 }

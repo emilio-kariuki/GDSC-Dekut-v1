@@ -1,9 +1,9 @@
-class userClass {
+class UserClass {
   late String name;
-  String email;
-  String password;
+  late String email;
+  late String password;
 
-  userClass({required this.name, required this.email, required this.password});
+  UserClass(this.name,  this.email, this.password);
 
   Map<String, Object> toJson() {
     return {
@@ -13,7 +13,7 @@ class userClass {
     };
   }
 
-  userClass.fromJson(Map<String, dynamic> json) {
+  UserClass.fromJson(Map<String, dynamic> json) {
     name = json['name']! as String;
     email = json['email']! as String;
     password = json['password']! as String;
