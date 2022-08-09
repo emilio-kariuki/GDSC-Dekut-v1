@@ -91,7 +91,7 @@ class Components {
     );
   }
 
- static showMessage(String message){
+  static showMessage(String message) {
     Fluttertoast.showToast(
         msg: message,
         toastLength: Toast.LENGTH_SHORT,
@@ -99,10 +99,65 @@ class Components {
         timeInSecForIosWeb: 1,
         backgroundColor: const Color.fromARGB(255, 0, 188, 25),
         textColor: Colors.white,
-        fontSize: 16.0
+        fontSize: 16.0);
+  }
+
+  static Widget showDivider() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        // ignore: prefer_const_literals_to_create_immutables
+        children: [
+          Expanded(
+              child: Container(
+            margin: const EdgeInsets.only(left: 15, right: 10),
+            child: const Divider(
+              thickness: 0.5,
+              height: 50,
+              color: Colors.black26,
+            ),
+          )),
+          Text("OR",
+              style: GoogleFonts.roboto(fontSize: 20, color: Colors.black26)),
+          Expanded(
+              child: Container(
+            margin: const EdgeInsets.only(left: 15, right: 10),
+            child: const Divider(
+              thickness: 0.5,
+              height: 40,
+              color: Colors.black26,
+            ),
+          )),
+        ],
+      ),
     );
   }
- 
+
+  static Widget signInWith(String imageUrl, Function() function) {
+    return InkWell(
+      onTap: function,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 5,
+          vertical: 5,
+        ),
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.white,
+            border: Border.all(
+              color: Colors.black,
+              width: 1,
+            )),
+        child: Image.asset(
+          imageUrl,
+          height: 20,
+          width: 20,
+          fit: BoxFit.fill,
+          filterQuality: FilterQuality.high,
+        ),
+      ),
+    );
+  }
 
   static Widget showImage(String imageName) {
     return Padding(

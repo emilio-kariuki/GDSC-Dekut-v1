@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../Util/App_Constants.dart';
 import '../../../Util/App_components.dart';
 import '../../../Util/dimensions.dart';
+import '../../../main.dart';
 import '../SignUp/Sign_up.dart';
 import '../user_logic.dart';
 
@@ -52,21 +53,34 @@ class _LoginState extends State<Login> {
                 Components.spacerHeight(Dimensions.PADDING_SIZE_SMALL),
                 Components.button(
                   Constants.login,
-                  () {
+                  () async{
                     if (username.text.isEmpty &&
                         email.text.isEmpty &&
                         password.text.isEmpty) {
                       Components.showMessage(Constants.empty);
                     } else {
-                      Authentication.signInWithEmailAndPassword(
+                      final user = await Authentication.signInWithEmailAndPassword(
                           username.text, email.text, password.text);
                       Get.offAll(() => const Login());
+                      if (user != null) {
+                          userID = user.uid;
+                          the_User = user;
+                        }
                     }
                   },
                 ),
                 Components.spacerHeight(Dimensions.PADDING_SIZE_SMALL),
                 Components.accountText(Constants.noAccount, Constants.register,
-                    () => Get.offAll(() => const Register()))
+                    () => Get.offAll(() => const Register())),
+                Components.showDivider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Components.signInWith(Constants.logo, () => null),
+                    Components.spacerWidth(Dimensions.PADDING_SIZE_SMALL),
+                    Components.signInWith(Constants.logo, () => null)
+                  ],
+                ),
               ],
             ),
           ),

@@ -1,4 +1,4 @@
-
+// ignore_for_file: non_constant_identifier_names
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,13 +6,18 @@ import 'package:gdsc_app/UI/Authentication/Login/login_page.dart';
 import 'package:gdsc_app/UI/Authentication/SignUp/Sign_up.dart';
 import 'package:gdsc_app/UI/Events/Events.dart';
 import 'package:get/get.dart';
-
+import 'package:flutter/services.dart';
 import 'UI/Authentication/user_logic.dart';
 
 String userID = '';
+
+User ?the_User;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

@@ -1,10 +1,12 @@
 // ignore_for_file: avoid_print
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gdsc_app/UI/Authentication/user_logic.dart';
 import 'package:gdsc_app/Util/App_Constants.dart';
 import 'package:gdsc_app/Util/App_components.dart';
 import 'package:gdsc_app/Util/dimensions.dart';
+import 'package:gdsc_app/main.dart';
 import 'package:get/get.dart';
 
 import '../Login/login_page.dart';
@@ -58,17 +60,22 @@ class _RegisterState extends State<Register> {
                 Components.spacerHeight(Dimensions.PADDING_SIZE_SMALL),
                 Components.button(
                   Constants.signUp,
-                  () {
+                  () async {
                     if (username.text.isEmpty &&
                         email.text.isEmpty &&
                         password.text.isEmpty &&
                         confirmPassword.text.isEmpty) {
                       Components.showMessage(Constants.empty);
-                    }else{
-                      if(password.text == confirmPassword.text){
-                        Authentication.registerWithEmail(username.text, email.text, password.text);
-                        Get.offAll(()=> const Login());
-                      }else{
+                    } else {
+                      if (password.text == confirmPassword.text) {
+                        final user = await Authentication.registerWithEmail(
+                            username.text, email.text, password.text);
+                        Get.offAll(() => const Login());
+                        if (user != null) {
+                          userID = user.uid;
+                          the_User = user;
+                        }
+                      } else {
                         Components.showMessage(Constants.passwordMatch);
                       }
                     }
