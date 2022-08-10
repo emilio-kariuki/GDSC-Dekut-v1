@@ -3,12 +3,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gdsc_app/UI/Authentication/user_logic.dart';
+import 'package:gdsc_app/UI/Events/Events.dart';
 import 'package:gdsc_app/Util/App_Constants.dart';
 import 'package:gdsc_app/Util/App_components.dart';
 import 'package:gdsc_app/Util/dimensions.dart';
 import 'package:gdsc_app/main.dart';
 import 'package:get/get.dart';
 
+import '../../Home/Home.dart';
+import '../user_logic.dart';
 import '../Login/login_page.dart';
 
 class Register extends StatefulWidget {
@@ -38,7 +41,7 @@ class _RegisterState extends State<Register> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
-                  child: Components.showImage(Constants.logo),
+                  child: Components.showImage(Constants.logo, context),
                 ),
                 Components.header_1(Constants.register),
                 InputField(
@@ -70,7 +73,7 @@ class _RegisterState extends State<Register> {
                       if (password.text == confirmPassword.text) {
                         final user = await Authentication.registerWithEmail(
                             username.text, email.text, password.text);
-                        Get.offAll(() => const Login());
+                        Get.offAll(() =>  const Login());
                         if (user != null) {
                           userID = user.uid;
                           the_User = user;
@@ -80,10 +83,11 @@ class _RegisterState extends State<Register> {
                       }
                     }
                   },
+                  context
                 ),
                 Components.spacerHeight(Dimensions.PADDING_SIZE_SMALL),
                 Components.accountText(Constants.haveAccount, Constants.login,
-                    () => Get.offAll(() => const Login()))
+                    () => Get.offAll(() => const Home()))
               ],
             ),
           ),

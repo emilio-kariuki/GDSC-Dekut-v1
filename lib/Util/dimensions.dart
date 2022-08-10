@@ -16,4 +16,13 @@ class Dimensions{
   static const double PADDING_SIZE_OVER_LARGE = 30.0;
   
 
+  static const double CONTAINER_SIZE_EXTRA_SMALL = 10.0;
+  static const double CONTAINER_SIZE_SMALL = 20.0;
+  static const double CONTAINER_SIZE_DEFAULT = 30.0;
+  static const double CONTAINER_SIZE_LARGE = 40.0;
+  static const double CONTAINER_SIZE_EXTRA_LARGE = 50.0;
+  static const double CONTAINER_SIZE_OVER_LARGE = 60.0;
+
+  
+
 }

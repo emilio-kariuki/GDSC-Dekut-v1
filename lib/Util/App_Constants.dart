@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 class Constants {
   static String logo = "lib/Assets/images/logo.png";
+  static String google = "lib/Assets/svg/google.svg";
+  static String twitter = "lib/Assets/svg/twitter.svg";
   static String email = "Email";
   static String password = "Password";
   static String confirmPassword = "Confirm Password";

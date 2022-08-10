@@ -1,5 +1,8 @@
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gdsc_app/Util/dimensions.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -62,19 +65,24 @@ class Components {
     );
   }
 
-  static Widget button(String text, Function() onPressed) {
+  static Widget button(
+      String text, Function() onPressed, BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+      padding: const EdgeInsets.symmetric(
+          horizontal: Dimensions.PADDING_SIZE_EXTRA_LARGE,
+          vertical: Dimensions.PADDING_SIZE_OVER_LARGE),
       child: SizedBox(
-        height: Get.context!.height * 0.075,
-        width: Get.context!.width * 0.75,
+        height: size.height * 0.075,
+        width: size.width * 0.75,
         child: ElevatedButton(
           onPressed: onPressed,
           style: ButtonStyle(
             elevation: MaterialStateProperty.all(1),
             shape: MaterialStateProperty.all(
               RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+                borderRadius:
+                    BorderRadius.circular(Dimensions.CONTAINER_SIZE_SMALL),
               ),
             ),
             backgroundColor: MaterialStateProperty.all(
@@ -104,16 +112,18 @@ class Components {
 
   static Widget showDivider() {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_SMALL),
       child: Row(
         // ignore: prefer_const_literals_to_create_immutables
         children: [
           Expanded(
               child: Container(
-            margin: const EdgeInsets.only(left: 15, right: 10),
+            margin: const EdgeInsets.only(
+                left: Dimensions.PADDING_SIZE_DEFAULT,
+                right: Dimensions.PADDING_SIZE_SMALL),
             child: const Divider(
               thickness: 0.5,
-              height: 50,
+              height: Dimensions.CONTAINER_SIZE_OVER_LARGE,
               color: Colors.black26,
             ),
           )),
@@ -121,10 +131,12 @@ class Components {
               style: GoogleFonts.roboto(fontSize: 20, color: Colors.black26)),
           Expanded(
               child: Container(
-            margin: const EdgeInsets.only(left: 15, right: 10),
+            margin: const EdgeInsets.only(
+                left: Dimensions.PADDING_SIZE_DEFAULT,
+                right: Dimensions.PADDING_SIZE_SMALL),
             child: const Divider(
               thickness: 0.5,
-              height: 40,
+              height: Dimensions.CONTAINER_SIZE_LARGE,
               color: Colors.black26,
             ),
           )),
@@ -137,9 +149,11 @@ class Components {
     return InkWell(
       onTap: function,
       child: Container(
+        height: Dimensions.CONTAINER_SIZE_LARGE,
+        width: Dimensions.CONTAINER_SIZE_LARGE,
         padding: const EdgeInsets.symmetric(
-          horizontal: 5,
-          vertical: 5,
+          horizontal: Dimensions.PADDING_SIZE_SMALL,
+          vertical: Dimensions.PADDING_SIZE_SMALL,
         ),
         decoration: BoxDecoration(
             shape: BoxShape.circle,
@@ -148,25 +162,26 @@ class Components {
               color: Colors.black,
               width: 1,
             )),
-        child: Image.asset(
+        child: SvgPicture.asset(
           imageUrl,
-          height: 20,
-          width: 20,
-          fit: BoxFit.fill,
-          filterQuality: FilterQuality.high,
+          width: Dimensions.CONTAINER_SIZE_LARGE,
+          height: Dimensions.CONTAINER_SIZE_LARGE,
+          color: Colors.black,
         ),
       ),
     );
   }
 
-  static Widget showImage(String imageName) {
+  static Widget showImage(String imageName, BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 40),
+      padding: const EdgeInsets.symmetric(
+          vertical: Dimensions.PADDING_SIZE_OVER_LARGE),
       child: Center(
         child: Container(
           padding: const EdgeInsets.all(2),
-          height: Get.context!.width * 0.09,
-          width: Get.context!.width * 0.16,
+          height: size.height * 0.09,
+          width: size.width * 0.16,
           decoration: BoxDecoration(
             image: DecorationImage(
               image: Image.asset(
@@ -228,6 +243,7 @@ class InputField extends StatelessWidget {
                   keyboardType: inputType,
                   maxLines: linesCount,
                   autofocus: false,
+                  focusNode: FocusNode(),
                   cursorColor: Colors.grey,
                   controller: controller,
                   decoration: InputDecoration(

@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gdsc_app/UI/Authentication/Login/login_page.dart';
 import 'package:gdsc_app/UI/Authentication/SignUp/Sign_up.dart';
@@ -8,12 +9,14 @@ import 'package:gdsc_app/UI/Events/Events.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
 import 'UI/Authentication/user_logic.dart';
+import 'UI/Home/Home.dart';
 
 String userID = '';
+ User? the_User;
 
-User ?the_User;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
@@ -39,7 +42,7 @@ class MyApp extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           User? user = FirebaseAuth.instance.currentUser;
           if (user != null) {
-            return MaterialApp(
+            return GetMaterialApp(
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
                 primarySwatch: Colors.blue,
@@ -48,12 +51,12 @@ class MyApp extends StatelessWidget {
               color: Colors.blue,
             );
           } else {
-            return MaterialApp(
+            return GetMaterialApp(
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
                 primarySwatch: Colors.blue,
               ),
-              home: const Login(),
+              home: Login(),
               color: Colors.blue,
             );
           }
