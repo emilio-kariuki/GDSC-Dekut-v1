@@ -4,15 +4,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gdsc_app/UI/Authentication/Login/login_page.dart';
-import 'package:gdsc_app/UI/Authentication/SignUp/Sign_up.dart';
-import 'package:gdsc_app/UI/Events/Events.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
 import 'UI/Authentication/user_logic.dart';
 import 'UI/Home/Home.dart';
 
 String userID = '';
- User? the_User;
+User? the_User;
+String userName = '';
+String userEmail = '';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
               theme: ThemeData(
                 primarySwatch: Colors.blue,
               ),
-              home: Login(),
+              home: const Login(),
               color: Colors.blue,
             );
           }

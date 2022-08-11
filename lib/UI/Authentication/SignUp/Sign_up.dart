@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, unused_field
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +10,8 @@ import 'package:gdsc_app/Util/dimensions.dart';
 import 'package:gdsc_app/main.dart';
 import 'package:get/get.dart';
 
+import '../../../Firebase_Logic/UserFirebase.dart';
+import '../../../Models/user_model.dart';
 import '../../Home/Home.dart';
 import '../user_logic.dart';
 import '../Login/login_page.dart';
@@ -26,6 +28,7 @@ class _RegisterState extends State<Register> {
   final email = TextEditingController();
   final password = TextEditingController();
   final confirmPassword = TextEditingController();
+  bool _isSigningIn = false;
 
   @override
   Widget build(BuildContext context) {
@@ -61,33 +64,64 @@ class _RegisterState extends State<Register> {
                     hint: "Confirm your password",
                     controller: confirmPassword),
                 Components.spacerHeight(Dimensions.PADDING_SIZE_SMALL),
-                Components.button(
-                  Constants.signUp,
-                  () async {
-                    if (username.text.isEmpty &&
-                        email.text.isEmpty &&
-                        password.text.isEmpty &&
-                        confirmPassword.text.isEmpty) {
-                      Components.showMessage(Constants.empty);
-                    } else {
-                      if (password.text == confirmPassword.text) {
-                        final user = await Authentication.registerWithEmail(
-                            username.text, email.text, password.text);
-                        Get.offAll(() =>  const Login());
-                        if (user != null) {
-                          userID = user.uid;
-                          the_User = user;
-                        }
-                      } else {
-                        Components.showMessage(Constants.passwordMatch);
+                Components.button(Constants.signUp, () async {
+                  if (username.text.isEmpty &&
+                      email.text.isEmpty &&
+                      password.text.isEmpty &&
+                      confirmPassword.text.isEmpty) {
+                    Components.showMessage(Constants.empty);
+                  } else {
+                    if (password.text == confirmPassword.text) {
+                      final user = await Authentication.registerWithEmail(
+                          username.text, email.text, password.text);
+                      Get.offAll(() => const Login());
+                      if (user != null) {
+                        userID = user.uid;
+                        the_User = user;
                       }
+                    } else {
+                      Components.showMessage(Constants.passwordMatch);
                     }
-                  },
-                  context
-                ),
+                  }
+                }, context),
                 Components.spacerHeight(Dimensions.PADDING_SIZE_SMALL),
                 Components.accountText(Constants.haveAccount, Constants.login,
-                    () => Get.offAll(() => const Home()))
+                    () => Get.offAll(() => const Home())),
+                Components.showDivider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Components.signInWith(Constants.google, () async {
+                      setState(() {
+                        _isSigningIn = true;
+                      });
+
+                      User? user = await Authentication.signInWithGoogle(
+                              context: context)
+                          .then((value) {
+                        userID = value!.uid;
+                        return value;
+                      });
+                      if (user != null) {
+                        print("USER IS NOT NULL");
+                        userID = user.uid;
+                        the_User = user;
+                        userName = user.displayName!;
+                        userEmail = user.email!;
+                        createUser(
+                            UserClass(user.displayName!, user.email!, ''),
+                            user.uid);
+                        Get.offAll(() => const Home());
+                      }
+
+                      setState(() {
+                        _isSigningIn = false;
+                      });
+                    }),
+                    Components.spacerWidth(Dimensions.PADDING_SIZE_SMALL),
+                    Components.signInWith(Constants.twitter, () {})
+                  ],
+                ),
               ],
             ),
           ),

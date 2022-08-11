@@ -97,6 +97,8 @@ class _LoginState extends State<Login> {
                         print("USER IS NOT NULL");
                         userID = user.uid;
                         the_User = user;
+                        userName = user.displayName!;
+                        userEmail = user.email!;
                         createUser(
                             UserClass(user.displayName!, user.email!, ''),
                             user.uid);

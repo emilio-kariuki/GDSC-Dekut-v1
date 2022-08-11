@@ -89,7 +89,7 @@ class _HomeState extends State<Home> {
       const Events(),
       const Resources(),
       const Announcements(),
-      const Profile(),
+      const Account(),
     ];
     return IndexedStack(
       index: activeIndex,

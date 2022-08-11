@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: file_names
 
 class Constants {
+  static const String APP_NAME = 'GDSC DeKUT';
   static String logo = "lib/Assets/images/logo.png";
   static String google = "lib/Assets/svg/google.svg";
   static String twitter = "lib/Assets/svg/twitter.svg";

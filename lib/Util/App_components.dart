@@ -1,10 +1,13 @@
+// ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gdsc_app/Util/dimensions.dart';
-import 'package:get/get.dart';
+
 import 'package:google_fonts/google_fonts.dart';
+
+import '../main.dart';
 
 class Components {
   static Widget header_1(String text) {
@@ -35,10 +38,18 @@ class Components {
       style: GoogleFonts.quicksand(
         color: color,
         fontSize: 16,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w600,
       ),
     );
   }
+  static   Widget showDividerLine() {
+    return Divider(
+      color: Colors.grey[300],
+      thickness: 1,
+      height: Dimensions.PADDING_SIZE_SMALL,
+    );
+  }
+
 
   static Widget spacerWidth(double width) {
     return SizedBox(
@@ -51,6 +62,30 @@ class Components {
       height: height,
     );
   }
+  static   Widget avatar() {
+    return const CircleAvatar(
+      radius: 30,
+      backgroundImage: AssetImage('assets/profile.jpg'),
+    );
+  }
+  static   Widget personalInformation() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          avatar(),
+          const SizedBox(width: 10),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [header_3(userName,Colors.black87), header_3(userEmail,Colors.black38)],
+          ),
+        ],
+      ),
+    );
+  }
+
 
   static Widget accountText(String text_1, String text_2, Function() function) {
     return Padding(
@@ -64,6 +99,37 @@ class Components {
       ),
     );
   }
+  static   Widget cardButton(IconData iconName, String action, Function() function) {
+    return InkWell(
+      onTap: function,
+      child: SizedBox(
+        width: double.infinity,
+        height: 50,
+        child: Row(
+          children: [
+            Row(
+              children: [
+                Icon(
+                  iconName,
+                  size: 18,
+                  color: Colors.black54,
+                ),
+                const SizedBox(width: 15),
+                header_3(action,Colors.black87),
+              ],
+            ),
+            Expanded(child: Container()),
+            const Icon(
+              Icons.arrow_forward_ios,
+              size: 18,
+              color: Colors.black54,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
 
   static Widget button(
       String text, Function() onPressed, BuildContext context) {

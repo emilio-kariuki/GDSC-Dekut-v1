@@ -1,4 +1,4 @@
-// ignore_for_file: unused_local_variable, avoid_print
+// ignore_for_file: unused_local_variable, avoid_print, avoid_types_as_parameter_names, non_constant_identifier_names, prefer_typing_uninitialized_variables
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +19,8 @@ class Authentication {
 
     if (user != null) {
       createUser(UserClass(name, email, password), user.uid);
+      userName = user.displayName!;
+      email = user.email!;
     }
     return user;
   }
@@ -34,6 +36,8 @@ class Authentication {
         .user;
     if (user != null) {
       createUser(UserClass(name, email, password), user.uid);
+      userName = user.displayName!;
+      userEmail = user.email!;
     }
     return user;
   }
@@ -50,35 +54,38 @@ class Authentication {
       print("USER EXISTS");
       print(user.uid);
       userID = user.uid;
+      userName = user.displayName!;
+      userEmail = user.email!;
     }
 
     return firebaseApp;
   }
 
   static Future<User?> signInWithGoogle({required BuildContext context}) async {
-    FirebaseAuth auth = await FirebaseAuth.instance;
+    FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
 
     final GoogleSignIn googleSignIn = GoogleSignIn();
 
-    final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
+    final GoogleSignInAccount? googleSignInAccount =
+        await googleSignIn.signIn();
 
     if (googleSignInAccount != null) {
-      final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleSignInAuthentication.accessToken,
-        idToken: googleSignInAuthentication.idToken
-      );
+          accessToken: googleSignInAuthentication.accessToken,
+          idToken: googleSignInAuthentication.idToken);
 
       try {
-        final UserCredential userCredential = await auth.signInWithCredential(credential);
+        final UserCredential userCredential =
+            await auth.signInWithCredential(credential);
         user = userCredential.user;
       } on FirebaseAuthException catch (e) {
         if (e.code == 'account-exists-with-different-credential') {
           // handle the error here
-        }
-        else if (e.code == 'invalid-credential') {
+        } else if (e.code == 'invalid-credential') {
           // handle the error here
         }
       } catch (e) {
@@ -86,5 +93,22 @@ class Authentication {
       }
     }
     return user;
+  }
+
+  static Future<void> signOut(){
+    FirebaseAuth auth = FirebaseAuth.instance;
+    return auth.signOut();
+  }
+
+  Future<List<UserClass>> getUser(String userID) async {
+    var data;
+    firestoreInstance.collection("users").doc(userID).get().then((value) {
+      data = value.data();
+    });
+    return userFromJson(data);
+  }
+
+  void updateUser(UserClass user, String id) {
+    firestoreInstance.collection("users").doc(id).update(user.toJson());
   }
 }

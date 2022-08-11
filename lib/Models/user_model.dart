@@ -1,3 +1,8 @@
+
+import 'dart:convert';
+
+List<UserClass> userFromJson(String str) =>
+    List<UserClass>.from(json.decode(str).map((x) => UserClass.fromJson(x)));
 class UserClass {
   late String name;
   late String email;
