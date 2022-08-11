@@ -7,6 +7,7 @@ import 'package:gdsc_app/Models/user_model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../main.dart';
+import '../Events/Model/Event_model.dart';
 
 class Authentication {
   static Future<User?> registerWithEmail(
@@ -19,7 +20,7 @@ class Authentication {
 
     if (user != null) {
       createUser(UserClass(name, email, password), user.uid);
-      userName = user.displayName!;
+      userName = user.displayName ?? "Unknown";
       email = user.email!;
     }
     return user;
@@ -36,7 +37,7 @@ class Authentication {
         .user;
     if (user != null) {
       createUser(UserClass(name, email, password), user.uid);
-      userName = user.displayName!;
+      userName = user.displayName ?? "Unknown";
       userEmail = user.email!;
     }
     return user;
@@ -95,7 +96,7 @@ class Authentication {
     return user;
   }
 
-  static Future<void> signOut(){
+  static Future<void> signOut() {
     FirebaseAuth auth = FirebaseAuth.instance;
     return auth.signOut();
   }
@@ -107,6 +108,8 @@ class Authentication {
     });
     return userFromJson(data);
   }
+
+  
 
   void updateUser(UserClass user, String id) {
     firestoreInstance.collection("users").doc(id).update(user.toJson());

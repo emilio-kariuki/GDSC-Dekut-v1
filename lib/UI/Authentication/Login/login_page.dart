@@ -10,7 +10,7 @@ import '../../../Util/App_Constants.dart';
 import '../../../Util/App_components.dart';
 import '../../../Util/dimensions.dart';
 import '../../../main.dart';
-import '../../Events/Events.dart';
+import '../../Events/UI/Events.dart';
 import '../../Home/Home.dart';
 import '../SignUp/Sign_up.dart';
 import '../user_logic.dart';

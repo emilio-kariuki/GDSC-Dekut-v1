@@ -1,20 +1,30 @@
 // ignore_for_file: file_names
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gdsc_app/Controller/app_controller.dart';
+import 'package:gdsc_app/Util/App_Constants.dart';
 import 'package:gdsc_app/Util/dimensions.dart';
+import 'package:get/get.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
 import '../main.dart';
 
 class Components {
+  static var controller = Get.put(AppController());
+  static var myGroup = AutoSizeGroup();
   static Widget header_1(String text) {
-    return Text(
+    return AutoSizeText(
       text,
+      maxLines: 1,
+      maxFontSize: 30,
+      minFontSize: 25,
+      group: myGroup,
       style: GoogleFonts.quicksand(
-        color: Colors.black87,
+        color: controller.isDark.value ? Colors.white : Colors.black87,
         fontSize: 30,
         fontWeight: FontWeight.w600,
       ),
@@ -22,19 +32,27 @@ class Components {
   }
 
   static Widget header_2(String text) {
-    return Text(
+    return AutoSizeText(
       text,
+      maxLines: 1,
+      maxFontSize: 24,
+      minFontSize: 20,
+      group: myGroup,
       style: GoogleFonts.quicksand(
-        color: Colors.black87,
+        color: controller.isDark.value ? Colors.white : Colors.black87,
         fontSize: 24,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w600,
       ),
     );
   }
 
   static Widget header_3(String text, Color color) {
-    return Text(
+    return AutoSizeText(
       text,
+      maxLines: 1,
+      maxFontSize: 16,
+      minFontSize: 12,
+      group: myGroup,
       style: GoogleFonts.quicksand(
         color: color,
         fontSize: 16,
@@ -42,14 +60,14 @@ class Components {
       ),
     );
   }
-  static   Widget showDividerLine() {
-    return Divider(
-      color: Colors.grey[300],
+
+  static Widget showDividerLine() {
+    return const Divider(
+      color: Colors.grey,
       thickness: 1,
       height: Dimensions.PADDING_SIZE_SMALL,
     );
   }
-
 
   static Widget spacerWidth(double width) {
     return SizedBox(
@@ -62,30 +80,79 @@ class Components {
       height: height,
     );
   }
-  static   Widget avatar() {
-    return const CircleAvatar(
+
+  static Widget avatar() {
+    return CircleAvatar(
       radius: 30,
-      backgroundImage: AssetImage('assets/profile.jpg'),
+      backgroundImage: AssetImage(Constants.profile),
     );
   }
-  static   Widget personalInformation() {
+
+  static Widget personalInformation() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           avatar(),
-          const SizedBox(width: 10),
+          const SizedBox(width: 15),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
-            children: [header_3(userName,Colors.black87), header_3(userEmail,Colors.black38)],
+            children: [
+              header_3(userName,
+                  controller.isDark.value ? Colors.white : Colors.black87),
+              header_3(userEmail,
+                  controller.isDark.value ? Colors.white : Colors.black54)
+            ],
           ),
         ],
       ),
     );
   }
 
+  static Widget showLogOutButton(
+      String text, Function() onPressed, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.075,
+        width: MediaQuery.of(context).size.width,
+        child: ElevatedButton(
+          onPressed: onPressed,
+          style: ButtonStyle(
+            elevation: MaterialStateProperty.all(1),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+            backgroundColor: MaterialStateProperty.all(
+              Colors.deepOrange,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.logout,
+                  color: Colors.white,
+                  size: 18,
+                ),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.15),
+                Text(text,
+                    style: GoogleFonts.quicksand(
+                        fontSize: 18,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600)),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   static Widget accountText(String text_1, String text_2, Function() function) {
     return Padding(
@@ -93,13 +160,16 @@ class Components {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          header_3(text_1, Colors.black),
+          header_3(
+              text_1, controller.isDark.value ? Colors.white : Colors.black87),
           InkWell(onTap: function, child: header_3(text_2, Colors.green))
         ],
       ),
     );
   }
-  static   Widget cardButton(IconData iconName, String action, Function() function) {
+
+  static Widget cardButton(
+      IconData iconName, String action, Function() function) {
     return InkWell(
       onTap: function,
       child: SizedBox(
@@ -112,24 +182,25 @@ class Components {
                 Icon(
                   iconName,
                   size: 18,
-                  color: Colors.black54,
+                  color:
+                      controller.isDark.value ? Colors.white : Colors.black87,
                 ),
                 const SizedBox(width: 15),
-                header_3(action,Colors.black87),
+                header_3(action,
+                    controller.isDark.value ? Colors.white : Colors.black87),
               ],
             ),
             Expanded(child: Container()),
-            const Icon(
+            Icon(
               Icons.arrow_forward_ios,
-              size: 18,
-              color: Colors.black54,
+              size: 16,
+              color: controller.isDark.value ? Colors.white : Colors.black87,
             ),
           ],
         ),
       ),
     );
   }
-
 
   static Widget button(
       String text, Function() onPressed, BuildContext context) {
@@ -260,6 +331,32 @@ class Components {
       ),
     );
   }
+
+  static Widget eventListCard(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 2,
+      height: MediaQuery.of(context).size.height * 0.26,
+      child: Obx(() {
+        return ListView.separated(
+            physics: const BouncingScrollPhysics(),
+            cacheExtent: 10,
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(controller.events[index].title),
+                subtitle: Text(controller.events[index].venue),
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5));
+            },
+            itemCount: controller.events.length);
+      }),
+    );
+  }
+  
 }
 
 class InputField extends StatelessWidget {
@@ -270,10 +367,12 @@ class InputField extends StatelessWidget {
   final Widget? widget;
   final TextInputType? inputType;
   final int? maxLength;
+  final bool ?showRequired;
   const InputField(
       {Key? key,
       required this.title,
       required this.hint,
+      this.showRequired,
       this.controller,
       this.widget,
       this.linesCount,
@@ -288,11 +387,18 @@ class InputField extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title,
-              style: GoogleFonts.quicksand(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              )),
+          Row(
+            children: [
+              Text(title,
+                  style: GoogleFonts.quicksand(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  )),
+              Components.spacerWidth(5),
+               Container(
+                child: showRequired ==true  ? const Icon(Icons.star,size: 12,color: Colors.red,):Container(),
+               ),]
+          ),
           Container(
             //height: 50,
             margin: const EdgeInsets.only(top: 8),

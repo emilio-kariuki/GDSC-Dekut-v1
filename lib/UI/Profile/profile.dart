@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gdsc_app/Controller/app_controller.dart';
 import 'package:gdsc_app/UI/Authentication/Login/login_page.dart';
 import 'package:gdsc_app/UI/Authentication/user_logic.dart';
+import 'package:gdsc_app/UI/Profile/Pages/Post/Post.dart';
 import 'package:gdsc_app/Util/App_Constants.dart';
+import 'package:gdsc_app/Util/dimensions.dart';
 import 'package:gdsc_app/main.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,119 +19,84 @@ class Account extends StatefulWidget {
 }
 
 class _AccountState extends State<Account> {
+  final controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: controller.isDark.value ? Colors.grey[900] : Colors.white,
         body: SafeArea(
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(child: Components.personalInformation()),
-              const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                child: introTitle(Constants.APP_NAME),
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Components.personalInformation(),
+                  const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    child:
+                        Components.header_3(Constants.APP_NAME, controller.isDark.value ? Colors.white : Colors.black87),
+                  ),
+                  Components.showDividerLine(),
+                  Components.cardButton(
+                      Icons.badge, Constants.details, () => null),
+                  Components.showDividerLine(),
+                  Components.cardButton(
+                      Icons.leaderboard, Constants.admins, () => null),
+                  Components.showDividerLine(),
+                  Components.cardButton(
+                      Icons.delivery_dining, Constants.post, () => Get.to(()=> const Post())),
+                  Components.showDividerLine(),
+                  Components.cardButton(
+                      Icons.person, Constants.leads, () => null),
+                  Components.showDividerLine(),
+                  Components.cardButton(Icons.notifications_active,
+                      Constants.notifications, () => null),
+                  Components.showDividerLine(),
+                  Components.cardButton(
+                      Icons.info_outline_rounded, Constants.about, () => null),
+                  Components.showDividerLine(),
+                  Components.cardButton(
+                      Icons.help_outline_sharp, Constants.help, () => null),
+                  Components.showLogOutButton(Constants.logout, () async {
+                    await Authentication.signOut();
+                    Get.offAll(() => const Login());
+                  }, context)
+                ],
               ),
-              Components.showDividerLine(),
-              Components.cardButton(Icons.badge, "Details", () => null),
-              Components.showDividerLine(),
-              Components.cardButton(
-                  Icons.shopping_cart_checkout, "Orders", () => null),
-              Components.showDividerLine(),
-              Components.cardButton(
-                  Icons.delivery_dining, "Delivery Address", () => null),
-              Components.showDividerLine(),
-              Components.cardButton(Icons.person, "Google Leads", () => null),
-              Components.showDividerLine(),
-              Components.cardButton(
-                  Icons.notifications_active, "Notifications", () => null),
-              Components.showDividerLine(),
-              Components.cardButton(
-                  Icons.info_outline_rounded, "About", () => null),
-              Components.showDividerLine(),
-              Components.cardButton(
-                  Icons.help_outline_sharp, "Help", () => null),
-              showButton("Log Out", () async {
-                await Authentication.signOut();
-                Get.offAll(() => const Login());
-              })
-            ],
-          ),
+            ),
+            Positioned(
+                top: 0,
+                right: 3,
+                child: Row(
+                  children: [
+                    Obx(() {
+                      return Icon(
+                        controller.isDark.value
+                            ? Icons.brightness_3
+                            : Icons.brightness_7,
+                        color: controller.isDark.value ? Colors.white : Colors.black87,
+                      );
+                    }),
+                    Components.spacerWidth(Dimensions.CONTAINER_SIZE_EXTRA_SMALL),
+                    Switch(
+                      trackColor: MaterialStateProperty.all(controller.isDark.value ? Colors.white : Colors.black54),
+                      thumbColor: MaterialStateProperty.all(Colors.deepOrange),
+                        value: controller.isDark.value,
+                        onChanged: ((value) {
+                          controller.isDark.value = value;
+                          setState(() {});
+                        }))
+                  ],
+                ))
+          ],
         ),
       ),
     ));
-  }
-
-
-  Widget introTitle(String text) {
-    return Text(
-      text,
-      textAlign: TextAlign.center,
-      style: GoogleFonts.quicksand(
-          fontSize: 18,
-          color: const Color.fromARGB(255, 24, 23, 37),
-          fontWeight: FontWeight.w600),
-    );
-  }
-
-
-
-  Widget showTexts(String text) {
-    return Text(
-      text,
-      style: GoogleFonts.quicksand(
-          fontSize: 16,
-          color: Colors.black38,
-          fontWeight: FontWeight.w600,
-          letterSpacing: 0.001),
-    );
-  }
-
-
-  Widget showButton(String text, Function() onPressed) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.08,
-        width: MediaQuery.of(context).size.width,
-        child: ElevatedButton(
-          onPressed: onPressed,
-          style: ButtonStyle(
-            elevation: MaterialStateProperty.all(1),
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-            backgroundColor: MaterialStateProperty.all(
-              Theme.of(context).primaryColor,
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.logout,
-                  color: Colors.white,
-                  size: 18,
-                ),
-                SizedBox(width: MediaQuery.of(context).size.width * 0.15),
-                Text(text,
-                    style: GoogleFonts.quicksand(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600)),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }

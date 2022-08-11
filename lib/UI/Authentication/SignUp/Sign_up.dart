@@ -3,7 +3,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gdsc_app/UI/Authentication/user_logic.dart';
-import 'package:gdsc_app/UI/Events/Events.dart';
+import 'package:gdsc_app/UI/Events/UI/Events.dart';
 import 'package:gdsc_app/Util/App_Constants.dart';
 import 'package:gdsc_app/Util/App_components.dart';
 import 'package:gdsc_app/Util/dimensions.dart';
@@ -74,7 +74,7 @@ class _RegisterState extends State<Register> {
                     if (password.text == confirmPassword.text) {
                       final user = await Authentication.registerWithEmail(
                           username.text, email.text, password.text);
-                      Get.offAll(() => const Login());
+                      Get.offAll(() => const Home());
                       if (user != null) {
                         userID = user.uid;
                         the_User = user;

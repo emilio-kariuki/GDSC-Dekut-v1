@@ -1,12 +1,14 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:gdsc_app/Controller/app_controller.dart';
 import 'package:gdsc_app/UI/Announcement/announcement.dart';
 import 'package:gdsc_app/UI/Profile/profile.dart';
 import 'package:gdsc_app/UI/Resources/resources.dart';
+import 'package:get/get.dart';
 
 import '../../Util/dimensions.dart';
-import '../Events/Events.dart';
+import '../Events/UI/Events.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -16,15 +18,18 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final controller = Get.put(AppController());
   int activeIndex = 0;
   var myGroup = AutoSizeGroup();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: getBody(),
-      bottomNavigationBar: getFooter(),
-    );
+    return Obx(() => Scaffold(
+          backgroundColor:
+              controller.isDark.value ? Colors.white : Colors.black87,
+          body: getBody(),
+          bottomNavigationBar: getFooter(),
+        ));
   }
 
   Widget getFooter() {
@@ -41,7 +46,8 @@ class _HomeState extends State<Home> {
       "Profile",
     ];
     return AnimatedBottomNavigationBar.builder(
-      backgroundColor: Colors.white,
+      backgroundColor:
+          controller.isDark.value ? Colors.grey[900] : Colors.white,
       splashColor: Colors.deepOrangeAccent,
       notchSmoothness: NotchSmoothness.softEdge,
       itemCount: icons.length,
@@ -52,7 +58,11 @@ class _HomeState extends State<Home> {
       },
       //other params
       tabBuilder: (int index, bool isActive) {
-        final color = isActive ? Colors.deepOrange : Colors.grey;
+        final color = isActive
+            ? Colors.deepOrange
+            : controller.isDark.value
+                ? Colors.white
+                : Colors.black54;
         return Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
