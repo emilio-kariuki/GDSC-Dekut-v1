@@ -4,12 +4,12 @@ List<EventModel> eventFromJson(String str) =>
     List<EventModel>.from(json.decode(str).map((x) => EventModel.fromJson(x)));
 
 class EventModel {
-  late String title;
-  late String description;
-  late String date;
-  late String time;
-  late String venue;
-  String? registrationLink;
+  late String title;//
+  late String description;//
+  late String date;//
+  late String time;//
+  late String venue;//
+  String? registrationLink;//
   late String organizers;
   late String imageUrl;
 

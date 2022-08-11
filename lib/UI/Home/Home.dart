@@ -21,6 +21,11 @@ class _HomeState extends State<Home> {
   final controller = Get.put(AppController());
   int activeIndex = 0;
   var myGroup = AutoSizeGroup();
+  @override
+  void initState() {
+    super.initState();
+    controller.fetchEvents();
+  }
 
   @override
   Widget build(BuildContext context) {

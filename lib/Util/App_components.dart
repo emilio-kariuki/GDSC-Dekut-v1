@@ -1,5 +1,7 @@
 // ignore_for_file: file_names
 
+import 'dart:io';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -10,10 +12,12 @@ import 'package:gdsc_app/Util/dimensions.dart';
 import 'package:get/get.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../main.dart';
 
 class Components {
+  
   static var controller = Get.put(AppController());
   static var myGroup = AutoSizeGroup();
   static Widget header_1(String text) {
@@ -223,7 +227,7 @@ class Components {
               ),
             ),
             backgroundColor: MaterialStateProperty.all(
-              Colors.deepPurple,
+              Colors.deepOrange
             ),
           ),
           child: Text(text,
@@ -356,7 +360,6 @@ class Components {
       }),
     );
   }
-  
 }
 
 class InputField extends StatelessWidget {
@@ -367,7 +370,7 @@ class InputField extends StatelessWidget {
   final Widget? widget;
   final TextInputType? inputType;
   final int? maxLength;
-  final bool ?showRequired;
+  final bool? showRequired;
   const InputField(
       {Key? key,
       required this.title,
@@ -387,18 +390,23 @@ class InputField extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Text(title,
-                  style: GoogleFonts.quicksand(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  )),
-              Components.spacerWidth(5),
-               Container(
-                child: showRequired ==true  ? const Icon(Icons.star,size: 12,color: Colors.red,):Container(),
-               ),]
-          ),
+          Row(children: [
+            Text(title,
+                style: GoogleFonts.quicksand(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                )),
+            Components.spacerWidth(5),
+            Container(
+              child: showRequired == true
+                  ? const Icon(
+                      Icons.star,
+                      size: 12,
+                      color: Colors.red,
+                    )
+                  : Container(),
+            ),
+          ]),
           Container(
             //height: 50,
             margin: const EdgeInsets.only(top: 8),

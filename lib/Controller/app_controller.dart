@@ -13,7 +13,14 @@ class AppController extends GetxController {
   var isLoading = true.obs;
   var selectedDate = 'Date'.obs;
   var selectTime = '5:00'.obs;
+  @override
+  onInit() {
+      super.onInit();
+      fetchEvents();
+    }
   void changeTheme(bool value) {
+    
+
     if (value == true) {
       Get.changeTheme(ThemeData.dark().copyWith(
         backgroundColor: Colors.grey[900],

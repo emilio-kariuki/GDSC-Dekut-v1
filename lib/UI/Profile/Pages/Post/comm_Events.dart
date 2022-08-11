@@ -1,9 +1,17 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print
 
+import 'dart:io';
+import 'package:gdsc_app/Firebase_Logic/EventFirebase.dart';
+import 'package:gdsc_app/UI/Events/Model/Event_model.dart';
+import 'package:path/path.dart' as path;
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gdsc_app/Util/App_components.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../Controller/app_controller.dart';
@@ -16,7 +24,8 @@ class CommunityEvents extends StatefulWidget {
   State<CommunityEvents> createState() => _CommunityEventsState();
 }
 
-class _CommunityEventsState extends State<CommunityEvents> {
+class _CommunityEventsState extends State<CommunityEvents>
+    with AutomaticKeepAliveClientMixin {
   final controller = Get.put(AppController());
   final title = TextEditingController();
   final description = TextEditingController();
@@ -24,6 +33,9 @@ class _CommunityEventsState extends State<CommunityEvents> {
   final venue = TextEditingController();
   final link = TextEditingController();
   TimeOfDay time = TimeOfDay.now();
+  File? image;
+  final picker = ImagePicker();
+  String? url;
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +79,40 @@ class _CommunityEventsState extends State<CommunityEvents> {
               hint: "Enter the link of the event?",
               controller: link,
             ),
-            rowTimeAndEvent()
+            rowTimeAndEvent(),
+            Components.spacerHeight(10),
+            Row(
+              children: [
+                Components.header_3("Select Image",
+                    controller.isDark.value ? Colors.white : Colors.black87),
+                Expanded(child: Container()),
+                InkWell(
+                  onTap: () async {
+                    await imageDialog();
+                    await uploadFile(image!);
+                  },
+                  child: Icon(
+                    Icons.add_a_photo_outlined,
+                    color:
+                        controller.isDark.value ? Colors.white : Colors.black87,
+                    size: 20,
+                  ),
+                )
+              ],
+            ),
+            Components.spacerHeight(10),
+            Components.button("Submit", () {
+              EventFirebase.createEvent(EventModel(
+                  title.text,
+                  description.text,
+                  controller.selectedDate.value,
+                  controller.selectTime.value,
+                  venue.text,
+                  link.text,
+                  organizers.text,
+                  url!));
+              Get.back();
+            }, context)
           ],
         ),
       )),
@@ -150,4 +195,119 @@ class _CommunityEventsState extends State<CommunityEvents> {
       },
     );
   }
+
+  Future<void> getImage(ImageSource source) async {
+    final image = await picker.pickImage(
+        source: source, maxHeight: 480, maxWidth: 640, imageQuality: 60);
+    try {
+      if (image == null) return;
+
+      final imageTempo = File(image.path);
+      setState(() {
+        this.image = imageTempo;
+      });
+    } on PlatformException catch (e) {
+      Components.showMessage(
+        "Failed to pick image $e",
+      );
+    }
+  }
+
+  Future<String?> imageDialog() async {
+    final size = MediaQuery.of(context).size;
+    return showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => Container(
+        width: size.width * 0.4,
+        height: size.height * 0.16,
+        decoration: BoxDecoration(
+          border: Border.all(
+              color: const Color.fromARGB(255, 14, 14, 20), width: 1),
+          //border: Border.all(color: Color.fromARGB(255, 182, 36, 116),width:1 ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          contentPadding: const EdgeInsets.all(5),
+          title: const Text('choose image from: '),
+          content: SingleChildScrollView(
+            child: ListBody(children: [
+              imageTile(ImageSource.camera, 'Camera', Icons.camera_alt),
+              imageTile(ImageSource.gallery, "Gallery", Icons.photo_library),
+              ListTile(
+                selectedColor: Colors.grey,
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                leading: const Icon(Icons.cancel, color: Colors.black87),
+                title: Text("Cancel",
+                    style: GoogleFonts.quicksand(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    )),
+              ),
+            ]),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> uploadFile(File image) async {
+    try {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      String filename = path.basename(image.path);
+      Reference ref = storage.ref().child("EcoVille/$filename");
+      await ref.putFile(image);
+      url = await ref.getDownloadURL();
+      print(url);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Widget imageTile(ImageSource source, String text, IconData icon) {
+    return ListTile(
+      selectedColor: Colors.grey,
+      onTap: () {
+        setState(() async {
+          await getImage(source);
+          await uploadFile(image!);
+        });
+      },
+      leading: Icon(icon, color: const Color.fromARGB(255, 0, 0, 0)),
+      title: GestureDetector(
+        onTap: () {
+          setState(() async {
+            await getImage(source);
+            await uploadFile(image!);
+          });
+        },
+        child: Text(text,
+            style: GoogleFonts.quicksand(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            )),
+      ),
+    );
+  }
+
+  Widget iconImage() {
+    return IconButton(
+        onPressed: () {
+          setState(() {
+            imageDialog();
+          });
+        },
+        icon: Icon(Icons.add_a_photo,
+            size: 20,
+            color: image != null
+                ? Colors.white
+                : const Color.fromARGB(255, 223, 152, 1)));
+  }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

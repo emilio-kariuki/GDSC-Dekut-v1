@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:gdsc_app/UI/Authentication/Login/login_page.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
+import 'Controller/app_controller.dart';
 import 'UI/Authentication/user_logic.dart';
 import 'UI/Home/Home.dart';
 
@@ -20,11 +21,12 @@ void main() async {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
+  final controller = Get.put(AppController());
 
   // This widget is the root of your application.
   @override
@@ -41,7 +43,9 @@ class MyApp extends StatelessWidget {
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
           User? user = FirebaseAuth.instance.currentUser;
+         
           if (user != null) {
+            
             return GetMaterialApp(
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
