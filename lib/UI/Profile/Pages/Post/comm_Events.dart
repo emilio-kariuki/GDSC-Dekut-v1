@@ -77,7 +77,7 @@ class _CommunityEventsState extends State<CommunityEvents>
                 InkWell(
                   onTap: () async {
                     await imageDialog();
-                    await uploadFile(image!);
+                    await Components.uploadFile(image!);
                   },
                   child: Icon(
                     Icons.add_a_photo_outlined,
@@ -257,18 +257,7 @@ class _CommunityEventsState extends State<CommunityEvents>
     );
   }
 
-  Future<void> uploadFile(File image) async {
-    try {
-      FirebaseStorage storage = FirebaseStorage.instance;
-      String filename = path.basename(image.path);
-      Reference ref = storage.ref().child("EcoVille/$filename");
-      await ref.putFile(image);
-      url = await ref.getDownloadURL();
-      print(url);
-    } catch (e) {
-      print(e);
-    }
-  }
+
 
   Widget imageTile(ImageSource source, String text, IconData icon) {
     return ListTile(
@@ -276,7 +265,7 @@ class _CommunityEventsState extends State<CommunityEvents>
       onTap: () {
         setState(() async {
           await getImage(source);
-          await uploadFile(image!);
+          await Components.uploadFile(image!);
         });
       },
       leading: Icon(icon, color: const Color.fromARGB(255, 0, 0, 0)),
@@ -284,7 +273,7 @@ class _CommunityEventsState extends State<CommunityEvents>
         onTap: () {
           setState(() async {
             await getImage(source);
-            await uploadFile(image!);
+            await Components.uploadFile(image!);
           });
         },
         child: Text(text,

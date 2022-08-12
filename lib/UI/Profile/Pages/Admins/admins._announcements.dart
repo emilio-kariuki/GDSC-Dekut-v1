@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:gdsc_app/Controller/app_controller.dart';
+import 'package:gdsc_app/Util/App_components.dart';
 import 'package:get/get.dart';
 
-import '../../../Util/App_components.dart';
 
-class Announcements extends StatefulWidget {
-  const Announcements({Key? key}) : super(key: key);
+class AdminAnnouncements extends StatefulWidget {
+  const AdminAnnouncements({Key? key}) : super(key: key);
 
   @override
-  State<Announcements> createState() => _AnnouncementsState();
+  State<AdminAnnouncements> createState() => _AdminAnnouncementsState();
 }
 
-class _AnnouncementsState extends State<Announcements> {
+class _AdminAnnouncementsState extends State<AdminAnnouncements> {
   final controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class _AnnouncementsState extends State<Announcements> {
         ),
         body: SafeArea(
             child: SingleChildScrollView(
-              child: Components.announcementListCard(context),
+              child: Components.adminAnnouncementListCard(context),
             )),
       ),);
   }

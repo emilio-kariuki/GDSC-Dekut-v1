@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gdsc_app/Controller/app_controller.dart';
 import 'package:gdsc_app/UI/Announcement/UI/announcement.dart';
 import 'package:gdsc_app/UI/Profile/profile.dart';
-import 'package:gdsc_app/UI/Resources/resources.dart';
+import 'package:gdsc_app/UI/Resources/UI/resources.dart';
 import 'package:get/get.dart';
 
 import '../../Util/dimensions.dart';

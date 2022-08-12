@@ -5,18 +5,23 @@ import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gdsc_app/Controller/app_controller.dart';
+import 'package:gdsc_app/UI/Profile/Pages/Admins/Admins.dart';
+import 'package:gdsc_app/UI/Profile/Pages/Post/Post.dart';
 import 'package:gdsc_app/Util/App_Constants.dart';
 import 'package:gdsc_app/Util/dimensions.dart';
 import 'package:get/get.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:path/path.dart' as path;
 import '../main.dart';
+
+String? url;
 
 class Components {
   static var controller = Get.put(AppController());
@@ -335,6 +340,495 @@ class Components {
     );
   }
 
+  static Future<void> uploadFile(File image) async {
+    try {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      String filename = path.basename(image.path);
+      Reference ref = storage.ref().child("EcoVille/$filename");
+      await ref.putFile(image);
+      url = await ref.getDownloadURL();
+      print(url);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static Widget adminResourceListCard(BuildContext context) {
+    final Stream<QuerySnapshot> detailStream =
+        FirebaseFirestore.instance.collection('resources').snapshots();
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 2,
+      height: MediaQuery.of(context).size.height,
+      child: Obx(() {
+        return Visibility(
+          visible: controller.isLoading.value,
+          replacement: StreamBuilder<QuerySnapshot>(
+            stream: detailStream,
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                print("loading");
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const CircularProgressIndicator(),
+                  ),
+                );
+              }
+              final docs = snapshot.data?.docs;
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: docs?.length,
+                itemBuilder: (context, int index) {
+                  Map<String, dynamic> data =
+                      docs![index].data() as Map<String, dynamic>;
+
+                  print("The length is ${docs.length}");
+
+                  return ListTile(
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: CachedNetworkImage(
+                        height: 90,
+                        width: 50,
+                        fit: BoxFit.cover,
+                        imageUrl: data['imageUrl'],
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                CircularProgressIndicator(
+                                    strokeWidth: 1,
+                                    value: downloadProgress.progress),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
+                    ),
+                    title: Text(
+                      data['title'],
+                      style: TextStyle(
+                        color: controller.isDark.value
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
+                    ),
+                    subtitle: Text(data['description'],
+                        style: TextStyle(
+                            color: controller.isDark.value
+                                ? Colors.white
+                                : Colors.black87)),
+                    trailing: Icon(
+                      Icons.link,
+                      size: 20,
+                      color: controller.isDark.value
+                          ? Colors.white
+                          : Colors.black87,
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: const CircularProgressIndicator(),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  static Widget resourceListCard(BuildContext context) {
+    final Stream<QuerySnapshot> detailStream =
+        FirebaseFirestore.instance.collection('resources').snapshots();
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 2,
+      height: MediaQuery.of(context).size.height,
+      child: Obx(() {
+        return Visibility(
+          visible: controller.isLoading.value,
+          replacement: StreamBuilder<QuerySnapshot>(
+            stream: detailStream,
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                print("loading");
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const CircularProgressIndicator(),
+                  ),
+                );
+              }
+              final docs = snapshot.data?.docs;
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: docs?.length,
+                itemBuilder: (context, int index) {
+                  Map<String, dynamic> data =
+                      docs![index].data() as Map<String, dynamic>;
+
+                  print("The length is ${docs.length}");
+
+                  return ListTile(
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: CachedNetworkImage(
+                        height: 90,
+                        width: 50,
+                        fit: BoxFit.cover,
+                        imageUrl: data['imageUrl'],
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                CircularProgressIndicator(
+                                    strokeWidth: 1,
+                                    value: downloadProgress.progress),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
+                    ),
+                    title: Text(
+                      data['title'],
+                      style: TextStyle(
+                        color: controller.isDark.value
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
+                    ),
+                    subtitle: Text(data['description'],
+                        style: TextStyle(
+                            color: controller.isDark.value
+                                ? Colors.white
+                                : Colors.black87)),
+                    trailing: Icon(
+                      Icons.link,
+                      size: 20,
+                      color: controller.isDark.value
+                          ? Colors.white
+                          : Colors.black87,
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: const CircularProgressIndicator(),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  static Widget adminAnnouncementListCard(BuildContext context) {
+    final Stream<QuerySnapshot> detailStream =
+        FirebaseFirestore.instance.collection('announcements').snapshots();
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 2,
+      height: MediaQuery.of(context).size.height,
+      child: Obx(() {
+        return Visibility(
+          visible: controller.isLoading.value,
+          replacement: StreamBuilder<QuerySnapshot>(
+            stream: detailStream,
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                print("loading");
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const CircularProgressIndicator(),
+                  ),
+                );
+              }
+              final docs = snapshot.data?.docs;
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: docs?.length,
+                itemBuilder: (context, int index) {
+                  Map<String, dynamic> data =
+                      docs![index].data() as Map<String, dynamic>;
+
+                  print("The length is ${docs.length}");
+
+                  return ListTile(
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: CachedNetworkImage(
+                        height: 90,
+                        width: 50,
+                        fit: BoxFit.cover,
+                        imageUrl: data['imageUrl'],
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                CircularProgressIndicator(
+                                    strokeWidth: 1,
+                                    value: downloadProgress.progress),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
+                    ),
+                    title: Text(
+                      data['title'],
+                      style: TextStyle(
+                        color: controller.isDark.value
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
+                    ),
+                    subtitle: Text(data['description'],
+                        style: TextStyle(
+                            color: controller.isDark.value
+                                ? Colors.white
+                                : Colors.black87)),
+                    // trailing: Text(data['date'],
+                    //     style: TextStyle(
+                    //       color: controller.isDark.value
+                    //           ? Colors.white
+                    //           : Colors.black87,
+                    //     )),
+                  );
+                },
+              );
+            },
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: const CircularProgressIndicator(),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  static Widget announcementListCard(BuildContext context) {
+    final Stream<QuerySnapshot> detailStream =
+        FirebaseFirestore.instance.collection('announcements').snapshots();
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 2,
+      height: MediaQuery.of(context).size.height,
+      child: Obx(() {
+        return Visibility(
+          visible: controller.isLoading.value,
+          replacement: StreamBuilder<QuerySnapshot>(
+            stream: detailStream,
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                print("loading");
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const CircularProgressIndicator(),
+                  ),
+                );
+              }
+              final docs = snapshot.data?.docs;
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: docs?.length,
+                itemBuilder: (context, int index) {
+                  Map<String, dynamic> data =
+                      docs![index].data() as Map<String, dynamic>;
+
+                  print("The length is ${docs.length}");
+
+                  return ListTile(
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: CachedNetworkImage(
+                        height: 90,
+                        width: 50,
+                        fit: BoxFit.cover,
+                        imageUrl: data['imageUrl'],
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                CircularProgressIndicator(
+                                    strokeWidth: 1,
+                                    value: downloadProgress.progress),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
+                    ),
+                    title: Text(
+                      data['title'],
+                      style: TextStyle(
+                        color: controller.isDark.value
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
+                    ),
+                    subtitle: Text(data['description'],
+                        style: TextStyle(
+                            color: controller.isDark.value
+                                ? Colors.white
+                                : Colors.black87)),
+                    // trailing: Text(data['date'],
+                    //     style: TextStyle(
+                    //       color: controller.isDark.value
+                    //           ? Colors.white
+                    //           : Colors.black87,
+                    //     )),
+                  );
+                },
+              );
+            },
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: const CircularProgressIndicator(),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  static Widget adminEventListCard(BuildContext context) {
+    final Stream<QuerySnapshot> detailStream =
+        FirebaseFirestore.instance.collection('events').snapshots();
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 2,
+      height: MediaQuery.of(context).size.height,
+      child: Obx(() {
+        return Visibility(
+          visible: controller.isLoading.value,
+          replacement: StreamBuilder<QuerySnapshot>(
+            stream: detailStream,
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                print("loading");
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const CircularProgressIndicator(),
+                  ),
+                );
+              }
+              final docs = snapshot.data?.docs;
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: docs?.length,
+                itemBuilder: (context, int index) {
+                  Map<String, dynamic> data =
+                      docs![index].data() as Map<String, dynamic>;
+
+                  print("The length is ${docs.length}");
+
+                  return ListTile(
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: CachedNetworkImage(
+                          height: 90,
+                          width: 50,
+                          fit: BoxFit.cover,
+                          imageUrl: data['imageUrl'],
+                          progressIndicatorBuilder:
+                              (context, url, downloadProgress) =>
+                                  CircularProgressIndicator(
+                                      strokeWidth: 1,
+                                      value: downloadProgress.progress),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
+                      ),
+                      title: Text(
+                        data['title'],
+                        style: TextStyle(
+                          color: controller.isDark.value
+                              ? Colors.white
+                              : Colors.black87,
+                        ),
+                      ),
+                      subtitle: Text(data['description'],
+                          style: TextStyle(
+                              color: controller.isDark.value
+                                  ? Colors.white
+                                  : Colors.black87)),
+                      trailing: InkWell(
+                        onTap: () {
+                          Get.defaultDialog(
+                            //titlePadding: EdgeInsets.only(top: 5),
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 5),
+                            cancelTextColor: controller.isDark.value
+                                ? Colors.white
+                                : Colors.black87,
+                            confirmTextColor: Colors.white,
+                            buttonColor: Colors.deepOrange,
+                            backgroundColor: controller.isDark.value
+                                ? Colors.grey[900]
+                                : Colors.white,
+                            title: "Confirm Delete",
+                            middleText: "Are you sure you want to delete this event?",
+                            middleTextStyle: GoogleFonts.quicksand(
+                              color: controller.isDark.value
+                                  ? Colors.white
+                                  : Colors.black87,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+
+                            titleStyle: GoogleFonts.quicksand(
+                              color: controller.isDark.value
+                                  ? Colors.white
+                                  : Colors.black87,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            onCancel: (() => null),
+                            onConfirm: () {
+                              FirebaseFirestore.instance
+                                  .collection('events')
+                                  .doc(docs[index].id)
+                                  .delete();
+                              Get.back();
+
+                              
+                            },
+                          );
+                        },
+                        child: Icon(
+                          Icons.delete,
+                          size: 20,
+                          color: controller.isDark.value
+                              ? Colors.white
+                              : Colors.black87,
+                        ),
+                      ));
+                },
+              );
+            },
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: const CircularProgressIndicator(),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
   static Widget eventListCard(BuildContext context) {
     final Stream<QuerySnapshot> detailStream =
         FirebaseFirestore.instance.collection('events').snapshots();
@@ -361,7 +855,7 @@ class Components {
               }
               final docs = snapshot.data?.docs;
               return ListView.builder(
-                //shrinkWrap: true,
+                shrinkWrap: true,
                 itemCount: docs?.length,
                 itemBuilder: (context, int index) {
                   Map<String, dynamic> data =
@@ -420,11 +914,79 @@ class Components {
       }),
     );
   }
+
+  static confirmAdminPost(password) {
+    Get.defaultDialog(
+      //titlePadding: EdgeInsets.only(top: 5),
+      contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      cancelTextColor: controller.isDark.value ? Colors.white : Colors.black87,
+      confirmTextColor: Colors.white,
+      buttonColor: Colors.deepOrange,
+      backgroundColor:
+          controller.isDark.value ? Colors.grey[900] : Colors.white,
+      title: Constants.confirmAdmin,
+      content: InputField(
+          title: "Enter the password",
+          hint: "Enter password",
+          controller: password),
+      titleStyle: GoogleFonts.quicksand(
+        color: controller.isDark.value ? Colors.white : Colors.black87,
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+      ),
+      onCancel: (() => Get.back()),
+      onConfirm: () {
+        if (password.text.isEmpty) {
+          showMessage("Enter password");
+        } else if (password.text == Constants.adminPassword) {
+          Get.back();
+          Get.to(() => const Post());
+        } else {
+          showMessage("Incorrect password");
+          Get.back();
+        }
+      },
+    );
+  }
+
+  static confirmAdmin(password) {
+    Get.defaultDialog(
+      //titlePadding: EdgeInsets.only(top: 5),
+      contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      cancelTextColor: controller.isDark.value ? Colors.white : Colors.black87,
+      confirmTextColor: Colors.white,
+      buttonColor: Colors.deepOrange,
+      backgroundColor:
+          controller.isDark.value ? Colors.grey[900] : Colors.white,
+      title: Constants.confirmAdmin,
+      content: InputField(
+          title: "Enter the password",
+          hint: "Enter password",
+          controller: password),
+      titleStyle: GoogleFonts.quicksand(
+        color: controller.isDark.value ? Colors.white : Colors.black87,
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+      ),
+      onCancel: (() => Get.back()),
+      onConfirm: () {
+        if (password.text.isEmpty) {
+          showMessage("Enter password");
+        } else if (password.text == Constants.adminPassword) {
+          Get.back();
+          Get.to(() => const Admin());
+        } else {
+          showMessage("Incorrect password");
+          Get.back();
+        }
+      },
+    );
+  }
 }
 
 class InputField extends StatelessWidget {
   var appController = Get.put(AppController());
-  final String title;
+  final String? title;
   final String hint;
   final int? linesCount;
   final TextEditingController? controller;
@@ -434,7 +996,7 @@ class InputField extends StatelessWidget {
   final bool? showRequired;
   InputField(
       {Key? key,
-      required this.title,
+      this.title,
       required this.hint,
       this.showRequired,
       this.controller,
@@ -452,7 +1014,7 @@ class InputField extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(children: [
-            Text(title,
+            Text(title ?? "",
                 style: GoogleFonts.quicksand(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
