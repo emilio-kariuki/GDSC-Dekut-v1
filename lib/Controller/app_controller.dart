@@ -13,14 +13,8 @@ class AppController extends GetxController {
   var isLoading = true.obs;
   var selectedDate = 'Date'.obs;
   var selectTime = '5:00'.obs;
-  @override
-  onInit() {
-      super.onInit();
-      fetchEvents();
-    }
-  void changeTheme(bool value) {
-    
 
+  void changeTheme(bool value) {
     if (value == true) {
       Get.changeTheme(ThemeData.dark().copyWith(
         backgroundColor: Colors.grey[900],
@@ -73,8 +67,9 @@ class AppController extends GetxController {
   void fetchEvents() async {
     try {
       isLoading(true);
-      var event = await EventFirebase.getEvents();
-      events.value = event;
+      //var event = await ActionFirebase.getEvents();
+      //events.value = event;
+      //print("The events are : $event");
       isLoading(false);
     } catch (e) {
       print(e);

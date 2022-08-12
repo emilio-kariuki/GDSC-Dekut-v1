@@ -59,7 +59,7 @@ class _CommunityEventsState extends State<CommunityEvents>
               title: "Description",
               hint: "Enter the description of the event?",
               controller: description,
-              maxLength: 100,
+              maxLength: 80,
               linesCount: 3,
             ),
             InputField(
@@ -68,19 +68,7 @@ class _CommunityEventsState extends State<CommunityEvents>
               hint: "Enter the venue of the event?",
               controller: venue,
             ),
-            InputField(
-              title: "Organizers",
-              hint: "Enter the organizers of the event?",
-              controller: organizers,
-            ),
-            InputField(
-              showRequired: true,
-              title: "Registration Link",
-              hint: "Enter the link of the event?",
-              controller: link,
-            ),
-            rowTimeAndEvent(),
-            Components.spacerHeight(10),
+            Components.spacerHeight(Dimensions.PADDING_SIZE_SMALL),
             Row(
               children: [
                 Components.header_3("Select Image",
@@ -97,12 +85,25 @@ class _CommunityEventsState extends State<CommunityEvents>
                         controller.isDark.value ? Colors.white : Colors.black87,
                     size: 20,
                   ),
-                )
+                ),
               ],
             ),
+            InputField(
+              title: "Organizers",
+              hint: "Enter the organizers of the event?",
+              controller: organizers,
+            ),
+            InputField(
+              showRequired: true,
+              title: "Registration Link",
+              hint: "Enter the link of the event?",
+              controller: link,
+            ),
+            rowTimeAndEvent(),
+            Components.spacerHeight(10),
             Components.spacerHeight(10),
             Components.button("Submit", () {
-              EventFirebase.createEvent(EventModel(
+              ActionFirebase.createEvent(EventModel(
                   title.text,
                   description.text,
                   controller.selectedDate.value,
@@ -129,6 +130,7 @@ class _CommunityEventsState extends State<CommunityEvents>
             hint: controller.selectTime.value,
             widget: IconButton(
               icon: const Icon(Icons.access_time),
+              color: controller.isDark.value ? Colors.white : Colors.black87,
               onPressed: () async {
                 String? token = await FirebaseMessaging.instance.getToken();
                 print('token: $token');
@@ -185,9 +187,10 @@ class _CommunityEventsState extends State<CommunityEvents>
                   });
                 });
               },
-              icon: const Icon(
+              icon: Icon(
                 Icons.calendar_month_outlined,
                 size: 18,
+                color: controller.isDark.value ? Colors.white : Colors.black87,
               ),
             ),
           ),

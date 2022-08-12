@@ -1,8 +1,10 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, prefer_const_constructors, must_be_immutable
 
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -17,7 +19,6 @@ import 'package:image_picker/image_picker.dart';
 import '../main.dart';
 
 class Components {
-  
   static var controller = Get.put(AppController());
   static var myGroup = AutoSizeGroup();
   static Widget header_1(String text) {
@@ -226,9 +227,7 @@ class Components {
                     BorderRadius.circular(Dimensions.CONTAINER_SIZE_SMALL),
               ),
             ),
-            backgroundColor: MaterialStateProperty.all(
-              Colors.deepOrange
-            ),
+            backgroundColor: MaterialStateProperty.all(Colors.deepOrange),
           ),
           child: Text(text,
               style: GoogleFonts.quicksand(
@@ -337,32 +336,94 @@ class Components {
   }
 
   static Widget eventListCard(BuildContext context) {
+    final Stream<QuerySnapshot> detailStream =
+        FirebaseFirestore.instance.collection('events').snapshots();
     return SizedBox(
       width: MediaQuery.of(context).size.width * 2,
-      height: MediaQuery.of(context).size.height * 0.26,
+      height: MediaQuery.of(context).size.height,
       child: Obx(() {
-        return ListView.separated(
-            physics: const BouncingScrollPhysics(),
-            cacheExtent: 10,
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(controller.events[index].title),
-                subtitle: Text(controller.events[index].venue),
+        return Visibility(
+          visible: controller.isLoading.value,
+          replacement: StreamBuilder<QuerySnapshot>(
+            stream: detailStream,
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                print("loading");
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const CircularProgressIndicator(),
+                  ),
+                );
+              }
+              final docs = snapshot.data?.docs;
+              return ListView.builder(
+                //shrinkWrap: true,
+                itemCount: docs?.length,
+                itemBuilder: (context, int index) {
+                  Map<String, dynamic> data =
+                      docs![index].data() as Map<String, dynamic>;
+
+                  print("The length is ${docs.length}");
+
+                  return ListTile(
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: CachedNetworkImage(
+                        height: 90,
+                        width: 50,
+                        fit: BoxFit.cover,
+                        imageUrl: data['imageUrl'],
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                CircularProgressIndicator(
+                                    strokeWidth: 1,
+                                    value: downloadProgress.progress),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
+                    ),
+                    title: Text(
+                      data['title'],
+                      style: TextStyle(
+                        color: controller.isDark.value
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
+                    ),
+                    subtitle: Text(data['description'],
+                        style: TextStyle(
+                            color: controller.isDark.value
+                                ? Colors.white
+                                : Colors.black87)),
+                    trailing: Text(data['date'],
+                        style: TextStyle(
+                          color: controller.isDark.value
+                              ? Colors.white
+                              : Colors.black87,
+                        )),
+                  );
+                },
               );
             },
-            separatorBuilder: (BuildContext context, int index) {
-              return const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5));
-            },
-            itemCount: controller.events.length);
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: const CircularProgressIndicator(),
+            ),
+          ),
+        );
       }),
     );
   }
 }
 
 class InputField extends StatelessWidget {
+  var appController = Get.put(AppController());
   final String title;
   final String hint;
   final int? linesCount;
@@ -371,7 +432,7 @@ class InputField extends StatelessWidget {
   final TextInputType? inputType;
   final int? maxLength;
   final bool? showRequired;
-  const InputField(
+  InputField(
       {Key? key,
       required this.title,
       required this.hint,
@@ -395,6 +456,9 @@ class InputField extends StatelessWidget {
                 style: GoogleFonts.quicksand(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
+                  color: appController.isDark.value
+                      ? Colors.white
+                      : Colors.black87,
                 )),
             Components.spacerWidth(5),
             Container(
@@ -412,7 +476,10 @@ class InputField extends StatelessWidget {
             margin: const EdgeInsets.only(top: 8),
             padding: const EdgeInsets.only(left: 10),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey, width: 1.0),
+              border: Border.all(
+                  color:
+                      appController.isDark.value ? Colors.white : Colors.grey,
+                  width: 1.0),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -424,17 +491,22 @@ class InputField extends StatelessWidget {
                   maxLines: linesCount,
                   autofocus: false,
                   focusNode: FocusNode(),
-                  cursorColor: Colors.grey,
+                  cursorColor:
+                      appController.isDark.value ? Colors.white : Colors.grey,
                   controller: controller,
                   decoration: InputDecoration(
                     hintText: hint,
                     hintStyle: GoogleFonts.quicksand(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    focusedBorder: const UnderlineInputBorder(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: appController.isDark.value
+                            ? Colors.white
+                            : Colors.grey),
+                    focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
-                        color: Colors.grey,
+                        color: appController.isDark.value
+                            ? Colors.white
+                            : Colors.grey,
                         width: 0,
                       ),
                     ),

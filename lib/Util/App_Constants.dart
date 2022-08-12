@@ -6,6 +6,8 @@ class Constants {
   static String google = "lib/Assets/svg/google.svg";
   static String twitter = "lib/Assets/svg/twitter.svg";
   static String profile = "lib/Assets/images/profile.jpg";
+  static String announceLogo =
+      "https://firebasestorage.googleapis.com/v0/b/apt-rite-346310.appspot.com/o/EcoVille%2Fscaled_image_picker1637068389106274777.jpg?alt=media&token=31198752-de9a-4d26-b8f9-1350dd0028f6";
   static String email = "Email";
   static String password = "Password";
   static String confirmPassword = "Confirm Password";
@@ -27,5 +29,4 @@ class Constants {
   static String leads = "Google Leads";
   static String admins = "Admins";
   static String post = "Post";
-  
 }

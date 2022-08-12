@@ -27,7 +27,9 @@ class _EventsState extends State<Events> {
           elevation: 0,
         ),
         body: SafeArea(
-            child: Components.eventListCard(context)),
+            child: SingleChildScrollView(
+              child: Components.eventListCard(context),
+            )),
       ),
     );
   }
