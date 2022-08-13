@@ -53,16 +53,16 @@ class _AccountState extends State<Account> {
                       Components.cardButton(
                           Icons.badge, Constants.details, () => null),
                       Components.showDividerLine(),
-                      Components.cardButton(
-                          Icons.leaderboard, Constants.admins, () => Components.confirmAdmin(password)),
+                      Components.cardButton(Icons.leaderboard, Constants.admins,
+                          () => Components.confirmAdmin(password)),
                       Components.showDividerLine(),
                       Components.cardButton(
                           Icons.delivery_dining,
                           Constants.post,
                           () => Components.confirmAdminPost(password)),
                       Components.showDividerLine(),
-                      Components.cardButton(
-                          Icons.person, Constants.leads, () => Get.to(()=> const  Leads())),
+                      Components.cardButton(Icons.person, Constants.leads,
+                          () => Get.to(() => const Leads())),
                       Components.showDividerLine(),
                       Components.cardButton(Icons.notifications_active,
                           Constants.notifications, () => null),
@@ -107,6 +107,7 @@ class _AccountState extends State<Account> {
                             onChanged: ((value) {
                               controller.isDark.value = value;
                               setState(() {});
+                              controller.saveThemeStatus();
                             }))
                       ],
                     ))

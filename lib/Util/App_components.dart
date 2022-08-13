@@ -20,7 +20,7 @@ import 'package:gdsc_app/UI/Profile/Pages/Post/Post.dart';
 import 'package:gdsc_app/Util/App_Constants.dart';
 import 'package:gdsc_app/Util/dimensions.dart';
 import 'package:get/get.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -110,9 +110,18 @@ class Components {
   }
 
   static Widget avatar() {
-    return CircleAvatar(
-      radius: 30,
-      backgroundImage: AssetImage(Constants.profile),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(100),
+      child: CachedNetworkImage(
+        height: 90,
+        width: 50,
+        fit: BoxFit.cover,
+        imageUrl: Constants.defaultIcon,
+        progressIndicatorBuilder: (context, url, downloadProgress) =>
+            CircularProgressIndicator(
+                strokeWidth: 1, value: downloadProgress.progress),
+        errorWidget: (context, url, error) => const Icon(Icons.error),
+      ),
     );
   }
 
@@ -527,7 +536,8 @@ class Components {
                                 ? Colors.white
                                 : Colors.black87)),
                     trailing: InkWell(
-                      onTap: () => Components.showLeadContact(data['phone'],data['email']),
+                      onTap: () => Components.showLeadContact(
+                          data['phone'], data['email']),
                       child: Icon(
                         Icons.phone,
                         size: 20,
@@ -1352,47 +1362,56 @@ class Components {
 
   static showLeadContact(String phone, String email) {
     Get.defaultDialog(
-        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        cancelTextColor:
-            controller.isDark.value ? Colors.white : Colors.black87,
-        confirmTextColor: Colors.white,
-        buttonColor: Colors.deepOrange,
-        backgroundColor:
-            controller.isDark.value ? Colors.grey[900] : Colors.white,
-        title: "Lead Contact",
-        content: Column(
-          children: [
-            Row(
-              children: [
-                header_3("Phone : ",
+      contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      cancelTextColor: controller.isDark.value ? Colors.white : Colors.black87,
+      confirmTextColor: Colors.white,
+      buttonColor: Colors.deepOrange,
+      backgroundColor:
+          controller.isDark.value ? Colors.grey[900] : Colors.white,
+      title: "Lead Contact",
+      content: Column(
+        children: [
+          Row(
+            children: [
+              header_3("Phone : ",
+                  controller.isDark.value ? Colors.white : Colors.black87),
+              Expanded(
+                child: Container(),
+              ),
+              InkWell(
+                onTap: (() async {
+                  String url = "tel:$phone";
+                  if (await canLaunchUrl(Uri.parse(url))) {
+                    await launchUrl(Uri.parse(url));
+                  } else {
+                    throw 'Could not launch $url';
+                  }
+                }),
+                child: header_3(phone,
                     controller.isDark.value ? Colors.white : Colors.black87),
-                Expanded(
-                  child: Container(),
-                ),
-                header_3(phone,
-                    controller.isDark.value ? Colors.white : Colors.black87)
-              ],
-            ),
-            spacerHeight(10),
-            Row(
-              children: [
-                header_3("Email : ",
-                    controller.isDark.value ? Colors.white : Colors.black87),
-                Expanded(
-                  child: Container(),
-                ),
-                header_3(email,
-                    controller.isDark.value ? Colors.white : Colors.black87)
-              ],
-            ),
-          ],
-        ),
-        titleStyle: GoogleFonts.quicksand(
-          color: controller.isDark.value ? Colors.white : Colors.black87,
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-        ),
-        );
+              )
+            ],
+          ),
+          spacerHeight(10),
+          Row(
+            children: [
+              header_3("Email : ",
+                  controller.isDark.value ? Colors.white : Colors.black87),
+              Expanded(
+                child: Container(),
+              ),
+              header_3(email,
+                  controller.isDark.value ? Colors.white : Colors.black87)
+            ],
+          ),
+        ],
+      ),
+      titleStyle: GoogleFonts.quicksand(
+        color: controller.isDark.value ? Colors.white : Colors.black87,
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+      ),
+    );
   }
 
   static editAnnouncement(String id, BuildContext context) {
@@ -1553,11 +1572,11 @@ class Components {
 
             backgroundColor:
                 controller.isDark.value ? Colors.grey[900] : Colors.white,
-            titleTextStyle:  GoogleFonts.quicksand(
-        color: controller.isDark.value ? Colors.white : Colors.black87,
-        fontSize: 18,
-        fontWeight: FontWeight.w600,
-      ),
+            titleTextStyle: GoogleFonts.quicksand(
+              color: controller.isDark.value ? Colors.white : Colors.black87,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
             title: Text("Edit and Event"),
             content: SingleChildScrollView(
               child: Column(

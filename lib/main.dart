@@ -22,6 +22,7 @@ void main() async {
     DeviceOrientation.portraitUp,
   ]);
   Get.lazyPut<AppController>(() => AppController(), fenix: true);
+  
   runApp(MyApp());
 }
 
@@ -46,8 +47,10 @@ class MyApp extends StatelessWidget {
           User? user = FirebaseAuth.instance.currentUser;
 
           if (user != null) {
+            
             return GetMaterialApp(
               debugShowCheckedModeBanner: false,
+              
               theme: ThemeData(
                 primarySwatch: Colors.blue,
               ),
