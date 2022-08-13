@@ -1,8 +1,8 @@
 import 'package:gdsc_app/Util/App_Constants.dart';
 
 class AnnouncementModel {
-  late String title; //
-  late String description; //
+  String ?title; //
+  String ?description; //
 
   String? imageUrl;
 
@@ -22,6 +22,6 @@ class AnnouncementModel {
     title = json['title']! as String;
     description = json['description']! as String;
 
-    imageUrl = json['imageUrl']! as String;
+    imageUrl = json['imageUrl']! as String ;
   }
 }

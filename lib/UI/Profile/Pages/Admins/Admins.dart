@@ -3,13 +3,16 @@
 import 'package:flutter/material.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Admins/admins._announcements.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Admins/admins_resources.dart';
+import 'package:gdsc_app/UI/Profile/Pages/Leads/UI/leads.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Post/comm_Events.dart';
+import 'package:gdsc_app/UI/Profile/Pages/Post/comm_leads.dart';
 import 'package:gdsc_app/Util/App_components.dart';
 import 'package:gdsc_app/Util/dimensions.dart';
 import 'package:get/get.dart';
 
 import '../../../../Controller/app_controller.dart';
 import 'admin_events.dart';
+import 'admin_leads.dart';
 
 class Admin extends StatefulWidget {
   const Admin({Key? key}) : super(key: key);
@@ -35,6 +38,10 @@ class _AdminState extends State<Admin>
     Tab(
       child: Components.header_3(
           "Resources", controller.isDark.value ? Colors.white : Colors.black87),
+    ),
+    Tab(
+      child: Components.header_3(
+          "Leads", controller.isDark.value ? Colors.white : Colors.black87),
     ),
   ];
   @override
@@ -82,6 +89,7 @@ class _AdminState extends State<Admin>
                 AdminEvents(),
                 AdminAnnouncements(),
                 AdminResources(),
+                AdminLeads()
               ],
             ),
           )),

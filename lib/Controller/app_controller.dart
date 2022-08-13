@@ -1,10 +1,14 @@
 // ignore_for_file: avoid_print
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:gdsc_app/Firebase_Logic/EventFirebase.dart';
 import 'package:gdsc_app/UI/Authentication/user_logic.dart';
+import 'package:gdsc_app/Util/App_Constants.dart';
 import 'package:get/get.dart';
-
+import 'package:image_picker/image_picker.dart';
+import 'dart:convert';
 import '../UI/Events/Model/Event_model.dart';
 
 class AppController extends GetxController {
@@ -13,6 +17,9 @@ class AppController extends GetxController {
   var isLoading = true.obs;
   var selectedDate = 'Date'.obs;
   var selectTime = '5:00'.obs;
+  Rx<File> image = File(Constants.logo).obs;
+  final picker = ImagePicker();
+  Rx<TimeOfDay> time = TimeOfDay.now().obs;
 
   void changeTheme(bool value) {
     if (value == true) {
@@ -76,6 +83,19 @@ class AppController extends GetxController {
       isLoading(false);
     } finally {
       isLoading(false);
+    }
+  }
+
+  Future<void> getImage(ImageSource source) async {
+    final pickedFile = await picker.pickImage(
+        source: source, maxHeight: 480, maxWidth: 640, imageQuality: 60);
+
+    if (pickedFile != null) {
+      image.value = File(pickedFile.path);
+      print("THe image value is : ${image.value}");
+      update();
+    } else {
+      print('No image selected.');
     }
   }
 }

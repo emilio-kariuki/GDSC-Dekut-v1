@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gdsc_app/Controller/app_controller.dart';
 import 'package:gdsc_app/UI/Authentication/Login/login_page.dart';
 import 'package:gdsc_app/UI/Authentication/user_logic.dart';
+import 'package:gdsc_app/UI/Profile/Pages/Leads/UI/leads.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Post/Post.dart';
 import 'package:gdsc_app/Util/App_Constants.dart';
 import 'package:gdsc_app/Util/dimensions.dart';
@@ -61,7 +62,7 @@ class _AccountState extends State<Account> {
                           () => Components.confirmAdminPost(password)),
                       Components.showDividerLine(),
                       Components.cardButton(
-                          Icons.person, Constants.leads, () => null),
+                          Icons.person, Constants.leads, () => Get.to(()=> const  Leads())),
                       Components.showDividerLine(),
                       Components.cardButton(Icons.notifications_active,
                           Constants.notifications, () => null),

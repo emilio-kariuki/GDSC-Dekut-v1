@@ -4,26 +4,25 @@ import 'package:gdsc_app/Util/App_components.dart';
 import 'package:get/get.dart';
 
 
-class AdminEvents extends StatefulWidget {
-  const AdminEvents({Key? key}) : super(key: key);
+class AdminLeads extends StatefulWidget {
+  const AdminLeads({Key? key}) : super(key: key);
 
   @override
-  State<AdminEvents> createState() => _AdminEventsState();
+  State<AdminLeads> createState() => _AdminLeadsState();
 }
 
-class _AdminEventsState extends State<AdminEvents> {
+class _AdminLeadsState extends State<AdminLeads> {
   final controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => Scaffold(
+    return Obx(() => Scaffold(
         backgroundColor:
             controller.isDark.value ? Colors.grey[900] : Colors.white,
+       
         body: SafeArea(
             child: SingleChildScrollView(
-              child: Components.adminEventListCard(context),
+              child: Components.adminLeadsListCard(context),
             )),
-      ),
-    );
+      ),);
   }
 }

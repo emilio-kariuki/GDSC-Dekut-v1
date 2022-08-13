@@ -1,20 +1,22 @@
 import 'dart:convert';
 
+import 'package:gdsc_app/Util/App_Constants.dart';
+
 List<EventModel> eventFromJson(String str) =>
     List<EventModel>.from(json.decode(str).map((x) => EventModel.fromJson(x)));
 
 class EventModel {
-  late String title;//
-  late String description;//
-  late String date;//
-  late String time;//
-  late String venue;//
-  String? registrationLink;//
-  late String organizers;
-  late String imageUrl;
+  String? title; //
+  String? description; //
+  String? date; //
+  String? time; //
+  String? venue; //
+  String? registrationLink; //
+  String? organizers;
+  String? imageUrl;
 
   EventModel(
-     this.title,
+    this.title,
     this.description,
     this.date,
     this.time,
@@ -32,7 +34,7 @@ class EventModel {
         'venue': venue,
         'registrationLink': registrationLink,
         'organizers': organizers,
-        'imageUrl': imageUrl,
+        'imageUrl': imageUrl ?? Constants.announceLogo,
       };
 
   EventModel.fromJson(Map<String, dynamic> json) {

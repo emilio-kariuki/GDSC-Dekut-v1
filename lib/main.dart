@@ -21,6 +21,7 @@ void main() async {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
+  Get.lazyPut<AppController>(() => AppController(), fenix: true);
   runApp(MyApp());
 }
 
@@ -43,9 +44,8 @@ class MyApp extends StatelessWidget {
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
           User? user = FirebaseAuth.instance.currentUser;
-         
+
           if (user != null) {
-            
             return GetMaterialApp(
               debugShowCheckedModeBanner: false,
               theme: ThemeData(

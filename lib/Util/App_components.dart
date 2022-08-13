@@ -1,16 +1,21 @@
-// ignore_for_file: file_names, prefer_const_constructors, must_be_immutable
+// ignore_for_file: file_names, prefer_const_constructors, must_be_immutable, avoid_print, use_build_context_synchronously
 
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gdsc_app/Controller/app_controller.dart';
+import 'package:gdsc_app/Firebase_Logic/EventFirebase.dart';
+import 'package:gdsc_app/Firebase_Logic/UserFirebase.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Admins/Admins.dart';
+import 'package:gdsc_app/UI/Profile/Pages/Leads/Model/leads_model.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Post/Post.dart';
 import 'package:gdsc_app/Util/App_Constants.dart';
 import 'package:gdsc_app/Util/dimensions.dart';
@@ -18,12 +23,24 @@ import 'package:get/get.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart' as path;
 import '../main.dart';
 
 String? url;
+File? image;
+final title = TextEditingController();
+final description = TextEditingController();
+final name = TextEditingController();
+final role = TextEditingController();
+final venue = TextEditingController();
+final link = TextEditingController();
+final organizers = TextEditingController();
+final phone = TextEditingController();
+final email = TextEditingController();
 
 class Components {
+  static File? image;
   static var controller = Get.put(AppController());
   static var myGroup = AutoSizeGroup();
   static Widget header_1(String text) {
@@ -62,6 +79,7 @@ class Components {
       maxLines: 1,
       maxFontSize: 16,
       minFontSize: 12,
+      textAlign: TextAlign.start,
       group: myGroup,
       style: GoogleFonts.quicksand(
         color: color,
@@ -353,6 +371,187 @@ class Components {
     }
   }
 
+  static Widget adminLeadsListCard(BuildContext context) {
+    final Stream<QuerySnapshot> detailStream =
+        FirebaseFirestore.instance.collection('leads').snapshots();
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 2,
+      height: MediaQuery.of(context).size.height,
+      child: Obx(() {
+        return Visibility(
+          visible: controller.isLoading.value,
+          replacement: StreamBuilder<QuerySnapshot>(
+            stream: detailStream,
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                print("loading");
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const CircularProgressIndicator(),
+                  ),
+                );
+              }
+              final docs = snapshot.data?.docs;
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: docs?.length,
+                itemBuilder: (context, int index) {
+                  Map<String, dynamic> data =
+                      docs![index].data() as Map<String, dynamic>;
+
+                  print("The length is ${docs.length}");
+
+                  return ListTile(
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: CachedNetworkImage(
+                        height: 90,
+                        width: 50,
+                        fit: BoxFit.cover,
+                        imageUrl: data['imageUrl'] ?? Constants.announceLogo,
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                CircularProgressIndicator(
+                                    strokeWidth: 1,
+                                    value: downloadProgress.progress),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
+                    ),
+                    title: Text(
+                      data['name'],
+                      style: TextStyle(
+                        color: controller.isDark.value
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
+                    ),
+                    subtitle: Text(data['role'],
+                        style: TextStyle(
+                            color: controller.isDark.value
+                                ? Colors.white
+                                : Colors.black87)),
+                    trailing: InkWell(
+                      onTap: () => Components.adminLeadBottomSheet(
+                          docs[index].id, context),
+                      child: Icon(
+                        Icons.edit,
+                        size: 20,
+                        color: controller.isDark.value
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: const CircularProgressIndicator(),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  static Widget leadListCard(BuildContext context) {
+    final Stream<QuerySnapshot> detailStream =
+        FirebaseFirestore.instance.collection('leads').snapshots();
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 2,
+      height: MediaQuery.of(context).size.height,
+      child: Obx(() {
+        return Visibility(
+          visible: controller.isLoading.value,
+          replacement: StreamBuilder<QuerySnapshot>(
+            stream: detailStream,
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                print("loading");
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const CircularProgressIndicator(),
+                  ),
+                );
+              }
+              final docs = snapshot.data?.docs;
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: docs?.length,
+                itemBuilder: (context, int index) {
+                  Map<String, dynamic> data =
+                      docs![index].data() as Map<String, dynamic>;
+
+                  print("The length is ${docs.length}");
+
+                  return ListTile(
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: CachedNetworkImage(
+                        height: 90,
+                        width: 50,
+                        fit: BoxFit.cover,
+                        imageUrl: data['imageUrl'] ?? Constants.announceLogo,
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                CircularProgressIndicator(
+                                    strokeWidth: 1,
+                                    value: downloadProgress.progress),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
+                    ),
+                    title: Text(
+                      data['name'],
+                      style: TextStyle(
+                        color: controller.isDark.value
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
+                    ),
+                    subtitle: Text(data['role'],
+                        style: TextStyle(
+                            color: controller.isDark.value
+                                ? Colors.white
+                                : Colors.black87)),
+                    trailing: InkWell(
+                      onTap: () => Components.showLeadContact(data['phone'],data['email']),
+                      child: Icon(
+                        Icons.phone,
+                        size: 20,
+                        color: controller.isDark.value
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: const CircularProgressIndicator(),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
   static Widget adminResourceListCard(BuildContext context) {
     final Stream<QuerySnapshot> detailStream =
         FirebaseFirestore.instance.collection('resources').snapshots();
@@ -394,7 +593,7 @@ class Components {
                         height: 90,
                         width: 50,
                         fit: BoxFit.cover,
-                        imageUrl: data['imageUrl'],
+                        imageUrl: data['imageUrl'] ?? Constants.announceLogo,
                         progressIndicatorBuilder:
                             (context, url, downloadProgress) =>
                                 CircularProgressIndicator(
@@ -417,12 +616,16 @@ class Components {
                             color: controller.isDark.value
                                 ? Colors.white
                                 : Colors.black87)),
-                    trailing: Icon(
-                      Icons.link,
-                      size: 20,
-                      color: controller.isDark.value
-                          ? Colors.white
-                          : Colors.black87,
+                    trailing: InkWell(
+                      onTap: () => Components.adminResourcesBottomSheet(
+                          docs[index].id, context),
+                      child: Icon(
+                        Icons.edit,
+                        size: 20,
+                        color: controller.isDark.value
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
                     ),
                   );
                 },
@@ -568,7 +771,7 @@ class Components {
                         height: 90,
                         width: 50,
                         fit: BoxFit.cover,
-                        imageUrl: data['imageUrl'],
+                        imageUrl: data['imageUrl'] ?? Constants.announceLogo,
                         progressIndicatorBuilder:
                             (context, url, downloadProgress) =>
                                 CircularProgressIndicator(
@@ -591,12 +794,17 @@ class Components {
                             color: controller.isDark.value
                                 ? Colors.white
                                 : Colors.black87)),
-                    // trailing: Text(data['date'],
-                    //     style: TextStyle(
-                    //       color: controller.isDark.value
-                    //           ? Colors.white
-                    //           : Colors.black87,
-                    //     )),
+                    trailing: InkWell(
+                      onTap: () => Components.adminAnnouncementBottomSheet(
+                          docs[index].id, context),
+                      child: Icon(
+                        Icons.edit,
+                        size: 20,
+                        color: controller.isDark.value
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
+                    ),
                   );
                 },
               );
@@ -734,86 +942,47 @@ class Components {
                   print("The length is ${docs.length}");
 
                   return ListTile(
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: CachedNetworkImage(
-                          height: 90,
-                          width: 50,
-                          fit: BoxFit.cover,
-                          imageUrl: data['imageUrl'],
-                          progressIndicatorBuilder:
-                              (context, url, downloadProgress) =>
-                                  CircularProgressIndicator(
-                                      strokeWidth: 1,
-                                      value: downloadProgress.progress),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
-                        ),
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: CachedNetworkImage(
+                        height: 90,
+                        width: 50,
+                        fit: BoxFit.cover,
+                        imageUrl: data['imageUrl'] ?? Constants.announceLogo,
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                CircularProgressIndicator(
+                                    strokeWidth: 1,
+                                    value: downloadProgress.progress),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
                       ),
-                      title: Text(
-                        data['title'],
+                    ),
+                    title: Text(
+                      data['title'],
+                      style: TextStyle(
+                        color: controller.isDark.value
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
+                    ),
+                    subtitle: Text(data['description'],
                         style: TextStyle(
-                          color: controller.isDark.value
-                              ? Colors.white
-                              : Colors.black87,
-                        ),
-                      ),
-                      subtitle: Text(data['description'],
-                          style: TextStyle(
-                              color: controller.isDark.value
-                                  ? Colors.white
-                                  : Colors.black87)),
-                      trailing: InkWell(
-                        onTap: () {
-                          Get.defaultDialog(
-                            //titlePadding: EdgeInsets.only(top: 5),
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 5, vertical: 5),
-                            cancelTextColor: controller.isDark.value
+                            color: controller.isDark.value
                                 ? Colors.white
-                                : Colors.black87,
-                            confirmTextColor: Colors.white,
-                            buttonColor: Colors.deepOrange,
-                            backgroundColor: controller.isDark.value
-                                ? Colors.grey[900]
-                                : Colors.white,
-                            title: "Confirm Delete",
-                            middleText: "Are you sure you want to delete this event?",
-                            middleTextStyle: GoogleFonts.quicksand(
-                              color: controller.isDark.value
-                                  ? Colors.white
-                                  : Colors.black87,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                            ),
-
-                            titleStyle: GoogleFonts.quicksand(
-                              color: controller.isDark.value
-                                  ? Colors.white
-                                  : Colors.black87,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            onCancel: (() => null),
-                            onConfirm: () {
-                              FirebaseFirestore.instance
-                                  .collection('events')
-                                  .doc(docs[index].id)
-                                  .delete();
-                              Get.back();
-
-                              
-                            },
-                          );
-                        },
-                        child: Icon(
-                          Icons.delete,
-                          size: 20,
-                          color: controller.isDark.value
-                              ? Colors.white
-                              : Colors.black87,
-                        ),
-                      ));
+                                : Colors.black87)),
+                    trailing: InkWell(
+                      onTap: () => Components.adminEventBottomSheet(
+                          docs[index].id, context),
+                      child: Icon(
+                        Icons.edit,
+                        size: 20,
+                        color: controller.isDark.value
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
+                    ),
+                  );
                 },
               );
             },
@@ -982,6 +1151,678 @@ class Components {
       },
     );
   }
+
+  static adminResourcesBottomSheet(String id, BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    Get.bottomSheet(
+      elevation: 0,
+
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+      Container(
+          height: size.height * 0.13,
+          color: controller.isDark.value ? Colors.grey[900] : Colors.white,
+          child: Row(
+            children: [
+              Expanded(
+                  child: button("Edit", () async {
+                Get.back();
+                await editResources(id, context);
+              }, context)),
+              Expanded(child: button("Delete", () => null, context))
+            ],
+          )),
+      //barrierColor: Colors.red[50],
+      isDismissible: true,
+    );
+  }
+
+  static adminEventBottomSheet(String id, BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    Get.bottomSheet(
+      elevation: 0,
+
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+      Container(
+          height: size.height * 0.13,
+          color: controller.isDark.value ? Colors.grey[900] : Colors.white,
+          child: Row(
+            children: [
+              Expanded(
+                  child: button("Edit", () async {
+                Get.back();
+                await editEvent(id, context);
+              }, context)),
+              Expanded(
+                  child: button("Delete", () {
+                ActionFirebase.deleteDoc(id, 'events');
+                Get.back();
+              }, context))
+            ],
+          )),
+      //barrierColor: Colors.red[50],
+      isDismissible: true,
+    );
+  }
+
+  static adminLeadBottomSheet(String id, BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    Get.bottomSheet(
+      elevation: 0,
+
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+      Container(
+          height: size.height * 0.13,
+          color: controller.isDark.value ? Colors.grey[900] : Colors.white,
+          child: Row(
+            children: [
+              Expanded(
+                  child: button("Edit", () async {
+                Get.back();
+                await editLeads(id, context);
+              }, context)),
+              Expanded(
+                  child: button("Delete", () {
+                ActionFirebase.deleteDoc(id, 'leads');
+                Get.back();
+              }, context))
+            ],
+          )),
+      //barrierColor: Colors.red[50],
+      isDismissible: true,
+    );
+  }
+
+  static adminAnnouncementBottomSheet(String id, BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    Get.bottomSheet(
+      elevation: 0,
+
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+      Container(
+          height: size.height * 0.13,
+          color: controller.isDark.value ? Colors.grey[900] : Colors.white,
+          child: Row(
+            children: [
+              Expanded(
+                  child: button("Edit", () async {
+                Get.back();
+                await editAnnouncement(id, context);
+              }, context)),
+              Expanded(
+                  child: button("Delete", () {
+                ActionFirebase.deleteDoc(id, 'announcements');
+                Get.back();
+              }, context))
+            ],
+          )),
+      //barrierColor: Colors.red[50],
+      isDismissible: true,
+    );
+  }
+
+  static editLeads(String id, BuildContext context) {
+    Get.defaultDialog(
+      //titlePadding: EdgeInsets.only(top: 5),
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: 10,
+      ),
+      cancelTextColor: controller.isDark.value ? Colors.white : Colors.black87,
+      confirmTextColor: Colors.white,
+      buttonColor: Colors.deepOrange,
+      backgroundColor:
+          controller.isDark.value ? Colors.grey[900] : Colors.white,
+      title: "Edit Lead Details",
+      content: Column(
+        children: [
+          InputField(
+            showRequired: true,
+            title: "Name",
+            hint: "Enter the name of the lead?",
+            controller: name,
+          ),
+          InputField(
+            showRequired: true,
+            title: "Role",
+            hint: "Enter the role of the lead?",
+            controller: role,
+          ),
+          Components.spacerHeight(5),
+          Row(
+            children: [
+              Components.header_3("Select Image",
+                  controller.isDark.value ? Colors.white : Colors.black87),
+              Expanded(child: Container()),
+              InkWell(
+                onTap: () async {
+                  await imageDialog(context);
+                  //await Components.uploadFile(controller.image!);
+                },
+                child: Icon(
+                  Icons.add_a_photo_outlined,
+                  color:
+                      controller.isDark.value ? Colors.white : Colors.black87,
+                  size: 20,
+                ),
+              ),
+            ],
+          ),
+          InputField(
+            showRequired: true,
+            title: "Phone",
+            hint: "Enter the phone number of the lead?",
+            controller: name,
+          ),
+          InputField(
+            showRequired: true,
+            title: "Email",
+            hint: "Enter the email of the lead?",
+            controller: role,
+          ),
+        ],
+      ),
+      titleStyle: GoogleFonts.quicksand(
+        color: controller.isDark.value ? Colors.white : Colors.black87,
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+      ),
+      onCancel: (() => Get.back()),
+      onConfirm: () async {
+        await firestoreInstance
+            .collection("leads")
+            .doc(id)
+            .update({
+              "name": name.text,
+              "role": role.text,
+              "imageUrl": url,
+            })
+            .then((value) => print("User Updated"))
+            .catchError((error) => print("Failed to update user: $error"));
+        Get.back();
+      },
+    );
+  }
+
+  static showLeadContact(String phone, String email) {
+    Get.defaultDialog(
+        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        cancelTextColor:
+            controller.isDark.value ? Colors.white : Colors.black87,
+        confirmTextColor: Colors.white,
+        buttonColor: Colors.deepOrange,
+        backgroundColor:
+            controller.isDark.value ? Colors.grey[900] : Colors.white,
+        title: "Lead Contact",
+        content: Column(
+          children: [
+            Row(
+              children: [
+                header_3("Phone : ",
+                    controller.isDark.value ? Colors.white : Colors.black87),
+                Expanded(
+                  child: Container(),
+                ),
+                header_3(phone,
+                    controller.isDark.value ? Colors.white : Colors.black87)
+              ],
+            ),
+            spacerHeight(10),
+            Row(
+              children: [
+                header_3("Email : ",
+                    controller.isDark.value ? Colors.white : Colors.black87),
+                Expanded(
+                  child: Container(),
+                ),
+                header_3(email,
+                    controller.isDark.value ? Colors.white : Colors.black87)
+              ],
+            ),
+          ],
+        ),
+        titleStyle: GoogleFonts.quicksand(
+          color: controller.isDark.value ? Colors.white : Colors.black87,
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+        ),
+        );
+  }
+
+  static editAnnouncement(String id, BuildContext context) {
+    Get.defaultDialog(
+      //titlePadding: EdgeInsets.only(top: 5),
+      contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      cancelTextColor: controller.isDark.value ? Colors.white : Colors.black87,
+      confirmTextColor: Colors.white,
+      buttonColor: Colors.deepOrange,
+      backgroundColor:
+          controller.isDark.value ? Colors.grey[900] : Colors.white,
+      title: "Edit an Announcement",
+      content: Column(
+        children: [
+          InputField(
+            showRequired: true,
+            title: "Title",
+            hint: "Enter the title of the announcement?",
+            controller: title,
+          ),
+          InputField(
+            showRequired: true,
+            title: "Description",
+            hint: "Enter the description of the annoucement?",
+            controller: description,
+            maxLength: 80,
+            linesCount: 3,
+          ),
+          Components.spacerHeight(10),
+          Row(
+            children: [
+              Components.header_3("Select Image",
+                  controller.isDark.value ? Colors.white : Colors.black87),
+              Expanded(child: Container()),
+              InkWell(
+                onTap: () async {
+                  await imageDialog(context);
+                  //await Components.uploadFile(controller.image!);
+                },
+                child: Icon(
+                  Icons.add_a_photo_outlined,
+                  color:
+                      controller.isDark.value ? Colors.white : Colors.black87,
+                  size: 20,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      titleStyle: GoogleFonts.quicksand(
+        color: controller.isDark.value ? Colors.white : Colors.black87,
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+      ),
+      onCancel: (() => Get.back()),
+      onConfirm: () async {
+        await firestoreInstance
+            .collection("announcements")
+            .doc(id)
+            .update({
+              "title": title.text,
+              "description": description.text,
+              "imageUrl": url,
+            })
+            .then((value) => print("User Updated"))
+            .catchError((error) => print("Failed to update user: $error"));
+        Get.back();
+      },
+    );
+  }
+
+  static editResources(String id, BuildContext context) {
+    Get.defaultDialog(
+      //titlePadding: EdgeInsets.only(top: 5),
+      contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+      cancelTextColor: controller.isDark.value ? Colors.white : Colors.black87,
+      confirmTextColor: Colors.white,
+      buttonColor: Colors.deepOrange,
+      backgroundColor:
+          controller.isDark.value ? Colors.grey[900] : Colors.white,
+      title: "Edit a resource",
+      content: Column(
+        children: [
+          InputField(
+            showRequired: true,
+            title: "Title",
+            hint: "Enter the title of the resource?",
+            controller: title,
+          ),
+          InputField(
+            showRequired: true,
+            title: "Link",
+            hint: "Enter the link of the resource",
+            controller: link,
+          ),
+          InputField(
+            showRequired: true,
+            title: "Description",
+            hint: "Enter the description of the resource?",
+            controller: description,
+            maxLength: 80,
+            linesCount: 3,
+          ),
+          Row(
+            children: [
+              Components.header_3("Select Image",
+                  controller.isDark.value ? Colors.white : Colors.black87),
+              Expanded(child: Container()),
+              InkWell(
+                onTap: () async {
+                  await imageDialog(context);
+                  await Components.uploadFile(image!);
+                },
+                child: Icon(
+                  Icons.add_a_photo_outlined,
+                  color:
+                      controller.isDark.value ? Colors.white : Colors.black87,
+                  size: 20,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      titleStyle: GoogleFonts.quicksand(
+        color: controller.isDark.value ? Colors.white : Colors.black87,
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+      ),
+      onCancel: (() => Get.back()),
+      onConfirm: () async {
+        await firestoreInstance
+            .collection("resources")
+            .doc(id)
+            .update({
+              "title": title.text,
+              "link": link.text,
+              "description": description.text,
+              "imageUrl": url,
+            })
+            .then((value) => print("User Updated"))
+            .catchError((error) => print("Failed to update user: $error"));
+        Get.back();
+      },
+    );
+  }
+
+  static editEvent(String id, BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            //titlePadding: EdgeInsets.only(top: 5),
+            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+
+            backgroundColor:
+                controller.isDark.value ? Colors.grey[900] : Colors.white,
+            titleTextStyle:  GoogleFonts.quicksand(
+        color: controller.isDark.value ? Colors.white : Colors.black87,
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+      ),
+            title: Text("Edit and Event"),
+            content: SingleChildScrollView(
+              child: Column(
+                children: [
+                  InputField(
+                    showRequired: true,
+                    title: "Title",
+                    hint: "Enter the title of the event?",
+                    controller: title,
+                  ),
+                  InputField(
+                    showRequired: true,
+                    title: "Description",
+                    hint: "Enter the description of the event?",
+                    controller: description,
+                    maxLength: 80,
+                    linesCount: 3,
+                  ),
+                  InputField(
+                    showRequired: true,
+                    title: "Venue",
+                    hint: "Enter the venue of the event?",
+                    controller: venue,
+                  ),
+                  Components.spacerHeight(Dimensions.PADDING_SIZE_SMALL),
+                  Row(
+                    children: [
+                      Components.header_3(
+                          "Select Image",
+                          controller.isDark.value
+                              ? Colors.white
+                              : Colors.black87),
+                      Expanded(child: Container()),
+                      InkWell(
+                        onTap: () async {
+                          await imageDialog(context);
+                          await Components.uploadFile(image!);
+                        },
+                        child: Icon(
+                          Icons.add_a_photo_outlined,
+                          color: controller.isDark.value
+                              ? Colors.white
+                              : Colors.black87,
+                          size: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                  InputField(
+                    title: "Organizers",
+                    hint: "Enter the organizers of the event?",
+                    controller: organizers,
+                  ),
+                  InputField(
+                    showRequired: true,
+                    title: "Registration Link",
+                    hint: "Enter the link of the event?",
+                    controller: link,
+                  ),
+                  rowTimeAndEvent(context),
+                  spacerHeight(10),
+                  Row(
+                    children: [
+                      Components.header_3(
+                          "Select Image",
+                          controller.isDark.value
+                              ? Colors.white
+                              : Colors.black87),
+                      Expanded(child: Container()),
+                      InkWell(
+                        onTap: () async {
+                          await imageDialog(context);
+                          await Components.uploadFile(image!);
+                        },
+                        child: Icon(
+                          Icons.add_a_photo_outlined,
+                          color: controller.isDark.value
+                              ? Colors.white
+                              : Colors.black87,
+                          size: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: button("Exit", () async {
+                        Get.back();
+                      }, context)),
+                      Expanded(
+                          child: button("Ok", () async {
+                        await firestoreInstance
+                            .collection("events")
+                            .doc(id)
+                            .update({
+                              "title": title.text,
+                              "description": description.text,
+                              "venue": venue.text,
+                              "organizers": organizers.text,
+                              "link": link.text,
+                              "date": controller.selectedDate.value,
+                              "time": controller.time.value,
+                              "imageUrl": url,
+                            })
+                            .then((value) => print("User Updated"))
+                            .catchError((error) =>
+                                print("Failed to update user: $error"));
+                        Get.back();
+                        Get.back();
+                      }, context))
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            scrollable: true,
+          );
+        });
+  }
+
+  static Widget rowTimeAndEvent(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: InputField(
+            showRequired: true,
+            title: "Start Time",
+            hint: controller.selectTime.value,
+            widget: IconButton(
+              icon: const Icon(Icons.access_time),
+              color: controller.isDark.value ? Colors.white : Colors.black87,
+              onPressed: () async {
+                String? token = await FirebaseMessaging.instance.getToken();
+                print('token: $token');
+                FocusScope.of(context).requestFocus(FocusNode());
+                final TimeOfDay? result = await showTimePicker(
+                    context: context,
+                    initialTime: TimeOfDay.now(),
+                    builder: (context, child) {
+                      return MediaQuery(
+                        data: MediaQuery.of(context).copyWith(
+                          alwaysUse24HourFormat: false,
+                        ),
+                        child: child!,
+                      );
+                    });
+                if (result != null) {
+                  controller.time.value = result;
+                  print(
+                      "The time schedules to end is : ${controller.selectTime.value}");
+                  controller.selectTime.value = result.format(context);
+                }
+              },
+            ),
+          ),
+        ),
+        Components.spacerWidth(10),
+        datePickStart(context)
+      ],
+    );
+  }
+
+  static Widget datePickStart(BuildContext context) {
+    return GetX<AppController>(
+      builder: (controller) {
+        return Expanded(
+          child: InputField(
+            showRequired: true,
+            title: "Start Date",
+            hint: controller.selectedDate.value,
+            widget: IconButton(
+              onPressed: () {
+                FocusScope.of(context).requestFocus(FocusNode());
+                showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(2020),
+                  lastDate: DateTime(2025),
+                ).then((date) {
+                  controller.selectedDate.value =
+                      DateFormat.yMMMd().format(date!);
+                });
+              },
+              icon: Icon(
+                Icons.calendar_month_outlined,
+                size: 18,
+                color: controller.isDark.value ? Colors.white : Colors.black87,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  static Future<String?> imageDialog(BuildContext context) async {
+    final size = MediaQuery.of(context).size;
+    return showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => Container(
+        width: size.width * 0.4,
+        height: size.height * 0.16,
+        decoration: BoxDecoration(
+          border: Border.all(
+              color: const Color.fromARGB(255, 14, 14, 20), width: 1),
+          //border: Border.all(color: Color.fromARGB(255, 182, 36, 116),width:1 ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          contentPadding: const EdgeInsets.all(5),
+          title: const Text('choose image from: '),
+          content: SingleChildScrollView(
+            child: ListBody(children: [
+              imageTile(
+                  ImageSource.camera, 'Camera', Icons.camera_alt, context),
+              imageTile(
+                  ImageSource.gallery, "Gallery", Icons.photo_library, context),
+              ListTile(
+                selectedColor: Colors.grey,
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                leading: const Icon(Icons.cancel, color: Colors.black87),
+                title: Text("Cancel",
+                    style: GoogleFonts.quicksand(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    )),
+              ),
+            ]),
+          ),
+        ),
+      ),
+    );
+  }
+
+  static Widget imageTile(
+      ImageSource source, String text, IconData icon, BuildContext context) {
+    return ListTile(
+      selectedColor: Colors.grey,
+      onTap: () async {
+        await controller.getImage(source);
+        await Components.uploadFile(
+          controller.image.value,
+        );
+        controller.update();
+      },
+      leading: Icon(icon, color: const Color.fromARGB(255, 0, 0, 0)),
+      title: GestureDetector(
+        onTap: () async {
+          await controller.getImage(source);
+          await Components.uploadFile(controller.image.value);
+          (context as Element).markNeedsBuild();
+        },
+        child: Text(text,
+            style: GoogleFonts.quicksand(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            )),
+      ),
+    );
+  }
 }
 
 class InputField extends StatelessWidget {
@@ -1048,6 +1889,12 @@ class InputField extends StatelessWidget {
               children: [
                 Expanded(
                     child: TextFormField(
+                  style: GoogleFonts.quicksand(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: appController.isDark.value
+                          ? Colors.white
+                          : Colors.grey),
                   maxLength: maxLength,
                   keyboardType: inputType,
                   maxLines: linesCount,

@@ -1,11 +1,11 @@
 import 'package:gdsc_app/Util/App_Constants.dart';
 
 class ResourceModel {
-  late String title; //
-  late String description;
+  String ?title; //
+  String ?description;
 
   String? imageUrl;
-    late String link;
+    String? link;
 
   ResourceModel(this.title, this.description, this.imageUrl, this.link);
 

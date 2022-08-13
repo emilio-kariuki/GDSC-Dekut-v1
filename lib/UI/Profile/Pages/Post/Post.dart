@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Post/comm_Events.dart';
+import 'package:gdsc_app/UI/Profile/Pages/Post/comm_leads.dart';
 import 'package:gdsc_app/Util/App_components.dart';
 import 'package:gdsc_app/Util/dimensions.dart';
 import 'package:get/get.dart';
@@ -34,6 +35,10 @@ class _PostState extends State<Post>
     Tab(
       child: Components.header_3(
           "Resources", controller.isDark.value ? Colors.white : Colors.black87),
+    ),
+    Tab(
+      child: Components.header_3(
+          "Leads", controller.isDark.value ? Colors.white : Colors.black87),
     ),
   ];
   @override
@@ -77,10 +82,12 @@ class _PostState extends State<Post>
           ),
           body: SafeArea(
             child: TabBarView(
+              // ignore: prefer_const_literals_to_create_immutables
               children: [
                 CommunityEvents(),
                 CommunityAnnoucements(),
                 CommunityResources(),
+                CommunityLeads()
               ],
             ),
           )),
