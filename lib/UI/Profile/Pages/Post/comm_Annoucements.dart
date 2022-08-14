@@ -87,6 +87,7 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
                     url,
                   ));
                   Get.back();
+                  Components.showMessage("Data sent successfully");
                 }, context)
               ],
             )),
@@ -136,7 +137,7 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
               ListTile(
                 selectedColor: Colors.grey,
                 onTap: () {
-                  Navigator.of(context).pop();
+                  Get.back();
                 },
                 leading: const Icon(Icons.cancel, color: Colors.black87),
                 title: Text("Cancel",
@@ -155,19 +156,21 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
   Widget imageTile(ImageSource source, String text, IconData icon) {
     return ListTile(
       selectedColor: Colors.grey,
-      onTap: () {
-        setState(() async {
+      onTap: ()  async {
           await getImage(source);
-          await Components.uploadFile(image!,);
-        });
+          Get.back();
+          await Components.uploadFile(
+            image!,
+          );
+       
       },
       leading: Icon(icon, color: const Color.fromARGB(255, 0, 0, 0)),
       title: GestureDetector(
-        onTap: () {
-          setState(() async {
+        onTap: ()  async {
             await getImage(source);
+            Get.back();
             await Components.uploadFile(image!);
-          });
+     
         },
         child: Text(text,
             style: GoogleFonts.quicksand(

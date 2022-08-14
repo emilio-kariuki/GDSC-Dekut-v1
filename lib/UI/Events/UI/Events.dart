@@ -28,7 +28,13 @@ class _EventsState extends State<Events> {
         ),
         body: SafeArea(
             child: SingleChildScrollView(
-              child: Components.eventListCard(context),
+              child: Column(
+                children: [
+                  Components.eventListSlider(context),
+                  
+                  Components.eventListCard(context),
+                ],
+              ),
             )),
       ),
     );

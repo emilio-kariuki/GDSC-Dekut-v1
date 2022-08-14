@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gdsc_app/UI/Announcement/Model/announcement_model.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Leads/Model/leads_model.dart';
 
@@ -16,7 +17,7 @@ class ActionFirebase {
       "date": eve.date,
       "time": eve.time,
       "imageUrl": eve.imageUrl,
-    });
+    },SetOptions(merge: true));
   }
 
   static void createAnnouncement(AnnouncementModel ann) async {
@@ -24,7 +25,7 @@ class ActionFirebase {
       "title": ann.title,
       "description": ann.description,
       "imageUrl": ann.imageUrl,
-    });
+    },SetOptions(merge: true));
   }
 
   static void createResource(ResourceModel res) async {
@@ -33,7 +34,7 @@ class ActionFirebase {
       "description": res.description,
       "imageUrl": res.imageUrl,
       "link": res.link,
-    });
+    },SetOptions(merge: true));
   }
 
   static void createLead(LeadsModel lead) async {
@@ -43,7 +44,7 @@ class ActionFirebase {
       "imageUrl" : lead.imageUrl,
       "phone" : lead.phone,
       "email" : lead.email
-    });
+    },SetOptions(merge: true));
   }
   static void deleteDoc(String id,String collection) async {
     firestoreInstance.collection(collection).doc(id).delete();

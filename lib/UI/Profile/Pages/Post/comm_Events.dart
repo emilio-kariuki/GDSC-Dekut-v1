@@ -35,7 +35,7 @@ class _CommunityEventsState extends State<CommunityEvents>
   TimeOfDay time = TimeOfDay.now();
   File? image;
   final picker = ImagePicker();
-  String? url;
+
 
   @override
   Widget build(BuildContext context) {
@@ -111,8 +111,9 @@ class _CommunityEventsState extends State<CommunityEvents>
                   venue.text,
                   link.text,
                   organizers.text,
-                  url!));
+                  url));
               Get.back();
+              Components.showMessage("Data sent successfully");
             }, context)
           ],
         ),
@@ -183,7 +184,7 @@ class _CommunityEventsState extends State<CommunityEvents>
                 ).then((date) {
                   setState(() {
                     controller.selectedDate.value =
-                        DateFormat.yMMMd().format(date!);
+                        DateFormat.yMMMd().format(date ?? DateTime.now());
                   });
                 });
               },
@@ -259,22 +260,24 @@ class _CommunityEventsState extends State<CommunityEvents>
 
 
 
-  Widget imageTile(ImageSource source, String text, IconData icon) {
+ Widget imageTile(ImageSource source, String text, IconData icon) {
     return ListTile(
       selectedColor: Colors.grey,
-      onTap: () {
-        setState(() async {
+      onTap: ()  async {
           await getImage(source);
-          await Components.uploadFile(image!);
-        });
+          Get.back();
+          await Components.uploadFile(
+            image!,
+          );
+
       },
       leading: Icon(icon, color: const Color.fromARGB(255, 0, 0, 0)),
       title: GestureDetector(
-        onTap: () {
-          setState(() async {
+        onTap: ()  async {
             await getImage(source);
+            Get.back();
             await Components.uploadFile(image!);
-          });
+     
         },
         child: Text(text,
             style: GoogleFonts.quicksand(
@@ -284,7 +287,6 @@ class _CommunityEventsState extends State<CommunityEvents>
       ),
     );
   }
-
   Widget iconImage() {
     return IconButton(
         onPressed: () {

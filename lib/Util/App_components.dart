@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -367,14 +368,32 @@ class Components {
     );
   }
 
-  static Future<void> uploadFile(File image) async {
+  static Future<String?> uploadFile(File image) async {
     try {
       FirebaseStorage storage = FirebaseStorage.instance;
       String filename = path.basename(image.path);
       Reference ref = storage.ref().child("EcoVille/$filename");
-      await ref.putFile(image);
-      url = await ref.getDownloadURL();
+
+      if (controller.isSent.value == false) {
+        Get.defaultDialog(
+            title: "Uploading image...",
+            //middleTextStyle: TextAlign.center,
+            middleTextStyle: GoogleFonts.quicksand(
+              fontSize: 18,
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+            ),
+            content: const CircularProgressIndicator());
+        await ref.putFile(image);
+        url = await ref.getDownloadURL();
+        controller.isSent.value = false;
+
+        Get.back();
+      }
+
+      controller.isSent.value = false;
       print(url);
+      return url;
     } catch (e) {
       print(e);
     }
@@ -405,12 +424,15 @@ class Components {
                 );
               }
               final docs = snapshot.data?.docs;
-              return ListView.builder(
+              return ListView.separated(
+                separatorBuilder: (context, index) {
+                  return spacerHeight(10);
+                },
                 shrinkWrap: true,
-                itemCount: docs?.length,
+                itemCount: docs!.length,
                 itemBuilder: (context, int index) {
                   Map<String, dynamic> data =
-                      docs![index].data() as Map<String, dynamic>;
+                      docs[index].data() as Map<String, dynamic>;
 
                   print("The length is ${docs.length}");
 
@@ -418,7 +440,7 @@ class Components {
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
                       child: CachedNetworkImage(
-                        height: 90,
+                        height: 50,
                         width: 50,
                         fit: BoxFit.cover,
                         imageUrl: data['imageUrl'] ?? Constants.announceLogo,
@@ -496,12 +518,15 @@ class Components {
                 );
               }
               final docs = snapshot.data?.docs;
-              return ListView.builder(
+              return ListView.separated(
+                separatorBuilder: (context, index) {
+                  return spacerHeight(10);
+                },
                 shrinkWrap: true,
-                itemCount: docs?.length,
+                itemCount: docs!.length,
                 itemBuilder: (context, int index) {
                   Map<String, dynamic> data =
-                      docs![index].data() as Map<String, dynamic>;
+                      docs[index].data() as Map<String, dynamic>;
 
                   print("The length is ${docs.length}");
 
@@ -587,12 +612,15 @@ class Components {
                 );
               }
               final docs = snapshot.data?.docs;
-              return ListView.builder(
+              return ListView.separated(
+                separatorBuilder: (context, index) {
+                  return spacerHeight(10);
+                },
                 shrinkWrap: true,
-                itemCount: docs?.length,
+                itemCount: docs!.length,
                 itemBuilder: (context, int index) {
                   Map<String, dynamic> data =
-                      docs![index].data() as Map<String, dynamic>;
+                      docs[index].data() as Map<String, dynamic>;
 
                   print("The length is ${docs.length}");
 
@@ -600,7 +628,7 @@ class Components {
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
                       child: CachedNetworkImage(
-                        height: 90,
+                        height: 50,
                         width: 50,
                         fit: BoxFit.cover,
                         imageUrl: data['imageUrl'] ?? Constants.announceLogo,
@@ -678,12 +706,15 @@ class Components {
                 );
               }
               final docs = snapshot.data?.docs;
-              return ListView.builder(
+              return ListView.separated(
+                separatorBuilder: (context, index) {
+                  return spacerHeight(10);
+                },
                 shrinkWrap: true,
-                itemCount: docs?.length,
+                itemCount: docs!.length,
                 itemBuilder: (context, int index) {
                   Map<String, dynamic> data =
-                      docs![index].data() as Map<String, dynamic>;
+                      docs[index].data() as Map<String, dynamic>;
 
                   print("The length is ${docs.length}");
 
@@ -691,10 +722,10 @@ class Components {
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
                       child: CachedNetworkImage(
-                        height: 90,
+                        height: 50,
                         width: 50,
                         fit: BoxFit.cover,
-                        imageUrl: data['imageUrl'],
+                        imageUrl: data['imageUrl'] ?? Constants.announceLogo,
                         progressIndicatorBuilder:
                             (context, url, downloadProgress) =>
                                 CircularProgressIndicator(
@@ -778,7 +809,7 @@ class Components {
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
                       child: CachedNetworkImage(
-                        height: 90,
+                        height: 50,
                         width: 50,
                         fit: BoxFit.cover,
                         imageUrl: data['imageUrl'] ?? Constants.announceLogo,
@@ -858,10 +889,10 @@ class Components {
               final docs = snapshot.data?.docs;
               return ListView.builder(
                 shrinkWrap: true,
-                itemCount: docs?.length,
+                itemCount: docs!.length,
                 itemBuilder: (context, int index) {
                   Map<String, dynamic> data =
-                      docs![index].data() as Map<String, dynamic>;
+                      docs[index].data() as Map<String, dynamic>;
 
                   print("The length is ${docs.length}");
 
@@ -869,7 +900,7 @@ class Components {
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
                       child: CachedNetworkImage(
-                        height: 90,
+                        height: 50,
                         width: 50,
                         fit: BoxFit.cover,
                         imageUrl: data['imageUrl'],
@@ -942,12 +973,15 @@ class Components {
                 );
               }
               final docs = snapshot.data?.docs;
-              return ListView.builder(
+              return ListView.separated(
+                separatorBuilder: (context, index) {
+                  return spacerHeight(10);
+                },
                 shrinkWrap: true,
-                itemCount: docs?.length,
+                itemCount: docs!.length,
                 itemBuilder: (context, int index) {
                   Map<String, dynamic> data =
-                      docs![index].data() as Map<String, dynamic>;
+                      docs[index].data() as Map<String, dynamic>;
 
                   print("The length is ${docs.length}");
 
@@ -955,7 +989,7 @@ class Components {
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
                       child: CachedNetworkImage(
-                        height: 90,
+                        height: 50,
                         width: 50,
                         fit: BoxFit.cover,
                         imageUrl: data['imageUrl'] ?? Constants.announceLogo,
@@ -1033,53 +1067,56 @@ class Components {
                 );
               }
               final docs = snapshot.data?.docs;
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: docs?.length,
-                itemBuilder: (context, int index) {
-                  Map<String, dynamic> data =
-                      docs![index].data() as Map<String, dynamic>;
+              return Container(
+                height: 200,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: docs?.length,
+                  itemBuilder: (context, int index) {
+                    Map<String, dynamic> data =
+                        docs![index].data() as Map<String, dynamic>;
 
-                  print("The length is ${docs.length}");
+                    print("The length is ${docs.length}");
 
-                  return ListTile(
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: CachedNetworkImage(
-                        height: 90,
-                        width: 50,
-                        fit: BoxFit.cover,
-                        imageUrl: data['imageUrl'],
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) =>
-                                CircularProgressIndicator(
-                                    strokeWidth: 1,
-                                    value: downloadProgress.progress),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
+                    return ListTile(
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: CachedNetworkImage(
+                          height: 50,
+                          width: 50,
+                          fit: BoxFit.cover,
+                          imageUrl: data['imageUrl'],
+                          progressIndicatorBuilder:
+                              (context, url, downloadProgress) =>
+                                  CircularProgressIndicator(
+                                      strokeWidth: 1,
+                                      value: downloadProgress.progress),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
                       ),
-                    ),
-                    title: Text(
-                      data['title'],
-                      style: TextStyle(
-                        color: controller.isDark.value
-                            ? Colors.white
-                            : Colors.black87,
-                      ),
-                    ),
-                    subtitle: Text(data['description'],
-                        style: TextStyle(
-                            color: controller.isDark.value
-                                ? Colors.white
-                                : Colors.black87)),
-                    trailing: Text(data['date'],
+                      title: Text(
+                        data['title'],
                         style: TextStyle(
                           color: controller.isDark.value
                               ? Colors.white
                               : Colors.black87,
-                        )),
-                  );
-                },
+                        ),
+                      ),
+                      subtitle: Text(data['description'],
+                          style: TextStyle(
+                              color: controller.isDark.value
+                                  ? Colors.white
+                                  : Colors.black87)),
+                      trailing: Text(data['date'],
+                          style: TextStyle(
+                            color: controller.isDark.value
+                                ? Colors.white
+                                : Colors.black87,
+                          )),
+                    );
+                  },
+                ),
               );
             },
           ),
@@ -1345,16 +1382,15 @@ class Components {
       ),
       onCancel: (() => Get.back()),
       onConfirm: () async {
-        await firestoreInstance
-            .collection("leads")
-            .doc(id)
-            .update({
-              "name": name.text,
-              "role": role.text,
-              "imageUrl": url,
-            })
-            .then((value) => print("User Updated"))
-            .catchError((error) => print("Failed to update user: $error"));
+        await firestoreInstance.collection("leads").doc(id).update({
+          "name": name.text,
+          "role": role.text,
+          "imageUrl": url,
+        }).then((value) {
+          Components.showMessage("Data Updated successfully");
+        }).catchError((error) {
+          Components.showMessage("Failed to update");
+        });
         Get.back();
       },
     );
@@ -1469,16 +1505,15 @@ class Components {
       ),
       onCancel: (() => Get.back()),
       onConfirm: () async {
-        await firestoreInstance
-            .collection("announcements")
-            .doc(id)
-            .update({
-              "title": title.text,
-              "description": description.text,
-              "imageUrl": url,
-            })
-            .then((value) => print("User Updated"))
-            .catchError((error) => print("Failed to update user: $error"));
+        await firestoreInstance.collection("announcements").doc(id).update({
+          "title": title.text,
+          "description": description.text,
+          "imageUrl": url,
+        }).then((value) {
+          Components.showMessage("Data Updated successfully");
+        }).catchError((error) {
+          Components.showMessage("Failed to update");
+        });
         Get.back();
       },
     );
@@ -1544,17 +1579,16 @@ class Components {
       ),
       onCancel: (() => Get.back()),
       onConfirm: () async {
-        await firestoreInstance
-            .collection("resources")
-            .doc(id)
-            .update({
-              "title": title.text,
-              "link": link.text,
-              "description": description.text,
-              "imageUrl": url,
-            })
-            .then((value) => print("User Updated"))
-            .catchError((error) => print("Failed to update user: $error"));
+        await firestoreInstance.collection("resources").doc(id).update({
+          "title": title.text,
+          "link": link.text,
+          "description": description.text,
+          "imageUrl": url,
+        }).then((value) {
+          Components.showMessage("Data Updated successfully");
+        }).catchError((error) {
+          Components.showMessage("Failed to update");
+        });
         Get.back();
       },
     );
@@ -1637,30 +1671,6 @@ class Components {
                     controller: link,
                   ),
                   rowTimeAndEvent(context),
-                  spacerHeight(10),
-                  Row(
-                    children: [
-                      Components.header_3(
-                          "Select Image",
-                          controller.isDark.value
-                              ? Colors.white
-                              : Colors.black87),
-                      Expanded(child: Container()),
-                      InkWell(
-                        onTap: () async {
-                          await imageDialog(context);
-                          await Components.uploadFile(image!);
-                        },
-                        child: Icon(
-                          Icons.add_a_photo_outlined,
-                          color: controller.isDark.value
-                              ? Colors.white
-                              : Colors.black87,
-                          size: 20,
-                        ),
-                      ),
-                    ],
-                  ),
                   Row(
                     children: [
                       Expanded(
@@ -1673,18 +1683,19 @@ class Components {
                             .collection("events")
                             .doc(id)
                             .update({
-                              "title": title.text,
-                              "description": description.text,
-                              "venue": venue.text,
-                              "organizers": organizers.text,
-                              "link": link.text,
-                              "date": controller.selectedDate.value,
-                              "time": controller.time.value,
-                              "imageUrl": url,
-                            })
-                            .then((value) => print("User Updated"))
-                            .catchError((error) =>
-                                print("Failed to update user: $error"));
+                          "title": title.text,
+                          "description": description.text,
+                          "venue": venue.text,
+                          "organizers": organizers.text,
+                          "link": link.text,
+                          "date": controller.selectedDate.value,
+                          "time": controller.time.value,
+                          "imageUrl": url,
+                        }).then((value) {
+                          Components.showMessage("Data Updated successfully");
+                        }).catchError((error) {
+                          Components.showMessage("Failed to update");
+                        });
                         Get.back();
                         Get.back();
                       }, context))
@@ -1822,6 +1833,7 @@ class Components {
       selectedColor: Colors.grey,
       onTap: () async {
         await controller.getImage(source);
+        Get.back();
         await Components.uploadFile(
           controller.image.value,
         );
@@ -1831,6 +1843,7 @@ class Components {
       title: GestureDetector(
         onTap: () async {
           await controller.getImage(source);
+          Get.back();
           await Components.uploadFile(controller.image.value);
           (context as Element).markNeedsBuild();
         },
@@ -1840,6 +1853,103 @@ class Components {
               fontWeight: FontWeight.w600,
             )),
       ),
+    );
+  }
+
+  static Widget eventListSlider(BuildContext context) {
+    final Stream<QuerySnapshot> detailStream =
+        FirebaseFirestore.instance.collection('events').snapshots();
+    return SizedBox(
+      width: MediaQuery.of(context).size.width ,
+      //height: MediaQuery.of(context).size.height,
+      child: Obx(() {
+        return Visibility(
+          visible: controller.isLoading.value,
+          replacement: StreamBuilder<QuerySnapshot>(
+            stream: detailStream,
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                print("loading");
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const CircularProgressIndicator(),
+                  ),
+                );
+              }
+              final docs = snapshot.data?.docs;
+
+              return CarouselSlider.builder(
+                options: CarouselOptions(
+                  height: 100.0,
+                  enlargeCenterPage: true,
+                  viewportFraction: 1,
+                  autoPlay: true,
+                ),
+                itemCount: docs!.length,
+                itemBuilder: (context, index, realIndex) {
+                  Map<String, dynamic> data =
+                      docs[index].data() as Map<String, dynamic>;
+
+                  print("The length is ${docs.length}");
+                  return ListTile(
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: CachedNetworkImage(
+                        height: 50,
+                        width: 50,
+                        fit: BoxFit.cover,
+                        imageUrl:
+                            data['imageUrl'] ?? Constants.announceLogo,
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                CircularProgressIndicator(
+                                    strokeWidth: 1,
+                                    value: downloadProgress.progress),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
+                    ),
+                    title: Text(
+                      data['title'],
+                      style: TextStyle(
+                        color: controller.isDark.value
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
+                    ),
+                    subtitle: Text(data['description'],
+                        style: TextStyle(
+                            color: controller.isDark.value
+                                ? Colors.white
+                                : Colors.black87)),
+                    trailing: InkWell(
+                      onTap: () => Components.adminEventBottomSheet(
+                          docs[index].id, context),
+                      child: Icon(
+                        Icons.edit,
+                        size: 20,
+                        color: controller.isDark.value
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: const CircularProgressIndicator(),
+            ),
+          ),
+        );
+      }),
     );
   }
 }

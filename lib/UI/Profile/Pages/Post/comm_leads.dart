@@ -101,6 +101,7 @@ final email = TextEditingController();
 
                   ));
                   Get.back();
+                  Components.showMessage("Data sent successfully");
                 }, context)
               ],
             )),
@@ -167,24 +168,24 @@ final email = TextEditingController();
     );
   }
 
-  Widget imageTile(ImageSource source, String text, IconData icon) {
+ Widget imageTile(ImageSource source, String text, IconData icon) {
     return ListTile(
       selectedColor: Colors.grey,
-      onTap: () {
-        setState(() async {
+      onTap: () async {
           await getImage(source);
+          //Get.back();
           await Components.uploadFile(
             image!,
           );
-        });
+
       },
       leading: Icon(icon, color: const Color.fromARGB(255, 0, 0, 0)),
       title: GestureDetector(
-        onTap: () {
-          setState(() async {
+        onTap: ()  async {
             await getImage(source);
+            // Get.back();
             await Components.uploadFile(image!);
-          });
+
         },
         child: Text(text,
             style: GoogleFonts.quicksand(
