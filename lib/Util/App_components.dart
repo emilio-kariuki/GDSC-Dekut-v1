@@ -8,6 +8,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -49,7 +50,7 @@ class Components {
       text,
       maxLines: 1,
       maxFontSize: 30,
-      minFontSize: 25,
+      minFontSize: 30,
       group: myGroup,
       style: GoogleFonts.quicksand(
         color: controller.isDark.value ? Colors.white : Colors.black87,
@@ -90,8 +91,26 @@ class Components {
     );
   }
 
+  static Widget header_4(String text, Color color) {
+    return AutoSizeText(
+      text,
+      maxLines: 20,
+      maxFontSize: 12,
+     overflow: TextOverflow.ellipsis,
+      softWrap: false,
+      minFontSize: 10,
+      textAlign: TextAlign.start,
+      group: myGroup,
+      style: GoogleFonts.quicksand(
+        color: color,
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+      ),
+    );
+  }
+
   static Widget showDividerLine() {
-    return const Divider(
+    return Divider(
       color: Colors.grey,
       thickness: 1,
       height: Dimensions.PADDING_SIZE_SMALL,
@@ -294,23 +313,26 @@ class Components {
             margin: const EdgeInsets.only(
                 left: Dimensions.PADDING_SIZE_DEFAULT,
                 right: Dimensions.PADDING_SIZE_SMALL),
-            child: const Divider(
+            child: Divider(
               thickness: 0.5,
               height: Dimensions.CONTAINER_SIZE_OVER_LARGE,
-              color: Colors.black26,
+              color: controller.isDark.value ? Colors.white : Colors.black87,
             ),
           )),
           Text("OR",
-              style: GoogleFonts.roboto(fontSize: 20, color: Colors.black26)),
+              style: GoogleFonts.roboto(
+                  fontSize: 20,
+                  color:
+                      controller.isDark.value ? Colors.white : Colors.black87)),
           Expanded(
               child: Container(
             margin: const EdgeInsets.only(
                 left: Dimensions.PADDING_SIZE_DEFAULT,
                 right: Dimensions.PADDING_SIZE_SMALL),
-            child: const Divider(
+            child: Divider(
               thickness: 0.5,
               height: Dimensions.CONTAINER_SIZE_LARGE,
-              color: Colors.black26,
+              color: controller.isDark.value ? Colors.white : Colors.black87,
             ),
           )),
         ],
@@ -1067,56 +1089,55 @@ class Components {
                 );
               }
               final docs = snapshot.data?.docs;
-              return Container(
-                height: 200,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: docs?.length,
-                  itemBuilder: (context, int index) {
-                    Map<String, dynamic> data =
-                        docs![index].data() as Map<String, dynamic>;
+              return ListView.builder(
+                reverse: false,
+                dragStartBehavior: DragStartBehavior.start,
+                shrinkWrap: true,
+                itemCount: docs?.length,
+                itemBuilder: (context, int index) {
+                  Map<String, dynamic> data =
+                      docs![index].data() as Map<String, dynamic>;
 
-                    print("The length is ${docs.length}");
+                  print("The length is ${docs.length}");
 
-                    return ListTile(
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: CachedNetworkImage(
-                          height: 50,
-                          width: 50,
-                          fit: BoxFit.cover,
-                          imageUrl: data['imageUrl'],
-                          progressIndicatorBuilder:
-                              (context, url, downloadProgress) =>
-                                  CircularProgressIndicator(
-                                      strokeWidth: 1,
-                                      value: downloadProgress.progress),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
-                        ),
+                  return ListTile(
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: CachedNetworkImage(
+                        height: 50,
+                        width: 50,
+                        fit: BoxFit.cover,
+                        imageUrl: data['imageUrl'],
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                CircularProgressIndicator(
+                                    strokeWidth: 1,
+                                    value: downloadProgress.progress),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
                       ),
-                      title: Text(
-                        data['title'],
+                    ),
+                    title: Text(
+                      data['title'],
+                      style: TextStyle(
+                        color: controller.isDark.value
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
+                    ),
+                    subtitle: Text(data['venue'],
+                        style: TextStyle(
+                            color: controller.isDark.value
+                                ? Colors.white
+                                : Colors.black87)),
+                    trailing: Text(data['date'],
                         style: TextStyle(
                           color: controller.isDark.value
                               ? Colors.white
                               : Colors.black87,
-                        ),
-                      ),
-                      subtitle: Text(data['description'],
-                          style: TextStyle(
-                              color: controller.isDark.value
-                                  ? Colors.white
-                                  : Colors.black87)),
-                      trailing: Text(data['date'],
-                          style: TextStyle(
-                            color: controller.isDark.value
-                                ? Colors.white
-                                : Colors.black87,
-                          )),
-                    );
-                  },
-                ),
+                        )),
+                  );
+                },
               );
             },
           ),
@@ -1860,7 +1881,7 @@ class Components {
     final Stream<QuerySnapshot> detailStream =
         FirebaseFirestore.instance.collection('events').snapshots();
     return SizedBox(
-      width: MediaQuery.of(context).size.width ,
+      width: MediaQuery.of(context).size.width,
       //height: MediaQuery.of(context).size.height,
       child: Obx(() {
         return Visibility(
@@ -1884,7 +1905,7 @@ class Components {
 
               return CarouselSlider.builder(
                 options: CarouselOptions(
-                  height: 100.0,
+                  height: MediaQuery.of(context).size.height * 0.2,
                   enlargeCenterPage: true,
                   viewportFraction: 1,
                   autoPlay: true,
@@ -1895,48 +1916,198 @@ class Components {
                       docs[index].data() as Map<String, dynamic>;
 
                   print("The length is ${docs.length}");
-                  return ListTile(
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: CachedNetworkImage(
-                        height: 50,
-                        width: 50,
-                        fit: BoxFit.cover,
-                        imageUrl:
-                            data['imageUrl'] ?? Constants.announceLogo,
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) =>
-                                CircularProgressIndicator(
-                                    strokeWidth: 1,
-                                    value: downloadProgress.progress),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
+                  return Stack(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 5),
+                        decoration: BoxDecoration(
+                           // borderRadius: BorderRadius.circular(15),
+                            border: Border(
+                              // right: BorderSide(
+                              //   color: Colors.grey,
+                              //   width: 0.5,
+                              //   style: BorderStyle.solid
+                              // ),
+                              // left: BorderSide(
+                              //   color: Colors.grey,
+                              //   width: 0.5,
+                              //   style: BorderStyle.solid
+                              // ),
+
+                            )),
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Container(
+                            padding: EdgeInsets.all(2),
+                            height: MediaQuery.of(context).size.height * 2,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  //mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(15),
+                                          border: Border.all(
+                                            color: controller.isDark.value
+                                                ? Color.fromARGB(255, 255, 255, 255)
+                                                : Colors.black87,
+                                            width: 1,
+                                          )),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(15),
+                                        child: CachedNetworkImage(
+                                          height: MediaQuery.of(context).size.height *
+                                              0.11,
+                                          width: MediaQuery.of(context).size.height *
+                                              0.13,
+                                          fit: BoxFit.fill,
+                                          imageUrl: data['imageUrl'] ??
+                                              Constants.announceLogo,
+                                          progressIndicatorBuilder: (context, url,
+                                                  downloadProgress) =>
+                                              CircularProgressIndicator(
+                                                  strokeWidth: 1,
+                                                  value: downloadProgress.progress),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
+                                        ),
+                                      ),
+                                    ),
+                                    spacerWidth(15),
+                                    // RotatedBox(
+                                    //   quarterTurns: 2,
+                                    //   child: Container(
+                                    //     height:
+                                    //         MediaQuery.of(context).size.height * 0.12,
+                                    //     width: 1,
+                                    //     decoration: BoxDecoration(
+                                    //       color: controller.isDark.value
+                                    //           ? Colors.white
+                                    //           : Color.fromARGB(255, 255, 0, 0)
+                                    //               .withOpacity(0.7),
+                                    //     ),
+                                    //   ),
+                                    // ),
+                                    spacerWidth(5),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        //spacerHeight(3),
+                                        Row(
+                                          
+                                          children: [
+                                            
+                                            Icon(
+                                              Icons.title,
+                                              size: 18,
+                                              color: controller.isDark.value
+                                                  ? Color.fromARGB(255, 255, 149, 0)
+                                                  : Color.fromARGB(255, 255, 149, 0),
+                                            ),
+                                            spacerWidth(2),
+                                            header_4(
+                                                "Title: ${data['title']}",
+                                                controller.isDark.value
+                                                    ? Colors.white
+                                                    : Colors.black87),
+                                          ],
+                                        ),
+                                        spacerHeight(1),
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.calendar_month,
+                                              size: 18,
+                                              color: controller.isDark.value
+                                                  ? Color.fromARGB(255, 255, 149, 0)
+                                                  : Color.fromARGB(255, 255, 149, 0),
+                                            ),
+                                            spacerWidth(2),
+                                            header_4(
+                                                "Date : ${data['date']}",
+                                                controller.isDark.value
+                                                    ? Colors.white
+                                                    : Colors.black87),
+                                          ],
+                                        ),
+                                        spacerHeight(1),
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.alarm,
+                                              size: 18,
+                                              color: controller.isDark.value
+                                                  ? Color.fromARGB(255, 255, 149, 0)
+                                                  : Color.fromARGB(255, 255, 149, 0),
+                                            ),
+                                            spacerWidth(2),
+                                            header_4(
+                                                "Time : ${data['time']}",
+                                                controller.isDark.value
+                                                    ? Colors.white
+                                                    : Colors.black87),
+                                          ],
+                                        ),
+                                        spacerHeight(1),
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.location_on_outlined,
+                                              size: 18,
+                                              color: controller.isDark.value
+                                                  ? Color.fromARGB(255, 255, 149, 0)
+                                                  : Color.fromARGB(255, 255, 149, 0),
+                                            ),
+                                            spacerWidth(2),
+                                            header_4(
+                                                "Venue : ${data['venue']}",
+                                                controller.isDark.value
+                                                    ? Colors.white
+                                                    : Colors.black87),
+                                          ],
+                                        ),
+                                        spacerHeight(1),
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.desktop_windows_outlined,
+                                              size: 18,
+                                              color: controller.isDark.value
+                                                  ? Color.fromARGB(255, 255, 149, 0)
+                                                  : Color.fromARGB(255, 255, 149, 0),
+                                            ),
+                                            spacerWidth(2),
+                                            header_4(
+                                                "Organizer : ${data['organizers']}",
+                                                controller.isDark.value
+                                                    ? Colors.white
+                                                    : Colors.black87),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                spacerHeight(10),
+                                header_4(
+                                    "Description : ${data['description']}",
+                                    controller.isDark.value
+                                        ? Colors.white
+                                : Colors.black87),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                    title: Text(
-                      data['title'],
-                      style: TextStyle(
-                        color: controller.isDark.value
-                            ? Colors.white
-                            : Colors.black87,
-                      ),
-                    ),
-                    subtitle: Text(data['description'],
-                        style: TextStyle(
-                            color: controller.isDark.value
-                                ? Colors.white
-                                : Colors.black87)),
-                    trailing: InkWell(
-                      onTap: () => Components.adminEventBottomSheet(
-                          docs[index].id, context),
-                      child: Icon(
-                        Icons.edit,
-                        size: 20,
-                        color: controller.isDark.value
-                            ? Colors.white
-                            : Colors.black87,
-                      ),
-                    ),
+                      Positioned(
+                        top: 5,
+                        right: 15,
+                        child: Icon(Icons.link,size:20,color: Colors.deepOrange))
+                    ],
                   );
                 },
               );

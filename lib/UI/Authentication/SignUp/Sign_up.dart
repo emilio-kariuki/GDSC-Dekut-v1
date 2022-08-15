@@ -10,6 +10,7 @@ import 'package:gdsc_app/Util/dimensions.dart';
 import 'package:gdsc_app/main.dart';
 import 'package:get/get.dart';
 
+import '../../../Controller/app_controller.dart';
 import '../../../Firebase_Logic/UserFirebase.dart';
 import '../../../Models/user_model.dart';
 import '../../Home/Home.dart';
@@ -29,10 +30,12 @@ class _RegisterState extends State<Register> {
   final password = TextEditingController();
   final confirmPassword = TextEditingController();
   bool _isSigningIn = false;
+  final controller = Get.put(AppController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: controller.isDark.value ? Colors.grey[900] : Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -86,7 +89,7 @@ class _RegisterState extends State<Register> {
                 }, context),
                 Components.spacerHeight(Dimensions.PADDING_SIZE_SMALL),
                 Components.accountText(Constants.haveAccount, Constants.login,
-                    () => Get.offAll(() => const Home())),
+                    () => Get.offAll(() => const Login())),
                 Components.showDivider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

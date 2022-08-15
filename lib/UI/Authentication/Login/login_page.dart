@@ -2,6 +2,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gdsc_app/Controller/app_controller.dart';
 import 'package:gdsc_app/Models/user_model.dart';
 import 'package:get/get.dart';
 
@@ -29,8 +30,10 @@ class _LoginState extends State<Login> {
     final username = TextEditingController();
     final email = TextEditingController();
     final password = TextEditingController();
+    final controller = Get.put(AppController());
 
     return Scaffold(
+      backgroundColor: controller.isDark.value ? Colors.grey[900] : Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -75,7 +78,7 @@ class _LoginState extends State<Login> {
                     }
                   }
                 }, context),
-                Components.spacerHeight(Dimensions.PADDING_SIZE_SMALL),
+                //Components.spacerHeight(Dimensions.PADDING_SIZE_SMALL),
                 Components.accountText(Constants.noAccount, Constants.register,
                     () => Get.offAll(() => const Register())),
                 Components.showDivider(),
