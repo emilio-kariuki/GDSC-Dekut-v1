@@ -96,7 +96,7 @@ class Components {
       text,
       maxLines: 20,
       maxFontSize: 12,
-     overflow: TextOverflow.ellipsis,
+      overflow: TextOverflow.ellipsis,
       softWrap: false,
       minFontSize: 10,
       textAlign: TextAlign.start,
@@ -730,7 +730,10 @@ class Components {
               final docs = snapshot.data?.docs;
               return ListView.separated(
                 separatorBuilder: (context, index) {
-                  return spacerHeight(10);
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: showDividerLine(),
+                  );
                 },
                 shrinkWrap: true,
                 itemCount: docs!.length,
@@ -742,19 +745,76 @@ class Components {
 
                   return ListTile(
                     leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: CachedNetworkImage(
-                        height: 50,
-                        width: 50,
-                        fit: BoxFit.cover,
-                        imageUrl: data['imageUrl'] ?? Constants.announceLogo,
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) =>
-                                CircularProgressIndicator(
-                                    strokeWidth: 1,
-                                    value: downloadProgress.progress),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
+                      borderRadius: BorderRadius.circular(10),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            PageRouteBuilder(
+                              opaque: true,
+                              barrierDismissible: false,
+                              pageBuilder: (BuildContext context, _, __) {
+                                return Scaffold(
+                                  backgroundColor: controller.isDark.value ? Colors.grey[900] : Colors.white,
+                                  body: SafeArea(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Align(
+                                          alignment: Alignment.topRight,
+                                          child: IconButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              icon: const Icon(
+                                                  Icons.cancel_sharp),
+                                                  color: controller.isDark.value ? Colors.white : Colors.black87,),
+                                        ),
+                                        
+                                        Expanded(
+                                          child: InteractiveViewer(
+                                            scaleEnabled: true,
+                                            panEnabled: true,
+                                            child: Hero(
+                                              tag: "image_${index}",
+                                              child: Center(
+                                                child: CachedNetworkImage(
+                                                  height: 390,
+                                                  width: MediaQuery.of(context).size.width ,
+                                                  fit: BoxFit.fill,
+                                                  filterQuality: FilterQuality.high,
+                                                  imageUrl: data['imageUrl'] ??
+                                                      Constants.announceLogo,
+                                                  // placeholder: (context, url) =>
+                                                  //     const CupertinoActivityIndicator(),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        child: Hero(
+                          tag: "image_${index}",
+                          child: CachedNetworkImage(
+                            height: 50,
+                            width: 50,
+                            fit: BoxFit.cover,
+                            imageUrl: data['imageUrl'] ?? Constants.announceLogo,
+                            progressIndicatorBuilder:
+                                (context, url, downloadProgress) =>
+                                    CircularProgressIndicator(
+                                        strokeWidth: 1,
+                                        value: downloadProgress.progress),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
+                          ),
+                        ),
                       ),
                     ),
                     title: Text(
@@ -1010,18 +1070,21 @@ class Components {
                   return ListTile(
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
-                      child: CachedNetworkImage(
-                        height: 50,
-                        width: 50,
-                        fit: BoxFit.cover,
-                        imageUrl: data['imageUrl'] ?? Constants.announceLogo,
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) =>
-                                CircularProgressIndicator(
-                                    strokeWidth: 1,
-                                    value: downloadProgress.progress),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
+                      child: InkWell(
+                        onTap: () {},
+                        child: CachedNetworkImage(
+                          height: 50,
+                          width: 50,
+                          fit: BoxFit.cover,
+                          imageUrl: data['imageUrl'] ?? Constants.announceLogo,
+                          progressIndicatorBuilder:
+                              (context, url, downloadProgress) =>
+                                  CircularProgressIndicator(
+                                      strokeWidth: 1,
+                                      value: downloadProgress.progress),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
                       ),
                     ),
                     title: Text(
@@ -1090,6 +1153,7 @@ class Components {
               }
               final docs = snapshot.data?.docs;
               return ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
                 reverse: false,
                 dragStartBehavior: DragStartBehavior.start,
                 shrinkWrap: true,
@@ -1103,18 +1167,75 @@ class Components {
                   return ListTile(
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
-                      child: CachedNetworkImage(
-                        height: 50,
-                        width: 50,
-                        fit: BoxFit.cover,
-                        imageUrl: data['imageUrl'],
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) =>
-                                CircularProgressIndicator(
-                                    strokeWidth: 1,
-                                    value: downloadProgress.progress),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            PageRouteBuilder(
+                              opaque: true,
+                              barrierDismissible: false,
+                              pageBuilder: (BuildContext context, _, __) {
+                                return Scaffold(
+                                  backgroundColor: controller.isDark.value ? Colors.grey[900] : Colors.white,
+                                  body: SafeArea(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Align(
+                                          alignment: Alignment.topRight,
+                                          child: IconButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context).pop(),
+                                              icon: const Icon(
+                                                  Icons.cancel_sharp),
+                                                  color: controller.isDark.value ? Colors.white : Colors.black87,),
+                                        ),
+                                        
+                                        Expanded(
+                                          child: InteractiveViewer(
+                                            scaleEnabled: true,
+                                            panEnabled: true,
+                                            child: Hero(
+                                              tag: "image_${index}",
+                                              child: Center(
+                                                child: CachedNetworkImage(
+                                                  height: MediaQuery.of(context).size.height * 0.4,
+                                                  width: MediaQuery.of(context).size.width ,
+                                                  fit: BoxFit.fill,
+                                                  filterQuality: FilterQuality.high,
+                                                  imageUrl: data['imageUrl'] ??
+                                                      Constants.announceLogo,
+                                                  // placeholder: (context, url) =>
+                                                  //     const CupertinoActivityIndicator(),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        child: Hero(
+                          tag: "image_${index}",
+                          child: CachedNetworkImage(
+                            height: 50,
+                            width: 50,
+                            fit: BoxFit.cover,
+                            imageUrl: data['imageUrl'],
+                            progressIndicatorBuilder:
+                                (context, url, downloadProgress) =>
+                                    CircularProgressIndicator(
+                                        strokeWidth: 1,
+                                        value: downloadProgress.progress),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
+                          ),
+                        ),
                       ),
                     ),
                     title: Text(
@@ -1238,7 +1359,11 @@ class Components {
                 Get.back();
                 await editResources(id, context);
               }, context)),
-              Expanded(child: button("Delete", () => null, context))
+              Expanded(
+                  child: button("Delete", () {
+                ActionFirebase.deleteDoc(id, 'resources');
+                Get.back();
+              }, context))
             ],
           )),
       //barrierColor: Colors.red[50],
@@ -1427,6 +1552,7 @@ class Components {
           controller.isDark.value ? Colors.grey[900] : Colors.white,
       title: "Lead Contact",
       content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
@@ -1921,20 +2047,20 @@ class Components {
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 5),
                         decoration: BoxDecoration(
-                           // borderRadius: BorderRadius.circular(15),
+                            // borderRadius: BorderRadius.circular(15),
                             border: Border(
-                              // right: BorderSide(
-                              //   color: Colors.grey,
-                              //   width: 0.5,
-                              //   style: BorderStyle.solid
-                              // ),
-                              // left: BorderSide(
-                              //   color: Colors.grey,
-                              //   width: 0.5,
-                              //   style: BorderStyle.solid
-                              // ),
+                                // right: BorderSide(
+                                //   color: Colors.grey,
+                                //   width: 0.5,
+                                //   style: BorderStyle.solid
+                                // ),
+                                // left: BorderSide(
+                                //   color: Colors.grey,
+                                //   width: 0.5,
+                                //   style: BorderStyle.solid
+                                // ),
 
-                            )),
+                                )),
                         child: Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: Container(
@@ -1949,28 +2075,35 @@ class Components {
                                   children: [
                                     Container(
                                       decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(15),
+                                          borderRadius:
+                                              BorderRadius.circular(15),
                                           border: Border.all(
                                             color: controller.isDark.value
-                                                ? Color.fromARGB(255, 255, 255, 255)
+                                                ? Color.fromARGB(
+                                                    255, 255, 255, 255)
                                                 : Colors.black87,
                                             width: 1,
                                           )),
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(15),
                                         child: CachedNetworkImage(
-                                          height: MediaQuery.of(context).size.height *
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
                                               0.11,
-                                          width: MediaQuery.of(context).size.height *
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
                                               0.13,
                                           fit: BoxFit.fill,
                                           imageUrl: data['imageUrl'] ??
                                               Constants.announceLogo,
-                                          progressIndicatorBuilder: (context, url,
-                                                  downloadProgress) =>
+                                          progressIndicatorBuilder: (context,
+                                                  url, downloadProgress) =>
                                               CircularProgressIndicator(
                                                   strokeWidth: 1,
-                                                  value: downloadProgress.progress),
+                                                  value: downloadProgress
+                                                      .progress),
                                           errorWidget: (context, url, error) =>
                                               const Icon(Icons.error),
                                         ),
@@ -1993,20 +2126,22 @@ class Components {
                                     // ),
                                     spacerWidth(5),
                                     Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         //spacerHeight(3),
                                         Row(
-                                          
                                           children: [
-                                            
                                             Icon(
                                               Icons.title,
                                               size: 18,
                                               color: controller.isDark.value
-                                                  ? Color.fromARGB(255, 255, 149, 0)
-                                                  : Color.fromARGB(255, 255, 149, 0),
+                                                  ? Color.fromARGB(
+                                                      255, 255, 149, 0)
+                                                  : Color.fromARGB(
+                                                      255, 255, 149, 0),
                                             ),
                                             spacerWidth(2),
                                             header_4(
@@ -2023,8 +2158,10 @@ class Components {
                                               Icons.calendar_month,
                                               size: 18,
                                               color: controller.isDark.value
-                                                  ? Color.fromARGB(255, 255, 149, 0)
-                                                  : Color.fromARGB(255, 255, 149, 0),
+                                                  ? Color.fromARGB(
+                                                      255, 255, 149, 0)
+                                                  : Color.fromARGB(
+                                                      255, 255, 149, 0),
                                             ),
                                             spacerWidth(2),
                                             header_4(
@@ -2041,8 +2178,10 @@ class Components {
                                               Icons.alarm,
                                               size: 18,
                                               color: controller.isDark.value
-                                                  ? Color.fromARGB(255, 255, 149, 0)
-                                                  : Color.fromARGB(255, 255, 149, 0),
+                                                  ? Color.fromARGB(
+                                                      255, 255, 149, 0)
+                                                  : Color.fromARGB(
+                                                      255, 255, 149, 0),
                                             ),
                                             spacerWidth(2),
                                             header_4(
@@ -2059,8 +2198,10 @@ class Components {
                                               Icons.location_on_outlined,
                                               size: 18,
                                               color: controller.isDark.value
-                                                  ? Color.fromARGB(255, 255, 149, 0)
-                                                  : Color.fromARGB(255, 255, 149, 0),
+                                                  ? Color.fromARGB(
+                                                      255, 255, 149, 0)
+                                                  : Color.fromARGB(
+                                                      255, 255, 149, 0),
                                             ),
                                             spacerWidth(2),
                                             header_4(
@@ -2077,8 +2218,10 @@ class Components {
                                               Icons.desktop_windows_outlined,
                                               size: 18,
                                               color: controller.isDark.value
-                                                  ? Color.fromARGB(255, 255, 149, 0)
-                                                  : Color.fromARGB(255, 255, 149, 0),
+                                                  ? Color.fromARGB(
+                                                      255, 255, 149, 0)
+                                                  : Color.fromARGB(
+                                                      255, 255, 149, 0),
                                             ),
                                             spacerWidth(2),
                                             header_4(
@@ -2097,16 +2240,17 @@ class Components {
                                     "Description : ${data['description']}",
                                     controller.isDark.value
                                         ? Colors.white
-                                : Colors.black87),
+                                        : Colors.black87),
                               ],
                             ),
                           ),
                         ),
                       ),
                       Positioned(
-                        top: 5,
-                        right: 15,
-                        child: Icon(Icons.link,size:20,color: Colors.deepOrange))
+                          top: 5,
+                          right: 15,
+                          child: Icon(Icons.link,
+                              size: 20, color: Colors.deepOrange))
                     ],
                   );
                 },

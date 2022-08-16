@@ -29,6 +29,7 @@ class _EventsState extends State<Events> {
         ),
         body: SafeArea(
             child: SingleChildScrollView(
+              //physics: const NeverScrollableScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

@@ -22,12 +22,20 @@ class _ResourcesState extends State<Resources> {
           // leading: const Icon(Icons.home, size: 20,color: Colors.black87,),
           backgroundColor: 
               controller.isDark.value ? Colors.grey[900] : Colors.white,
-          title: Components.header_3("Resources", controller.isDark.value ? Colors.white : Colors.black87),
+          title: Components.header_1("Resources",),
           elevation: 0,
         ),
         body: SafeArea(
             child: SingleChildScrollView(
-              child: Components.resourceListCard(context),
+              child: Column(
+                children: [
+                   Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Components.showDividerLine(),
+                  ),
+                  Components.resourceListCard(context),
+                ],
+              ),
             )),
       ),);
   }

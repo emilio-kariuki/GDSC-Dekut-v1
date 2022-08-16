@@ -59,8 +59,8 @@ class _CommunityEventsState extends State<CommunityEvents>
               title: "Description",
               hint: "Enter the description of the event?",
               controller: description,
-              maxLength: 80,
-              linesCount: 3,
+              maxLength: 100,
+              linesCount: 4,
             ),
             InputField(
               showRequired: true,
@@ -202,7 +202,7 @@ class _CommunityEventsState extends State<CommunityEvents>
 
   Future<void> getImage(ImageSource source) async {
     final image = await picker.pickImage(
-        source: source, maxHeight: 480, maxWidth: 640, imageQuality: 60);
+        source: source, maxHeight: 480, maxWidth: 640, imageQuality: 90);
     try {
       if (image == null) return;
 

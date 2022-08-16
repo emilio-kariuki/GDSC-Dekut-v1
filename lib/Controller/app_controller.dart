@@ -44,7 +44,7 @@ class AppController extends GetxController {
 
   Future<void> getImage(ImageSource source) async {
     final pickedFile = await picker.pickImage(
-        source: source, maxHeight: 480, maxWidth: 640, imageQuality: 60);
+        source: source, maxHeight: 480, maxWidth: 640, imageQuality: 100);
 
     if (pickedFile != null) {
       image.value = File(pickedFile.path);

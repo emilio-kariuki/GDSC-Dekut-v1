@@ -9,6 +9,7 @@ import 'package:gdsc_app/Util/App_components.dart';
 import 'package:gdsc_app/Util/dimensions.dart';
 import 'package:gdsc_app/main.dart';
 import 'package:get/get.dart';
+import 'package:twitter_login/twitter_login.dart';
 
 import '../../../Controller/app_controller.dart';
 import '../../../Firebase_Logic/UserFirebase.dart';
@@ -122,7 +123,29 @@ class _RegisterState extends State<Register> {
                       });
                     }),
                     Components.spacerWidth(Dimensions.PADDING_SIZE_SMALL),
-                    Components.signInWith(Constants.twitter, () {})
+                    Components.signInWith(Constants.twitter, () async{
+                      final twitterLogin = TwitterLogin(
+                        apiKey: '1298161679310770177-g8GMFBcyN2pSxWRrPRJppjk234OrNy',
+                        apiSecretKey:
+                            'Dtcxjnm2ANUUVbR4DH9e2EnycZ1Z7VdxwqxLQXYUWbZYI',
+                        redirectURI:
+                            'https://apt-rite-346310.firebaseapp.com/__/auth/handler',
+                      );
+                      final authResult = await twitterLogin.login();
+                      switch (authResult.status) {
+                        case TwitterLoginStatus.loggedIn:
+                          // success
+                          break;
+                        case TwitterLoginStatus.cancelledByUser:
+                          // cancel
+                          break;
+                        case TwitterLoginStatus.error:
+                          // error
+                          break;
+                          default: 
+                           TwitterLoginStatus.error;
+                      }
+                    })
                   ],
                 ),
               ],

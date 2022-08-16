@@ -111,7 +111,7 @@ final email = TextEditingController();
 
   Future<void> getImage(ImageSource source) async {
     final image = await picker.pickImage(
-        source: source, maxHeight: 480, maxWidth: 640, imageQuality: 60);
+        source: source, maxHeight: 480, maxWidth: 640, imageQuality: 90);
     try {
       if (image == null) return;
 
