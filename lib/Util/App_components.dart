@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, prefer_const_constructors, must_be_immutable, avoid_print, use_build_context_synchronously
+// ignore_for_file: file_names, prefer_const_constructors, must_be_immutable, avoid_print, use_build_context_synchronously, deprecated_member_use
 
 import 'dart:io';
 
@@ -369,21 +369,17 @@ class Components {
 
   static Widget showImage(String imageName, BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-          vertical: Dimensions.PADDING_SIZE_OVER_LARGE),
-      child: Center(
-        child: Container(
-          padding: const EdgeInsets.all(2),
-          height: size.height * 0.09,
-          width: size.width * 0.16,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: Image.asset(
-                imageName,
-              ).image,
-              fit: BoxFit.fill,
-            ),
+    return Center(
+      child: Container(
+        padding: const EdgeInsets.all(2),
+        height: size.height * 0.2,
+        width: size.width * 0.5,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: Image.asset(
+              imageName,
+            ).image,
+            fit: BoxFit.fill,
           ),
         ),
       ),
@@ -744,6 +740,20 @@ class Components {
                   print("The length is ${docs.length}");
 
                   return ListTile(
+                    onTap: () async {
+                      String url = data['link'];
+                      if (await canLaunchUrl(Uri.parse(url))) {
+                        await launch(url,
+                            forceWebView: true,
+                            enableJavaScript: true,
+                            enableDomStorage: true,
+                            forceSafariVC: false);
+                      } else {
+                        showMessage("Cannot launch url");
+                        throw 'Could not launch $url';
+                        
+                      }
+                    },
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: InkWell(
@@ -754,7 +764,9 @@ class Components {
                               barrierDismissible: false,
                               pageBuilder: (BuildContext context, _, __) {
                                 return Scaffold(
-                                  backgroundColor: controller.isDark.value ? Colors.grey[900] : Colors.white,
+                                  backgroundColor: controller.isDark.value
+                                      ? Colors.grey[900]
+                                      : Colors.white,
                                   body: SafeArea(
                                     child: Column(
                                       mainAxisAlignment:
@@ -763,13 +775,15 @@ class Components {
                                         Align(
                                           alignment: Alignment.topRight,
                                           child: IconButton(
-                                              onPressed: () =>
-                                                  Navigator.of(context).pop(),
-                                              icon: const Icon(
-                                                  Icons.cancel_sharp),
-                                                  color: controller.isDark.value ? Colors.white : Colors.black87,),
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(),
+                                            icon:
+                                                const Icon(Icons.cancel_sharp),
+                                            color: controller.isDark.value
+                                                ? Colors.white
+                                                : Colors.black87,
+                                          ),
                                         ),
-                                        
                                         Expanded(
                                           child: InteractiveViewer(
                                             scaleEnabled: true,
@@ -778,10 +792,13 @@ class Components {
                                               tag: "image_${index}",
                                               child: Center(
                                                 child: CachedNetworkImage(
-                                                  height: 390,
-                                                  width: MediaQuery.of(context).size.width ,
+                                                  height: 30,
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
                                                   fit: BoxFit.fill,
-                                                  filterQuality: FilterQuality.high,
+                                                  filterQuality:
+                                                      FilterQuality.high,
                                                   imageUrl: data['imageUrl'] ??
                                                       Constants.announceLogo,
                                                   // placeholder: (context, url) =>
@@ -805,7 +822,8 @@ class Components {
                             height: 50,
                             width: 50,
                             fit: BoxFit.cover,
-                            imageUrl: data['imageUrl'] ?? Constants.announceLogo,
+                            imageUrl:
+                                data['imageUrl'] ?? Constants.announceLogo,
                             progressIndicatorBuilder:
                                 (context, url, downloadProgress) =>
                                     CircularProgressIndicator(
@@ -1175,7 +1193,9 @@ class Components {
                               barrierDismissible: false,
                               pageBuilder: (BuildContext context, _, __) {
                                 return Scaffold(
-                                  backgroundColor: controller.isDark.value ? Colors.grey[900] : Colors.white,
+                                  backgroundColor: controller.isDark.value
+                                      ? Colors.grey[900]
+                                      : Colors.white,
                                   body: SafeArea(
                                     child: Column(
                                       mainAxisAlignment:
@@ -1184,13 +1204,15 @@ class Components {
                                         Align(
                                           alignment: Alignment.topRight,
                                           child: IconButton(
-                                              onPressed: () =>
-                                                  Navigator.of(context).pop(),
-                                              icon: const Icon(
-                                                  Icons.cancel_sharp),
-                                                  color: controller.isDark.value ? Colors.white : Colors.black87,),
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(),
+                                            icon:
+                                                const Icon(Icons.cancel_sharp),
+                                            color: controller.isDark.value
+                                                ? Colors.white
+                                                : Colors.black87,
+                                          ),
                                         ),
-                                        
                                         Expanded(
                                           child: InteractiveViewer(
                                             scaleEnabled: true,
@@ -1199,10 +1221,16 @@ class Components {
                                               tag: "image_${index}",
                                               child: Center(
                                                 child: CachedNetworkImage(
-                                                  height: MediaQuery.of(context).size.height * 0.4,
-                                                  width: MediaQuery.of(context).size.width ,
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.4,
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
                                                   fit: BoxFit.fill,
-                                                  filterQuality: FilterQuality.high,
+                                                  filterQuality:
+                                                      FilterQuality.high,
                                                   imageUrl: data['imageUrl'] ??
                                                       Constants.announceLogo,
                                                   // placeholder: (context, url) =>
