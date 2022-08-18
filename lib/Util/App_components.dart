@@ -1606,8 +1606,18 @@ class Components {
           spacerHeight(10),
           Row(
             children: [
-              header_3("Email : ",
-                  controller.isDark.value ? Colors.white : Colors.black87),
+              InkWell(
+                onTap: () async {
+                  String url = "mailto:$email";
+                  if (await canLaunchUrl(Uri.parse(url))) {
+                    await launchUrl(Uri.parse(url));
+                  } else {
+                    throw 'Could not launch $url';
+                  }
+                },
+                
+               
+              ),
               Expanded(
                 child: Container(),
               ),
