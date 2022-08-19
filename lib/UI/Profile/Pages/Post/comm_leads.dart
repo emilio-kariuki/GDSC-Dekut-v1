@@ -81,7 +81,7 @@ final email = TextEditingController();
                 InputField(
                   showRequired: true,
                   title: "Phone",
-                  hint: "Enter the phone number of the lead?",
+                  hint: "+254",
                   controller: phone,
                 ),
                 InputField(
@@ -92,6 +92,7 @@ final email = TextEditingController();
                 ),
                 Components.spacerHeight(10),
                 Components.button("Submit", () {
+                  
                   ActionFirebase.createLead(LeadsModel(
                     name.text,
                     role.text,

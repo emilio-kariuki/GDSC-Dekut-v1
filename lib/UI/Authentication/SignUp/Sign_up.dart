@@ -115,7 +115,7 @@ class _RegisterState extends State<Register> {
                         createUser(
                             UserClass(user.displayName!, user.email!, ''),
                             user.uid);
-                        Get.offAll(() => const Home());
+                        Get.offAll(() => const Home(),duration:const Duration(milliseconds: 100));
                       }
 
                       setState(() {

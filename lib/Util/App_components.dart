@@ -45,6 +45,8 @@ class Components {
   static File? image;
   static var controller = Get.put(AppController());
   static var myGroup = AutoSizeGroup();
+  static double sizeHeight = Get.mediaQuery.size.height;
+  static double sizeWidth = Get.mediaQuery.size.width;
   static Widget header_1(String text) {
     return AutoSizeText(
       text,
@@ -231,7 +233,7 @@ class Components {
       onTap: function,
       child: SizedBox(
         width: double.infinity,
-        height: 50,
+        height: sizeHeight * 0.06,
         child: Row(
           children: [
             Row(
@@ -550,19 +552,84 @@ class Components {
 
                   return ListTile(
                     leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: CachedNetworkImage(
-                        height: 90,
-                        width: 50,
-                        fit: BoxFit.cover,
-                        imageUrl: data['imageUrl'] ?? Constants.announceLogo,
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) =>
-                                CircularProgressIndicator(
-                                    strokeWidth: 1,
-                                    value: downloadProgress.progress),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
+                      borderRadius: BorderRadius.circular(10),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            PageRouteBuilder(
+                              opaque: true,
+                              barrierDismissible: false,
+                              pageBuilder: (BuildContext context, _, __) {
+                                return Scaffold(
+                                  backgroundColor: controller.isDark.value
+                                      ? Colors.grey[900]
+                                      : Colors.white,
+                                  body: SafeArea(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Align(
+                                          alignment: Alignment.topRight,
+                                          child: IconButton(
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(),
+                                            icon:
+                                                const Icon(Icons.cancel_sharp),
+                                            color: controller.isDark.value
+                                                ? Colors.white
+                                                : Colors.black87,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: InteractiveViewer(
+                                            scaleEnabled: true,
+                                            panEnabled: true,
+                                            child: Hero(
+                                              tag: docs[index].id,
+                                              child: Center(
+                                                child: CachedNetworkImage(
+                                                  height: 300,
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  fit: BoxFit.fill,
+                                                  filterQuality:
+                                                      FilterQuality.high,
+                                                  imageUrl: data['imageUrl'] ??
+                                                      Constants.announceLogo,
+                                                  // placeholder: (context, url) =>
+                                                  //     const CupertinoActivityIndicator(),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        child: Hero(
+                          tag: docs[index].id,
+                          child: CachedNetworkImage(
+                            height: 50,
+                            width: 50,
+                            fit: BoxFit.cover,
+                            imageUrl:
+                                data['imageUrl'] ?? Constants.announceLogo,
+                            progressIndicatorBuilder:
+                                (context, url, downloadProgress) =>
+                                    CircularProgressIndicator(
+                                        strokeWidth: 1,
+                                        value: downloadProgress.progress),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
+                          ),
+                        ),
                       ),
                     ),
                     title: Text(
@@ -751,7 +818,6 @@ class Components {
                       } else {
                         showMessage("Cannot launch url");
                         throw 'Could not launch $url';
-                        
                       }
                     },
                     leading: ClipRRect(
@@ -789,10 +855,10 @@ class Components {
                                             scaleEnabled: true,
                                             panEnabled: true,
                                             child: Hero(
-                                              tag: "image_${index}",
+                                              tag: docs[index].id,
                                               child: Center(
                                                 child: CachedNetworkImage(
-                                                  height: 30,
+                                                  height: 300,
                                                   width: MediaQuery.of(context)
                                                       .size
                                                       .width,
@@ -817,7 +883,7 @@ class Components {
                           );
                         },
                         child: Hero(
-                          tag: "image_${index}",
+                          tag: docs[index].id,
                           child: CachedNetworkImage(
                             height: 50,
                             width: 50,
@@ -1218,13 +1284,10 @@ class Components {
                                             scaleEnabled: true,
                                             panEnabled: true,
                                             child: Hero(
-                                              tag: "image_${index}",
+                                              tag: docs[index].id,
                                               child: Center(
                                                 child: CachedNetworkImage(
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      0.4,
+                                                  height: 300,
                                                   width: MediaQuery.of(context)
                                                       .size
                                                       .width,
@@ -1249,7 +1312,7 @@ class Components {
                           );
                         },
                         child: Hero(
-                          tag: "image_${index}",
+                          tag: docs[index].id,
                           child: CachedNetworkImage(
                             height: 50,
                             width: 50,
@@ -1360,7 +1423,8 @@ class Components {
           showMessage("Enter password");
         } else if (password.text == Constants.adminPassword) {
           Get.back();
-          Get.to(() => const Admin());
+          Get.to(() => const Admin(),
+              duration: const Duration(milliseconds: 100));
         } else {
           showMessage("Incorrect password");
           Get.back();
@@ -1606,23 +1670,50 @@ class Components {
           spacerHeight(10),
           Row(
             children: [
-              InkWell(
-                onTap: () async {
-                  String url = "mailto:$email";
-                  if (await canLaunchUrl(Uri.parse(url))) {
-                    await launchUrl(Uri.parse(url));
-                  } else {
-                    throw 'Could not launch $url';
-                  }
-                },
-                
-               
-              ),
+              header_3("Email : ",
+                  controller.isDark.value ? Colors.white : Colors.black87),
               Expanded(
                 child: Container(),
               ),
-              header_3(email,
-                  controller.isDark.value ? Colors.white : Colors.black87)
+              InkWell(
+                  onTap: () async {
+                    String url = "mailto:$email";
+                    if (await canLaunchUrl(Uri.parse(url))) {
+                      await launchUrl(Uri.parse(url));
+                    } else {
+                      throw 'Could not launch $url';
+                    }
+                  },
+                  child: header_3(email,
+                      controller.isDark.value ? Colors.white : Colors.black87)),
+            ],
+          ),
+          spacerHeight(10),
+          Row(
+            children: [
+              header_3("WhatsApp : ",
+                  controller.isDark.value ? Colors.white : Colors.black87),
+              Expanded(
+                child: Container(),
+              ),
+              InkWell(
+                  onTap: () async => await launch('https://wa.me/$phone'),
+                  child: header_3(phone,
+                      controller.isDark.value ? Colors.white : Colors.black87)),
+            ],
+          ),
+          spacerHeight(10),
+          Row(
+            children: [
+              header_3("Sms : ",
+                  controller.isDark.value ? Colors.white : Colors.black87),
+              Expanded(
+                child: Container(),
+              ),
+              InkWell(
+                  onTap: () async => await launch("sms:$phone"),
+                  child: header_3(phone,
+                      controller.isDark.value ? Colors.white : Colors.black87)),
             ],
           ),
         ],

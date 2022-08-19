@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gdsc_app/Controller/app_controller.dart';
 import 'package:gdsc_app/UI/Authentication/Login/login_page.dart';
 import 'package:gdsc_app/UI/Authentication/user_logic.dart';
+import 'package:gdsc_app/UI/Profile/Pages/Help/help.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Leads/UI/leads.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Post/Post.dart';
 import 'package:gdsc_app/Util/App_Constants.dart';
@@ -62,7 +63,7 @@ class _AccountState extends State<Account> {
                           () => Components.confirmAdminPost(password)),
                       Components.showDividerLine(),
                       Components.cardButton(Icons.person, Constants.leads,
-                          () => Get.to(() => const Leads())),
+                          () => Get.to(() => const Leads(),duration: const Duration(milliseconds: 100))),
                       Components.showDividerLine(),
                       Components.cardButton(Icons.notifications_active,
                           Constants.notifications, () => null),
@@ -71,7 +72,7 @@ class _AccountState extends State<Account> {
                           Constants.about, () => null),
                       Components.showDividerLine(),
                       Components.cardButton(
-                          Icons.help_outline_sharp, Constants.help, () => null),
+                          Icons.help_outline_sharp, Constants.help, () => Get.to(()=>Contact(),duration: const Duration(milliseconds: 1))),
                       Components.showLogOutButton(Constants.logout, () async {
                         await Authentication.signOut();
                         Get.offAll(() => const Login());
@@ -88,10 +89,11 @@ class _AccountState extends State<Account> {
                           return Icon(
                             controller.isDark.value
                                 ? Icons.brightness_3
-                                : Icons.brightness_7,
+                                : Icons.brightness_5,
                             color: controller.isDark.value
                                 ? Colors.white
                                 : Colors.black87,
+                                size: 18,
                           );
                         }),
                         Components.spacerWidth(
