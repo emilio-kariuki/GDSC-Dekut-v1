@@ -64,6 +64,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  carousel_indicator:
+    dependency: "direct main"
+    description:
+      name: carousel_indicator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.6"
   carousel_slider:
     dependency: "direct main"
     description:

@@ -1,3 +1,4 @@
+import 'package:carousel_indicator/carousel_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:gdsc_app/Util/App_components.dart';
 import 'package:get/get.dart';
@@ -22,7 +23,7 @@ class _EventsState extends State<Events> {
             controller.isDark.value ? Colors.grey[900] : Colors.white,
         appBar: AppBar(
           // leading: const Icon(Icons.home, size: 20,color: Colors.black87,),
-          backgroundColor: 
+          backgroundColor:
               controller.isDark.value ? Colors.grey[900] : Colors.white,
           title: Components.header_3("Events", controller.isDark.value ? Colors.white : Colors.black87),
           elevation: 0,
@@ -37,6 +38,18 @@ class _EventsState extends State<Events> {
                     padding: const EdgeInsets.symmetric(horizontal: 5),
                     child: Components.eventListSlider(context),
                   ),
+
+                  Padding(padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: CarouselIndicator(
+                    count: controller.docsLength.value,
+                    index: controller.i.value,
+                    animationDuration: 200,
+                    color: const Color.fromARGB(255, 146, 144, 144),
+                    activeColor: const Color.fromARGB(255, 255, 255, 255),
+
+
+                  ),
+                   ),
                   Components.spacerHeight(15),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),

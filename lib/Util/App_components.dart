@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_indicator/carousel_indicator.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -40,6 +41,7 @@ final link = TextEditingController();
 final organizers = TextEditingController();
 final phone = TextEditingController();
 final email = TextEditingController();
+int i = 0;
 
 class Components {
   static File? image;
@@ -2157,15 +2159,19 @@ class Components {
                 );
               }
               final docs = snapshot.data?.docs;
+              controller.docsLength.value = docs!.length;
 
               return CarouselSlider.builder(
                 options: CarouselOptions(
-                  height: MediaQuery.of(context).size.height * 0.2,
-                  enlargeCenterPage: true,
-                  viewportFraction: 1,
-                  autoPlay: true,
-                ),
-                itemCount: docs!.length,
+                    //height: MediaQuery.of(context).size.height * 0.22,
+                    enlargeCenterPage: true,
+                    viewportFraction: 1,
+                    autoPlay: true,
+                    onPageChanged: (int i, carouselPageChangedReason) {
+                      controller.i.value = i;
+                    }),
+
+                itemCount: docs.length,
                 itemBuilder: (context, index, realIndex) {
                   Map<String, dynamic> data =
                       docs[index].data() as Map<String, dynamic>;
@@ -2175,21 +2181,6 @@ class Components {
                     children: [
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 5),
-                        decoration: BoxDecoration(
-                            // borderRadius: BorderRadius.circular(15),
-                            border: Border(
-                                // right: BorderSide(
-                                //   color: Colors.grey,
-                                //   width: 0.5,
-                                //   style: BorderStyle.solid
-                                // ),
-                                // left: BorderSide(
-                                //   color: Colors.grey,
-                                //   width: 0.5,
-                                //   style: BorderStyle.solid
-                                // ),
-
-                                )),
                         child: Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: Container(
@@ -2370,6 +2361,7 @@ class Components {
                                     controller.isDark.value
                                         ? Colors.white
                                         : Colors.black87),
+
                               ],
                             ),
                           ),

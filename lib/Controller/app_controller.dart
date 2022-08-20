@@ -23,6 +23,8 @@ class AppController extends GetxController {
   Rx<File> image = File(Constants.logo).obs;
   final picker = ImagePicker();
   Rx<TimeOfDay> time = TimeOfDay.now().obs;
+  var i = 0.obs;
+  var docsLength = 1.obs;
 
   @override
   void onInit() {
