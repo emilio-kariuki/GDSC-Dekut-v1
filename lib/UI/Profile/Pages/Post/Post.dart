@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Post/comm_Events.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Post/comm_leads.dart';
+import 'package:gdsc_app/UI/Profile/Pages/Post/comm_meeting.dart';
 import 'package:gdsc_app/Util/App_components.dart';
 import 'package:gdsc_app/Util/dimensions.dart';
 import 'package:get/get.dart';
@@ -29,12 +30,17 @@ class _PostState extends State<Post>
           "Event", controller.isDark.value ? Colors.white : Colors.black87),
     ),
     Tab(
-      child: Components.header_3("Annoucements",
+      child: Components.header_3("News",
           controller.isDark.value ? Colors.white : Colors.black87),
     ),
     Tab(
       child: Components.header_3(
           "Resources", controller.isDark.value ? Colors.white : Colors.black87),
+    ),
+
+    Tab(
+      child: Components.header_3(
+          "Meetings", controller.isDark.value ? Colors.white : Colors.black87),
     ),
     Tab(
       child: Components.header_3(
@@ -87,6 +93,7 @@ class _PostState extends State<Post>
                 CommunityEvents(),
                 CommunityAnnoucements(),
                 CommunityResources(),
+                CommunityMeeting(),
                 CommunityLeads()
               ],
             ),

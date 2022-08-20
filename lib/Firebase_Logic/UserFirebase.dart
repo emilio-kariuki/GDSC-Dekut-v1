@@ -11,6 +11,8 @@ void createUser(UserClass user, String id) async {
     "username": user.name,
     "email": user.email,
     "password": user.password,
+    "userID": user.userID,
+    "technology": user.technology,
   });
 }
 

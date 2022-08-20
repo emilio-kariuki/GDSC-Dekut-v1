@@ -97,7 +97,7 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
 
   Future<void> getImage(ImageSource source) async {
     final image = await picker.pickImage(
-        source: source, maxHeight: 480, maxWidth: 640, imageQuality: 90);
+        source: source, imageQuality: 90);
     try {
       if (image == null) return;
 
@@ -162,7 +162,7 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
           await Components.uploadFile(
             image!,
           );
-       
+
       },
       leading: Icon(icon, color: const Color.fromARGB(255, 0, 0, 0)),
       title: GestureDetector(
@@ -170,7 +170,7 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
             await getImage(source);
             Get.back();
             await Components.uploadFile(image!);
-     
+
         },
         child: Text(text,
             style: GoogleFonts.quicksand(

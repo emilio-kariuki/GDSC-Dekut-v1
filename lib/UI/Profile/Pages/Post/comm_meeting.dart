@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'package:gdsc_app/Firebase_Logic/EventFirebase.dart';
 import 'package:gdsc_app/UI/Events/Model/Event_model.dart';
+import 'package:gdsc_app/UI/Meetings/Model/meetings_model.dart';
 import 'package:path/path.dart' as path;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -17,25 +18,23 @@ import 'package:intl/intl.dart';
 import '../../../../Controller/app_controller.dart';
 import '../../../../Util/dimensions.dart';
 
-class CommunityEvents extends StatefulWidget {
-  const CommunityEvents({Key? key}) : super(key: key);
+class CommunityMeeting extends StatefulWidget {
+  const CommunityMeeting({Key? key}) : super(key: key);
 
   @override
-  State<CommunityEvents> createState() => _CommunityEventsState();
+  State<CommunityMeeting> createState() => _CommunityMeetingState();
 }
 
-class _CommunityEventsState extends State<CommunityEvents>
+class _CommunityMeetingState extends State<CommunityMeeting>
     with AutomaticKeepAliveClientMixin {
   final controller = Get.put(AppController());
   final title = TextEditingController();
   final description = TextEditingController();
   final organizers = TextEditingController();
-  final venue = TextEditingController();
   final link = TextEditingController();
   TimeOfDay time = TimeOfDay.now();
   File? image;
   final picker = ImagePicker();
-
 
   @override
   Widget build(BuildContext context) {
@@ -51,22 +50,16 @@ class _CommunityEventsState extends State<CommunityEvents>
             InputField(
               showRequired: true,
               title: "Title",
-              hint: "Enter the title of the event?",
+              hint: "Enter the title of the meeting?",
               controller: title,
             ),
             InputField(
               showRequired: true,
               title: "Description",
-              hint: "Enter the description of the event?",
+              hint: "Enter the description of the meeting?",
               controller: description,
               maxLength: 100,
               linesCount: 4,
-            ),
-            InputField(
-              showRequired: true,
-              title: "Venue",
-              hint: "Enter the venue of the event?",
-              controller: venue,
             ),
             Components.spacerHeight(Dimensions.PADDING_SIZE_SMALL),
             Row(
@@ -103,12 +96,11 @@ class _CommunityEventsState extends State<CommunityEvents>
             Components.spacerHeight(10),
             Components.spacerHeight(10),
             Components.button("Submit", () {
-              ActionFirebase.createEvent(EventModel(
+              ActionFirebase.createMeeting(MeetingModel(
                   title.text,
                   description.text,
                   controller.selectedDate.value,
                   controller.selectTime.value,
-                  venue.text,
                   link.text,
                   organizers.text,
                   url));
@@ -201,8 +193,7 @@ class _CommunityEventsState extends State<CommunityEvents>
   }
 
   Future<void> getImage(ImageSource source) async {
-    final image = await picker.pickImage(
-        source: source,  imageQuality: 90);
+    final image = await picker.pickImage(source: source, imageQuality: 90);
     try {
       if (image == null) return;
 
@@ -258,26 +249,22 @@ class _CommunityEventsState extends State<CommunityEvents>
     );
   }
 
-
-
- Widget imageTile(ImageSource source, String text, IconData icon) {
+  Widget imageTile(ImageSource source, String text, IconData icon) {
     return ListTile(
       selectedColor: Colors.grey,
-      onTap: ()  async {
-          await getImage(source);
-          Get.back();
-          await Components.uploadFile(
-            image!,
-          );
-
+      onTap: () async {
+        await getImage(source);
+        Get.back();
+        await Components.uploadFile(
+          image!,
+        );
       },
       leading: Icon(icon, color: const Color.fromARGB(255, 0, 0, 0)),
       title: GestureDetector(
-        onTap: ()  async {
-            await getImage(source);
-            Get.back();
-            await Components.uploadFile(image!);
-
+        onTap: () async {
+          await getImage(source);
+          Get.back();
+          await Components.uploadFile(image!);
         },
         child: Text(text,
             style: GoogleFonts.quicksand(
@@ -287,6 +274,7 @@ class _CommunityEventsState extends State<CommunityEvents>
       ),
     );
   }
+
   Widget iconImage() {
     return IconButton(
         onPressed: () {

@@ -7,14 +7,14 @@ import '../../../Controller/app_controller.dart';
 
 int itemCount = 5;
 
-class Events extends StatefulWidget {
-  const Events({Key? key}) : super(key: key);
+class Meeting extends StatefulWidget {
+  const Meeting({Key? key}) : super(key: key);
 
   @override
-  State<Events> createState() => _EventsState();
+  State<Meeting> createState() => _MeetingState();
 }
 
-class _EventsState extends State<Events> {
+class _MeetingState extends State<Meeting> {
   final controller = Get.put(AppController());
   int initCount = 5;
 
@@ -36,7 +36,7 @@ class _EventsState extends State<Events> {
           // leading: const Icon(Icons.home, size: 20,color: Colors.black87,),
           backgroundColor:
               controller.isDark.value ? Colors.grey[900] : Colors.white,
-          title: Components.header_3("Events",
+          title: Components.header_3("Virtual Meetings",
               controller.isDark.value ? Colors.white : Colors.black87),
           elevation: 0,
         ),
@@ -49,14 +49,14 @@ class _EventsState extends State<Events> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: Components.eventListSlider(context),
+                child: Components.meetingListSlider(context),
               ),
 
               Components.spacerHeight(15),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
-                  "upcoming Events",
+                  "upcoming Meetings",
                   style: GoogleFonts.robotoCondensed(
                       fontSize: 22,
                       color: controller.isDark.value
@@ -71,7 +71,7 @@ class _EventsState extends State<Events> {
               // ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: Components.eventListCard(context),
+                child: Components.meetingGridListCard(context),
               ),
             ],
           ),

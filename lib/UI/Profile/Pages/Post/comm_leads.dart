@@ -92,7 +92,7 @@ final email = TextEditingController();
                 ),
                 Components.spacerHeight(10),
                 Components.button("Submit", () {
-                  
+
                   ActionFirebase.createLead(LeadsModel(
                     name.text,
                     role.text,
@@ -112,7 +112,7 @@ final email = TextEditingController();
 
   Future<void> getImage(ImageSource source) async {
     final image = await picker.pickImage(
-        source: source, maxHeight: 480, maxWidth: 640, imageQuality: 90);
+        source: source,  imageQuality: 90);
     try {
       if (image == null) return;
 

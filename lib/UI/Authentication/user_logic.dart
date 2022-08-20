@@ -19,7 +19,7 @@ class Authentication {
         .user;
 
     if (user != null) {
-      createUser(UserClass(name, email, password), user.uid);
+      createUser(UserClass(name, email, password,user.uid,''), user.uid);
       userName = user.displayName ?? "Unknown";
       email = user.email!;
     }
@@ -36,7 +36,7 @@ class Authentication {
     ))
         .user;
     if (user != null) {
-      createUser(UserClass(name, email, password), user.uid);
+      createUser(UserClass(name, email, password,user.uid,''), user.uid);
       userName = user.displayName ?? "Unknown";
       userEmail = user.email!;
     }
@@ -109,7 +109,7 @@ class Authentication {
     return userFromJson(data);
   }
 
-  
+
 
   void updateUser(UserClass user, String id) {
     firestoreInstance.collection("users").doc(id).update(user.toJson());

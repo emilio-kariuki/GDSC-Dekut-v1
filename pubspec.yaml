@@ -64,7 +64,8 @@ dependencies:
   twitter_login: ^4.2.3
   flutter_launcher_icons: ^0.10.0
   contactus: ^1.2.0
-  carousel_indicator: ^1.0.6
+
+  dots_indicator: ^2.1.0
 
 dev_dependencies:
   flutter_test:

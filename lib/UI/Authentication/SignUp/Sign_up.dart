@@ -113,7 +113,7 @@ class _RegisterState extends State<Register> {
                         userName = user.displayName!;
                         userEmail = user.email!;
                         createUser(
-                            UserClass(user.displayName!, user.email!, ''),
+                            UserClass(user.displayName!, user.email!, '',user.uid,''),
                             user.uid);
                         Get.offAll(() => const Home(),duration:const Duration(milliseconds: 100));
                       }
@@ -142,7 +142,7 @@ class _RegisterState extends State<Register> {
                         case TwitterLoginStatus.error:
                           // error
                           break;
-                          default: 
+                          default:
                            TwitterLoginStatus.error;
                       }
                     })

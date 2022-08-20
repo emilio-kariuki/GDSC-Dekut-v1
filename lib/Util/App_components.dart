@@ -4,21 +4,22 @@ import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_indicator/carousel_indicator.dart';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gdsc_app/Controller/app_controller.dart';
 import 'package:gdsc_app/Firebase_Logic/EventFirebase.dart';
 import 'package:gdsc_app/Firebase_Logic/UserFirebase.dart';
+import 'package:gdsc_app/UI/Events/UI/Events.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Admins/Admins.dart';
-import 'package:gdsc_app/UI/Profile/Pages/Leads/Model/leads_model.dart';
+
 import 'package:gdsc_app/UI/Profile/Pages/Post/Post.dart';
 import 'package:gdsc_app/Util/App_Constants.dart';
 import 'package:gdsc_app/Util/dimensions.dart';
@@ -32,6 +33,8 @@ import '../main.dart';
 
 String? url;
 File? image;
+String? profileUrl;
+String? stack;
 final title = TextEditingController();
 final description = TextEditingController();
 final name = TextEditingController();
@@ -42,6 +45,40 @@ final organizers = TextEditingController();
 final phone = TextEditingController();
 final email = TextEditingController();
 int i = 0;
+
+//Leads
+final nameLead = TextEditingController();
+final roleLead = TextEditingController();
+final phoneLead = TextEditingController();
+final emailLead = TextEditingController();
+String? urlLead;
+
+//Resources
+final titleResource = TextEditingController();
+final descriptionResource = TextEditingController();
+final linkResource = TextEditingController();
+String? urlResource;
+
+//Announcements
+final titleAnnouncement = TextEditingController();
+final descriptionAnnouncement = TextEditingController();
+String? urlAnnouncement;
+
+//Events
+final titleEvent = TextEditingController();
+final descriptionEvent = TextEditingController();
+final venueEvent = TextEditingController();
+final linkEvent = TextEditingController();
+final organizersEvent = TextEditingController();
+
+String? urlEvent;
+
+//Meeting
+final titleMeeting = TextEditingController();
+final descriptionMeeting = TextEditingController();
+final linkMeeting = TextEditingController();
+final organizersMeeting = TextEditingController();
+String? urlMeeting;
 
 class Components {
   static File? image;
@@ -140,7 +177,7 @@ class Components {
         height: 90,
         width: 50,
         fit: BoxFit.cover,
-        imageUrl: Constants.defaultIcon,
+        imageUrl: profileUrl ?? Constants.defaultIcon,
         progressIndicatorBuilder: (context, url, downloadProgress) =>
             CircularProgressIndicator(
                 strokeWidth: 1, value: downloadProgress.progress),
@@ -157,16 +194,18 @@ class Components {
         children: [
           avatar(),
           const SizedBox(width: 15),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              header_3(userName,
-                  controller.isDark.value ? Colors.white : Colors.black87),
-              header_3(userEmail,
-                  controller.isDark.value ? Colors.white : Colors.black54)
-            ],
-          ),
+          Obx(() => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  header_3(userName,
+                      controller.isDark.value ? Colors.white : Colors.black87),
+                  header_3(userEmail,
+                      controller.isDark.value ? Colors.white : Colors.black54),
+                  header_3(controller.stack.value,
+                      controller.isDark.value ? Colors.white : Colors.black54)
+                ],
+              )),
         ],
       ),
     );
@@ -390,6 +429,161 @@ class Components {
     );
   }
 
+  static Future<String?> uploadFileLead(File image) async {
+    try {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      String filename = path.basename(image.path);
+      Reference ref = storage.ref().child("EcoVille/$filename");
+
+      if (controller.isSent.value == false) {
+        Get.defaultDialog(
+            title: "Uploading image...",
+            //middleTextStyle: TextAlign.center,
+            middleTextStyle: GoogleFonts.quicksand(
+              fontSize: 18,
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+            ),
+            content: const CircularProgressIndicator());
+        await ref.putFile(image);
+        urlLead = await ref.getDownloadURL();
+        controller.isSent.value = false;
+
+        Get.back();
+      }
+
+      controller.isSent.value = false;
+      print(url);
+      return url;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static Future<String?> uploadFileMeeting(File image) async {
+    try {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      String filename = path.basename(image.path);
+      Reference ref = storage.ref().child("EcoVille/$filename");
+
+      if (controller.isSent.value == false) {
+        Get.defaultDialog(
+            title: "Uploading image...",
+            //middleTextStyle: TextAlign.center,
+            middleTextStyle: GoogleFonts.quicksand(
+              fontSize: 18,
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+            ),
+            content: const CircularProgressIndicator());
+        await ref.putFile(image);
+        urlMeeting = await ref.getDownloadURL();
+        controller.isSent.value = false;
+
+        Get.back();
+      }
+
+      controller.isSent.value = false;
+      print(url);
+      return url;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static Future<String?> uploadFileResource(File image) async {
+    try {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      String filename = path.basename(image.path);
+      Reference ref = storage.ref().child("EcoVille/$filename");
+
+      if (controller.isSent.value == false) {
+        Get.defaultDialog(
+            title: "Uploading image...",
+            //middleTextStyle: TextAlign.center,
+            middleTextStyle: GoogleFonts.quicksand(
+              fontSize: 18,
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+            ),
+            content: const CircularProgressIndicator());
+        await ref.putFile(image);
+        urlResource = await ref.getDownloadURL();
+        controller.isSent.value = false;
+
+        Get.back();
+      }
+
+      controller.isSent.value = false;
+      print(url);
+      return url;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static Future<String?> uploadFileAnnouncement(File image) async {
+    try {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      String filename = path.basename(image.path);
+      Reference ref = storage.ref().child("EcoVille/$filename");
+
+      if (controller.isSent.value == false) {
+        Get.defaultDialog(
+            title: "Uploading image...",
+            //middleTextStyle: TextAlign.center,
+            middleTextStyle: GoogleFonts.quicksand(
+              fontSize: 18,
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+            ),
+            content: const CircularProgressIndicator());
+        await ref.putFile(image);
+        urlAnnouncement = await ref.getDownloadURL();
+        controller.isSent.value = false;
+
+        Get.back();
+      }
+
+      controller.isSent.value = false;
+      print(url);
+      return url;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  static Future<String?> uploadFileEvent(File image) async {
+    try {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      String filename = path.basename(image.path);
+      Reference ref = storage.ref().child("EcoVille/$filename");
+
+      if (controller.isSent.value == false) {
+        Get.defaultDialog(
+            title: "Uploading image...",
+            //middleTextStyle: TextAlign.center,
+            middleTextStyle: GoogleFonts.quicksand(
+              fontSize: 18,
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+            ),
+            content: const CircularProgressIndicator());
+        await ref.putFile(image);
+        urlEvent = await ref.getDownloadURL();
+        controller.isSent.value = false;
+
+        Get.back();
+      }
+
+      controller.isSent.value = false;
+      print(url);
+      return url;
+    } catch (e) {
+      print(e);
+    }
+  }
+
   static Future<String?> uploadFile(File image) async {
     try {
       FirebaseStorage storage = FirebaseStorage.instance;
@@ -456,8 +650,6 @@ class Components {
                   Map<String, dynamic> data =
                       docs[index].data() as Map<String, dynamic>;
 
-                  print("The length is ${docs.length}");
-
                   return ListTile(
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
@@ -489,11 +681,18 @@ class Components {
                                 ? Colors.white
                                 : Colors.black87)),
                     trailing: InkWell(
-                      onTap: () => Components.adminLeadBottomSheet(
-                          docs[index].id, context),
+                      onTap: () {
+                        nameLead.text = data['name'];
+                        roleLead.text = data['role'];
+                        emailLead.text = data['email'];
+                        phoneLead.text = data['phone'];
+                        urlLead = data['imageUrl'];
+                        Components.adminLeadBottomSheet(
+                            docs[index].id, context);
+                      },
                       child: Icon(
                         Icons.edit,
-                        size: 20,
+                        size: 18,
                         color: controller.isDark.value
                             ? Colors.white
                             : Colors.black87,
@@ -550,8 +749,6 @@ class Components {
                   Map<String, dynamic> data =
                       docs[index].data() as Map<String, dynamic>;
 
-                  print("The length is ${docs.length}");
-
                   return ListTile(
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
@@ -591,7 +788,7 @@ class Components {
                                               tag: docs[index].id,
                                               child: Center(
                                                 child: CachedNetworkImage(
-                                                  height: 300,
+                                                  //height: 300,
                                                   width: MediaQuery.of(context)
                                                       .size
                                                       .width,
@@ -709,8 +906,6 @@ class Components {
                   Map<String, dynamic> data =
                       docs[index].data() as Map<String, dynamic>;
 
-                  print("The length is ${docs.length}");
-
                   return ListTile(
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
@@ -742,11 +937,17 @@ class Components {
                                 ? Colors.white
                                 : Colors.black87)),
                     trailing: InkWell(
-                      onTap: () => Components.adminResourcesBottomSheet(
-                          docs[index].id, context),
+                      onTap: () {
+                        titleResource.text = data['title'];
+                        descriptionResource.text = data['description'];
+                        linkResource.text = data['link'];
+                        urlResource = data['imageUrl'];
+                        Components.adminResourcesBottomSheet(
+                            docs[index].id, context);
+                      },
                       child: Icon(
                         Icons.edit,
-                        size: 20,
+                        size: 18,
                         color: controller.isDark.value
                             ? Colors.white
                             : Colors.black87,
@@ -806,8 +1007,6 @@ class Components {
                   Map<String, dynamic> data =
                       docs[index].data() as Map<String, dynamic>;
 
-                  print("The length is ${docs.length}");
-
                   return ListTile(
                     onTap: () async {
                       String url = data['link'];
@@ -860,7 +1059,7 @@ class Components {
                                               tag: docs[index].id,
                                               child: Center(
                                                 child: CachedNetworkImage(
-                                                  height: 300,
+                                                  //height: 300,
                                                   width: MediaQuery.of(context)
                                                       .size
                                                       .width,
@@ -971,8 +1170,6 @@ class Components {
                   Map<String, dynamic> data =
                       docs![index].data() as Map<String, dynamic>;
 
-                  print("The length is ${docs.length}");
-
                   return ListTile(
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
@@ -1004,11 +1201,16 @@ class Components {
                                 ? Colors.white
                                 : Colors.black87)),
                     trailing: InkWell(
-                      onTap: () => Components.adminAnnouncementBottomSheet(
-                          docs[index].id, context),
+                      onTap: () {
+                        titleAnnouncement.text = data['title'];
+                        descriptionAnnouncement.text = data['description'];
+                        urlAnnouncement = data['imageUrl'];
+                        Components.adminAnnouncementBottomSheet(
+                            docs[index].id, context);
+                      },
                       child: Icon(
                         Icons.edit,
-                        size: 20,
+                        size: 18,
                         color: controller.isDark.value
                             ? Colors.white
                             : Colors.black87,
@@ -1061,8 +1263,6 @@ class Components {
                 itemBuilder: (context, int index) {
                   Map<String, dynamic> data =
                       docs[index].data() as Map<String, dynamic>;
-
-                  print("The length is ${docs.length}");
 
                   return ListTile(
                     leading: ClipRRect(
@@ -1151,8 +1351,6 @@ class Components {
                   Map<String, dynamic> data =
                       docs[index].data() as Map<String, dynamic>;
 
-                  print("The length is ${docs.length}");
-
                   return ListTile(
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
@@ -1187,11 +1385,21 @@ class Components {
                                 ? Colors.white
                                 : Colors.black87)),
                     trailing: InkWell(
-                      onTap: () => Components.adminEventBottomSheet(
-                          docs[index].id, context),
+                      onTap: () {
+                        titleEvent.text = data['title'];
+                        descriptionEvent.text = data['description'];
+                        urlEvent = data['imageUrl'];
+                        venueEvent.text = data['venue'];
+                        controller.selectTime.value = data['time'];
+                        controller.selectedDate.value = data['date'];
+                        organizersEvent.text = data['organizers'];
+                        linkEvent.text = data['link'];
+                        Components.adminEventBottomSheet(
+                            docs[index].id, context);
+                      },
                       child: Icon(
                         Icons.edit,
-                        size: 20,
+                        size: 18,
                         color: controller.isDark.value
                             ? Colors.white
                             : Colors.black87,
@@ -1238,6 +1446,7 @@ class Components {
                 );
               }
               final docs = snapshot.data?.docs;
+
               return ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 reverse: false,
@@ -1248,11 +1457,9 @@ class Components {
                   Map<String, dynamic> data =
                       docs![index].data() as Map<String, dynamic>;
 
-                  print("The length is ${docs.length}");
-
                   return ListTile(
                     leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
+                      borderRadius: BorderRadius.circular(50),
                       child: InkWell(
                         onTap: () {
                           Navigator.of(context).push(
@@ -1289,7 +1496,7 @@ class Components {
                                               tag: docs[index].id,
                                               child: Center(
                                                 child: CachedNetworkImage(
-                                                  height: 300,
+                                                  //height: 40,
                                                   width: MediaQuery.of(context)
                                                       .size
                                                       .width,
@@ -1340,6 +1547,268 @@ class Components {
                       ),
                     ),
                     subtitle: Text(data['venue'],
+                        style: TextStyle(
+                            color: controller.isDark.value
+                                ? Colors.white
+                                : Colors.black87)),
+                    trailing: Text(data['date'],
+                        style: TextStyle(
+                          color: controller.isDark.value
+                              ? Colors.white
+                              : Colors.black87,
+                        )),
+                  );
+                },
+              );
+            },
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: const CircularProgressIndicator(),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  static Widget adminMeetingListCard(BuildContext context) {
+    final Stream<QuerySnapshot> detailStream =
+        FirebaseFirestore.instance.collection('meetings').snapshots();
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 2,
+      height: MediaQuery.of(context).size.height,
+      child: Obx(() {
+        return Visibility(
+          visible: controller.isLoading.value,
+          replacement: StreamBuilder<QuerySnapshot>(
+            stream: detailStream,
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                print("loading");
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const CircularProgressIndicator(),
+                  ),
+                );
+              }
+              final docs = snapshot.data?.docs;
+              return ListView.separated(
+                separatorBuilder: (context, index) {
+                  return spacerHeight(10);
+                },
+                shrinkWrap: true,
+                itemCount: docs!.length,
+                itemBuilder: (context, int index) {
+                  Map<String, dynamic> data =
+                      docs[index].data() as Map<String, dynamic>;
+
+                  return ListTile(
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: InkWell(
+                        onTap: () {},
+                        child: CachedNetworkImage(
+                          height: 50,
+                          width: 50,
+                          fit: BoxFit.cover,
+                          imageUrl: data['imageUrl'] ?? Constants.announceLogo,
+                          progressIndicatorBuilder:
+                              (context, url, downloadProgress) =>
+                                  CircularProgressIndicator(
+                                      strokeWidth: 1,
+                                      value: downloadProgress.progress),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
+                      ),
+                    ),
+                    title: Text(
+                      data['title'],
+                      style: TextStyle(
+                        color: controller.isDark.value
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
+                    ),
+                    subtitle: Text(data['description'],
+                        style: TextStyle(
+                            color: controller.isDark.value
+                                ? Colors.white
+                                : Colors.black87)),
+                    trailing: InkWell(
+                      onTap: () {
+                        titleMeeting.text = data['title'];
+                        descriptionMeeting.text = data['description'];
+                        urlMeeting = data['imageUrl'];
+                        controller.selectTime.value = data['time'];
+                        controller.selectedDate.value = data['date'];
+                        organizersMeeting.text = data['organizers'];
+                        linkMeeting.text = data['link'];
+                        Components.adminMeetingBottomSheet(
+                            docs[index].id, context);
+                      },
+                      child: Icon(
+                        Icons.edit,
+                        size: 18,
+                        color: controller.isDark.value
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: const CircularProgressIndicator(),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  static Widget meetingListCard(BuildContext context) {
+    final Stream<QuerySnapshot> detailStream =
+        FirebaseFirestore.instance.collection('meetings').snapshots();
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 2,
+      height: MediaQuery.of(context).size.height,
+      child: Obx(() {
+        return Visibility(
+          visible: controller.isLoading.value,
+          replacement: StreamBuilder<QuerySnapshot>(
+            stream: detailStream,
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                print("loading");
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const CircularProgressIndicator(),
+                  ),
+                );
+              }
+              final docs = snapshot.data?.docs;
+
+              return ListView.separated(
+                separatorBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: showDividerLine(),
+                  );
+                },
+                physics: NeverScrollableScrollPhysics(),
+                reverse: false,
+                dragStartBehavior: DragStartBehavior.start,
+                shrinkWrap: true,
+                itemCount: docs!.length,
+                itemBuilder: (context, int index) {
+                  Map<String, dynamic> data =
+                      docs[index].data() as Map<String, dynamic>;
+
+                  return ListTile(
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            PageRouteBuilder(
+                              opaque: true,
+                              barrierDismissible: false,
+                              pageBuilder: (BuildContext context, _, __) {
+                                return Scaffold(
+                                  backgroundColor: controller.isDark.value
+                                      ? Colors.grey[900]
+                                      : Colors.white,
+                                  body: SafeArea(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Align(
+                                          alignment: Alignment.topRight,
+                                          child: IconButton(
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(),
+                                            icon:
+                                                const Icon(Icons.cancel_sharp),
+                                            color: controller.isDark.value
+                                                ? Colors.white
+                                                : Colors.black87,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: InteractiveViewer(
+                                            scaleEnabled: true,
+                                            panEnabled: true,
+                                            child: Hero(
+                                              tag: docs[index].id,
+                                              child: Center(
+                                                child: CachedNetworkImage(
+                                                  //height: 40,
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  fit: BoxFit.fill,
+                                                  filterQuality:
+                                                      FilterQuality.high,
+                                                  imageUrl: data['imageUrl'] ??
+                                                      Constants.announceLogo,
+                                                  // placeholder: (context, url) =>
+                                                  //     const CupertinoActivityIndicator(),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                        child: Hero(
+                          tag: docs[index].id,
+                          child: CachedNetworkImage(
+                            height: 50,
+                            width: 50,
+                            fit: BoxFit.cover,
+                            imageUrl: data['imageUrl'],
+                            progressIndicatorBuilder:
+                                (context, url, downloadProgress) =>
+                                    CircularProgressIndicator(
+                                        strokeWidth: 1,
+                                        value: downloadProgress.progress),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
+                          ),
+                        ),
+                      ),
+                    ),
+                    title: Text(
+                      data['title'],
+                      style: TextStyle(
+                        color: controller.isDark.value
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
+                    ),
+                    subtitle: Text(data['description'],
                         style: TextStyle(
                             color: controller.isDark.value
                                 ? Colors.white
@@ -1495,6 +1964,36 @@ class Components {
     );
   }
 
+  static adminMeetingBottomSheet(String id, BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    Get.bottomSheet(
+      elevation: 0,
+
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+      Container(
+          height: size.height * 0.13,
+          color: controller.isDark.value ? Colors.grey[900] : Colors.white,
+          child: Row(
+            children: [
+              Expanded(
+                  child: button("Edit", () async {
+                Get.back();
+                await editMeeting(id, context);
+              }, context)),
+              Expanded(
+                  child: button("Delete", () {
+                ActionFirebase.deleteDoc(id, 'meetings');
+                Get.back();
+              }, context))
+            ],
+          )),
+      //barrierColor: Colors.red[50],
+      isDismissible: true,
+    );
+  }
+
   static adminLeadBottomSheet(String id, BuildContext context) {
     final size = MediaQuery.of(context).size;
     Get.bottomSheet(
@@ -1573,13 +2072,13 @@ class Components {
             showRequired: true,
             title: "Name",
             hint: "Enter the name of the lead?",
-            controller: name,
+            controller: nameLead,
           ),
           InputField(
             showRequired: true,
             title: "Role",
             hint: "Enter the role of the lead?",
-            controller: role,
+            controller: roleLead,
           ),
           Components.spacerHeight(5),
           Row(
@@ -1590,7 +2089,7 @@ class Components {
               InkWell(
                 onTap: () async {
                   await imageDialog(context);
-                  //await Components.uploadFile(controller.image!);
+                  await Components.uploadFileLead(image!);
                 },
                 child: Icon(
                   Icons.add_a_photo_outlined,
@@ -1605,13 +2104,13 @@ class Components {
             showRequired: true,
             title: "Phone",
             hint: "Enter the phone number of the lead?",
-            controller: name,
+            controller: phoneLead,
           ),
           InputField(
             showRequired: true,
             title: "Email",
             hint: "Enter the email of the lead?",
-            controller: role,
+            controller: emailLead,
           ),
         ],
       ),
@@ -1623,9 +2122,11 @@ class Components {
       onCancel: (() => Get.back()),
       onConfirm: () async {
         await firestoreInstance.collection("leads").doc(id).update({
-          "name": name.text,
-          "role": role.text,
-          "imageUrl": url,
+          "name": nameLead.text,
+          "role": roleLead.text,
+          "phone": phoneLead.text,
+          "email": emailLead.text,
+          "imageUrl": url ?? urlLead,
         }).then((value) {
           Components.showMessage("Data Updated successfully");
         }).catchError((error) {
@@ -1744,13 +2245,13 @@ class Components {
             showRequired: true,
             title: "Title",
             hint: "Enter the title of the announcement?",
-            controller: title,
+            controller: titleAnnouncement,
           ),
           InputField(
             showRequired: true,
             title: "Description",
             hint: "Enter the description of the annoucement?",
-            controller: description,
+            controller: descriptionAnnouncement,
             maxLength: 80,
             linesCount: 3,
           ),
@@ -1763,7 +2264,7 @@ class Components {
               InkWell(
                 onTap: () async {
                   await imageDialog(context);
-                  //await Components.uploadFile(controller.image!);
+                  await Components.uploadFileAnnouncement(image!);
                 },
                 child: Icon(
                   Icons.add_a_photo_outlined,
@@ -1786,7 +2287,7 @@ class Components {
         await firestoreInstance.collection("announcements").doc(id).update({
           "title": title.text,
           "description": description.text,
-          "imageUrl": url,
+          "imageUrl": url ?? urlAnnouncement,
         }).then((value) {
           Components.showMessage("Data Updated successfully");
         }).catchError((error) {
@@ -1813,19 +2314,19 @@ class Components {
             showRequired: true,
             title: "Title",
             hint: "Enter the title of the resource?",
-            controller: title,
+            controller: titleResource,
           ),
           InputField(
             showRequired: true,
             title: "Link",
             hint: "Enter the link of the resource",
-            controller: link,
+            controller: linkResource,
           ),
           InputField(
             showRequired: true,
             title: "Description",
             hint: "Enter the description of the resource?",
-            controller: description,
+            controller: descriptionResource,
             maxLength: 80,
             linesCount: 3,
           ),
@@ -1837,7 +2338,7 @@ class Components {
               InkWell(
                 onTap: () async {
                   await imageDialog(context);
-                  await Components.uploadFile(image!);
+                  await Components.uploadFileResource(image!);
                 },
                 child: Icon(
                   Icons.add_a_photo_outlined,
@@ -1858,10 +2359,10 @@ class Components {
       onCancel: (() => Get.back()),
       onConfirm: () async {
         await firestoreInstance.collection("resources").doc(id).update({
-          "title": title.text,
-          "link": link.text,
-          "description": description.text,
-          "imageUrl": url,
+          "title": titleResource.text,
+          "link": linkResource.text,
+          "description": descriptionResource.text,
+          "imageUrl": url ?? urlResource,
         }).then((value) {
           Components.showMessage("Data Updated successfully");
         }).catchError((error) {
@@ -1870,6 +2371,114 @@ class Components {
         Get.back();
       },
     );
+  }
+
+  static editMeeting(String id, BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            //titlePadding: EdgeInsets.only(top: 5),
+            contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+
+            backgroundColor:
+                controller.isDark.value ? Colors.grey[900] : Colors.white,
+            titleTextStyle: GoogleFonts.quicksand(
+              color: controller.isDark.value ? Colors.white : Colors.black87,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+            title: Text("Edit a Meeting"),
+            content: SingleChildScrollView(
+              child: Column(
+                children: [
+                  InputField(
+                    showRequired: true,
+                    title: "Title",
+                    hint: "Enter the title of the meeting?",
+                    controller: titleMeeting,
+                  ),
+                  InputField(
+                    showRequired: true,
+                    title: "Description",
+                    hint: "Enter the description of the meeting?",
+                    controller: descriptionMeeting,
+                    maxLength: 80,
+                    linesCount: 3,
+                  ),
+                  Components.spacerHeight(Dimensions.PADDING_SIZE_SMALL),
+                  Row(
+                    children: [
+                      Components.header_3(
+                          "Select Image",
+                          controller.isDark.value
+                              ? Colors.white
+                              : Colors.black87),
+                      Expanded(child: Container()),
+                      InkWell(
+                        onTap: () async {
+                          await imageDialog(context);
+                          await Components.uploadFileMeeting(image!);
+                        },
+                        child: Icon(
+                          Icons.add_a_photo_outlined,
+                          color: controller.isDark.value
+                              ? Colors.white
+                              : Colors.black87,
+                          size: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                  InputField(
+                    title: "Organizers",
+                    hint: "Enter the organizers of the event?",
+                    controller: organizersMeeting,
+                  ),
+                  InputField(
+                    showRequired: true,
+                    title: "Registration Link",
+                    hint: "Enter the link of the event?",
+                    controller: linkMeeting,
+                  ),
+                  rowTimeAndEvent(context),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: button("Exit", () async {
+                        Get.back();
+                      }, context)),
+                      Expanded(
+                          child: button("Ok", () async {
+                        await firestoreInstance
+                            .collection("meetings")
+                            .doc(id)
+                            .update({
+                          "title": titleMeeting.text,
+                          "description": descriptionMeeting.text,
+                          "organizers": organizersMeeting.text,
+                          "link": linkMeeting.text,
+                          "date": controller.selectedDate.value,
+                          "time": controller.selectTime.value,
+                          "imageUrl": urlMeeting,
+                        }).then((value) {
+                          Components.showMessage("Data Updated successfully");
+                        }).catchError((error) {
+                          Components.showMessage("Failed to update");
+                        });
+                        Get.back();
+                        Get.back();
+                      }, context))
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            scrollable: true,
+          );
+        });
   }
 
   static editEvent(String id, BuildContext context) {
@@ -1897,13 +2506,13 @@ class Components {
                     showRequired: true,
                     title: "Title",
                     hint: "Enter the title of the event?",
-                    controller: title,
+                    controller: titleEvent,
                   ),
                   InputField(
                     showRequired: true,
                     title: "Description",
                     hint: "Enter the description of the event?",
-                    controller: description,
+                    controller: descriptionEvent,
                     maxLength: 80,
                     linesCount: 3,
                   ),
@@ -1911,7 +2520,7 @@ class Components {
                     showRequired: true,
                     title: "Venue",
                     hint: "Enter the venue of the event?",
-                    controller: venue,
+                    controller: venueEvent,
                   ),
                   Components.spacerHeight(Dimensions.PADDING_SIZE_SMALL),
                   Row(
@@ -1925,7 +2534,7 @@ class Components {
                       InkWell(
                         onTap: () async {
                           await imageDialog(context);
-                          await Components.uploadFile(image!);
+                          await Components.uploadFileEvent(image!);
                         },
                         child: Icon(
                           Icons.add_a_photo_outlined,
@@ -1940,13 +2549,13 @@ class Components {
                   InputField(
                     title: "Organizers",
                     hint: "Enter the organizers of the event?",
-                    controller: organizers,
+                    controller: organizersEvent,
                   ),
                   InputField(
                     showRequired: true,
                     title: "Registration Link",
                     hint: "Enter the link of the event?",
-                    controller: link,
+                    controller: linkEvent,
                   ),
                   rowTimeAndEvent(context),
                   Row(
@@ -1961,14 +2570,14 @@ class Components {
                             .collection("events")
                             .doc(id)
                             .update({
-                          "title": title.text,
-                          "description": description.text,
-                          "venue": venue.text,
-                          "organizers": organizers.text,
-                          "link": link.text,
+                          "title": titleEvent.text,
+                          "description": descriptionEvent.text,
+                          "venue": venueEvent.text,
+                          "organizers": organizersEvent.text,
+                          "link": linkEvent.text,
                           "date": controller.selectedDate.value,
-                          "time": controller.time.value,
-                          "imageUrl": url,
+                          "time": controller.selectTime.value,
+                          "imageUrl": urlEvent,
                         }).then((value) {
                           Components.showMessage("Data Updated successfully");
                         }).catchError((error) {
@@ -2160,33 +2769,36 @@ class Components {
               }
               final docs = snapshot.data?.docs;
               controller.docsLength.value = docs!.length;
+              itemCount = controller.docsLength.value;
 
               return CarouselSlider.builder(
                 options: CarouselOptions(
-                    //height: MediaQuery.of(context).size.height * 0.22,
+                    height: MediaQuery.of(context).size.height * 0.2,
                     enlargeCenterPage: true,
                     viewportFraction: 1,
                     autoPlay: true,
+                    //enlargeCenterPage: true,
                     onPageChanged: (int i, carouselPageChangedReason) {
-                      controller.i.value = i;
+                      controller.i.value = i.toDouble();
+                      controller.update();
                     }),
-
                 itemCount: docs.length,
                 itemBuilder: (context, index, realIndex) {
                   Map<String, dynamic> data =
                       docs[index].data() as Map<String, dynamic>;
 
-                  print("The length is ${docs.length}");
                   return Stack(
                     children: [
                       Container(
+                        height: MediaQuery.of(context).size.height * 0.2,
                         margin: EdgeInsets.symmetric(horizontal: 5),
                         child: Padding(
-                          padding: const EdgeInsets.all(5.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
                           child: Container(
-                            padding: EdgeInsets.all(2),
+                            padding: EdgeInsets.symmetric(horizontal: 5),
                             height: MediaQuery.of(context).size.height * 2,
                             child: Column(
+                              mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
@@ -2206,26 +2818,112 @@ class Components {
                                           )),
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(15),
-                                        child: CachedNetworkImage(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.11,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.13,
-                                          fit: BoxFit.fill,
-                                          imageUrl: data['imageUrl'] ??
-                                              Constants.announceLogo,
-                                          progressIndicatorBuilder: (context,
-                                                  url, downloadProgress) =>
-                                              CircularProgressIndicator(
-                                                  strokeWidth: 1,
-                                                  value: downloadProgress
-                                                      .progress),
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(Icons.error),
+                                        child: InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                              PageRouteBuilder(
+                                                opaque: true,
+                                                barrierDismissible: false,
+                                                pageBuilder:
+                                                    (BuildContext context, _,
+                                                        __) {
+                                                  return Scaffold(
+                                                    backgroundColor:
+                                                        controller.isDark.value
+                                                            ? Colors.grey[900]
+                                                            : Colors.white,
+                                                    body: SafeArea(
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: <Widget>[
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .topRight,
+                                                            child: IconButton(
+                                                              onPressed: () =>
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop(),
+                                                              icon: const Icon(Icons
+                                                                  .cancel_sharp),
+                                                              color: controller
+                                                                      .isDark
+                                                                      .value
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .black87,
+                                                            ),
+                                                          ),
+                                                          Expanded(
+                                                            child:
+                                                                InteractiveViewer(
+                                                              scaleEnabled:
+                                                                  true,
+                                                              panEnabled: true,
+                                                              child: Hero(
+                                                                tag: docs[index]
+                                                                    .id,
+                                                                child: Center(
+                                                                  child:
+                                                                      CachedNetworkImage(
+                                                                    //height: 40,
+                                                                    width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                    filterQuality:
+                                                                        FilterQuality
+                                                                            .high,
+                                                                    imageUrl: data[
+                                                                            'imageUrl'] ??
+                                                                        Constants
+                                                                            .announceLogo,
+                                                                    // placeholder: (context, url) =>
+                                                                    //     const CupertinoActivityIndicator(),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            );
+                                          },
+                                          child: Hero(
+                                            tag: docs[index].id,
+                                            child: CachedNetworkImage(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.11,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.13,
+                                              fit: BoxFit.cover,
+                                              imageUrl: data['imageUrl'] ??
+                                                  Constants.announceLogo,
+                                              progressIndicatorBuilder:
+                                                  (context, url,
+                                                          downloadProgress) =>
+                                                      CircularProgressIndicator(
+                                                          strokeWidth: 1,
+                                                          value:
+                                                              downloadProgress
+                                                                  .progress),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Icon(Icons.error),
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -2361,7 +3059,6 @@ class Components {
                                     controller.isDark.value
                                         ? Colors.white
                                         : Colors.black87),
-
                               ],
                             ),
                           ),
@@ -2371,11 +3068,383 @@ class Components {
                           top: 5,
                           right: 15,
                           child: Icon(Icons.link,
-                              size: 20, color: Colors.deepOrange))
+                              size: 20, color: Colors.deepOrange)),
                     ],
                   );
                 },
               );
+            },
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: const CircularProgressIndicator(),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  static Widget meetingListSlider(BuildContext context) {
+    final Stream<QuerySnapshot> detailStream =
+        FirebaseFirestore.instance.collection('meetings').snapshots();
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      //height: MediaQuery.of(context).size.height,
+      child: Obx(() {
+        return Visibility(
+          visible: controller.isLoading.value,
+          replacement: StreamBuilder<QuerySnapshot>(
+            stream: detailStream,
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                print("loading");
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const CircularProgressIndicator(),
+                  ),
+                );
+              }
+              final docs = snapshot.data?.docs;
+              controller.docsLength.value = docs!.length;
+              itemCount = controller.docsLength.value;
+
+              return CarouselSlider.builder(
+                options: CarouselOptions(
+                    height: MediaQuery.of(context).size.height * 0.2,
+                    enlargeCenterPage: true,
+                    viewportFraction: 1,
+                    autoPlay: true,
+                    //enlargeCenterPage: true,
+                    onPageChanged: (int i, carouselPageChangedReason) {
+                      controller.i.value = i.toDouble();
+                      controller.update();
+                    }),
+                itemCount: docs.length,
+                itemBuilder: (context, index, realIndex) {
+                  Map<String, dynamic> data =
+                      docs[index].data() as Map<String, dynamic>;
+
+                  return Stack(
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.2,
+                        margin: EdgeInsets.symmetric(horizontal: 5),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            height: MediaQuery.of(context).size.height * 2,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  //mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          border: Border.all(
+                                            color: controller.isDark.value
+                                                ? Color.fromARGB(
+                                                    255, 255, 255, 255)
+                                                : Colors.black87,
+                                            width: 1,
+                                          )),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(15),
+                                        child: InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                              PageRouteBuilder(
+                                                opaque: true,
+                                                barrierDismissible: false,
+                                                pageBuilder:
+                                                    (BuildContext context, _,
+                                                        __) {
+                                                  return Scaffold(
+                                                    backgroundColor:
+                                                        controller.isDark.value
+                                                            ? Colors.grey[900]
+                                                            : Colors.white,
+                                                    body: SafeArea(
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: <Widget>[
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .topRight,
+                                                            child: IconButton(
+                                                              onPressed: () =>
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop(),
+                                                              icon: const Icon(Icons
+                                                                  .cancel_sharp),
+                                                              color: controller
+                                                                      .isDark
+                                                                      .value
+                                                                  ? Colors.white
+                                                                  : Colors
+                                                                      .black87,
+                                                            ),
+                                                          ),
+                                                          Expanded(
+                                                            child:
+                                                                InteractiveViewer(
+                                                              scaleEnabled:
+                                                                  true,
+                                                              panEnabled: true,
+                                                              child: Hero(
+                                                                tag: docs[index]
+                                                                    .id,
+                                                                child: Center(
+                                                                  child:
+                                                                      CachedNetworkImage(
+                                                                    //height: 40,
+                                                                    width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                    filterQuality:
+                                                                        FilterQuality
+                                                                            .high,
+                                                                    imageUrl: data[
+                                                                            'imageUrl'] ??
+                                                                        Constants
+                                                                            .announceLogo,
+                                                                    // placeholder: (context, url) =>
+                                                                    //     const CupertinoActivityIndicator(),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            );
+                                          },
+                                          child: Hero(
+                                            tag: docs[index].id,
+                                            child: CachedNetworkImage(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.11,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.13,
+                                              fit: BoxFit.cover,
+                                              imageUrl: data['imageUrl'] ??
+                                                  Constants.announceLogo,
+                                              progressIndicatorBuilder:
+                                                  (context, url,
+                                                          downloadProgress) =>
+                                                      CircularProgressIndicator(
+                                                          strokeWidth: 1,
+                                                          value:
+                                                              downloadProgress
+                                                                  .progress),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      const Icon(Icons.error),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    spacerWidth(15),
+                                    // RotatedBox(
+                                    //   quarterTurns: 2,
+                                    //   child: Container(
+                                    //     height:
+                                    //         MediaQuery.of(context).size.height * 0.12,
+                                    //     width: 1,
+                                    //     decoration: BoxDecoration(
+                                    //       color: controller.isDark.value
+                                    //           ? Colors.white
+                                    //           : Color.fromARGB(255, 255, 0, 0)
+                                    //               .withOpacity(0.7),
+                                    //     ),
+                                    //   ),
+                                    // ),
+                                    spacerWidth(5),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        //spacerHeight(3),
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.title,
+                                              size: 18,
+                                              color: controller.isDark.value
+                                                  ? Color.fromARGB(
+                                                      255, 255, 149, 0)
+                                                  : Color.fromARGB(
+                                                      255, 255, 149, 0),
+                                            ),
+                                            spacerWidth(2),
+                                            header_4(
+                                                "Title: ${data['title']}",
+                                                controller.isDark.value
+                                                    ? Colors.white
+                                                    : Colors.black87),
+                                          ],
+                                        ),
+                                        spacerHeight(1),
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.calendar_month,
+                                              size: 18,
+                                              color: controller.isDark.value
+                                                  ? Color.fromARGB(
+                                                      255, 255, 149, 0)
+                                                  : Color.fromARGB(
+                                                      255, 255, 149, 0),
+                                            ),
+                                            spacerWidth(2),
+                                            header_4(
+                                                "Date : ${data['date']}",
+                                                controller.isDark.value
+                                                    ? Colors.white
+                                                    : Colors.black87),
+                                          ],
+                                        ),
+                                        spacerHeight(1),
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.alarm,
+                                              size: 18,
+                                              color: controller.isDark.value
+                                                  ? Color.fromARGB(
+                                                      255, 255, 149, 0)
+                                                  : Color.fromARGB(
+                                                      255, 255, 149, 0),
+                                            ),
+                                            spacerWidth(2),
+                                            header_4(
+                                                "Time : ${data['time']}",
+                                                controller.isDark.value
+                                                    ? Colors.white
+                                                    : Colors.black87),
+                                          ],
+                                        ),
+                                        spacerHeight(1),
+
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.desktop_windows_outlined,
+                                              size: 18,
+                                              color: controller.isDark.value
+                                                  ? Color.fromARGB(
+                                                      255, 255, 149, 0)
+                                                  : Color.fromARGB(
+                                                      255, 255, 149, 0),
+                                            ),
+                                            spacerWidth(2),
+                                            header_4(
+                                                "Organizer : ${data['organizers']}",
+                                                controller.isDark.value
+                                                    ? Colors.white
+                                                    : Colors.black87),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                spacerHeight(10),
+                                header_4(
+                                    "Description : ${data['description']}",
+                                    controller.isDark.value
+                                        ? Colors.white
+                                        : Colors.black87),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                          top: 5,
+                          right: 15,
+                          child: Icon(Icons.link,
+                              size: 20, color: Colors.deepOrange)),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: const CircularProgressIndicator(),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  static Widget meetingGridListCard(BuildContext context) {
+    final Stream<QuerySnapshot> detailStream =
+        FirebaseFirestore.instance.collection('meetings').snapshots();
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 2,
+      height: MediaQuery.of(context).size.height,
+      child: Obx(() {
+        return Visibility(
+          visible: controller.isLoading.value,
+          replacement: StreamBuilder<QuerySnapshot>(
+            stream: detailStream,
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                print("loading");
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const CircularProgressIndicator(),
+                  ),
+                );
+              }
+              final docs = snapshot.data?.docs;
+
+              return GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 1.0),
+                      itemCount: docs!.length,
+                  itemBuilder: ((context, index) {
+                    Map<String , dynamic> data =  docs[index].data() as Map<String , dynamic>;
+                    return Text(data['title']);
+                  }));
             },
           ),
           child: Center(

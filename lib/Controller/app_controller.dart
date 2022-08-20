@@ -2,10 +2,12 @@
 
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gdsc_app/Firebase_Logic/EventFirebase.dart';
 import 'package:gdsc_app/UI/Authentication/user_logic.dart';
 import 'package:gdsc_app/Util/App_Constants.dart';
+import 'package:gdsc_app/main.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,13 +25,28 @@ class AppController extends GetxController {
   Rx<File> image = File(Constants.logo).obs;
   final picker = ImagePicker();
   Rx<TimeOfDay> time = TimeOfDay.now().obs;
-  var i = 0.obs;
-  var docsLength = 1.obs;
+  var i = 0.0.obs;
+  var docsLength = 5.obs;
+  var stack = "No Stacking".obs;
 
   @override
   void onInit() {
     super.onInit();
     getThemeStatus();
+    
+  }
+
+  getTechology() async {
+    print("Running the function");
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userID)
+        .get()
+        .then((snapshot) {
+          print ("The tech is ${snapshot['technology']}");
+      stack.value = snapshot['technology'];
+    });
+
   }
 
   void fetchEvents() async {
@@ -45,8 +62,8 @@ class AppController extends GetxController {
   }
 
   Future<void> getImage(ImageSource source) async {
-    final pickedFile = await picker.pickImage(
-        source: source, maxHeight: 480, maxWidth: 640, imageQuality: 100);
+    final pickedFile =
+        await picker.pickImage(source: source, imageQuality: 100);
 
     if (pickedFile != null) {
       image.value = File(pickedFile.path);

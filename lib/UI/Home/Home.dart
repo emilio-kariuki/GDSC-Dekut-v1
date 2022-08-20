@@ -3,6 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gdsc_app/Controller/app_controller.dart';
 import 'package:gdsc_app/UI/Announcement/UI/announcement.dart';
+import 'package:gdsc_app/UI/Meetings/UI/meetings.dart';
 import 'package:gdsc_app/UI/Profile/profile.dart';
 import 'package:gdsc_app/UI/Resources/UI/resources.dart';
 import 'package:get/get.dart';
@@ -26,6 +27,7 @@ class _HomeState extends State<Home> {
     // TODO: implement initState
     super.initState();
     controller.fetchEvents();
+    controller.getTechology();
   }
 
   @override
@@ -43,13 +45,17 @@ class _HomeState extends State<Home> {
       Icons.home,
       Icons.layers,
       Icons.notifications,
+      Icons.missed_video_call_outlined,
       Icons.person,
+
     ];
     List<String> names = [
       "Events",
       "Resources",
-      "Announcements",
+      "News",
+      "Meeting",
       "Profile",
+
     ];
     return AnimatedBottomNavigationBar.builder(
       backgroundColor:
@@ -105,6 +111,7 @@ class _HomeState extends State<Home> {
       const Events(),
       const Resources(),
       const Announcements(),
+      const Meeting(),
       const Account(),
     ];
     return IndexedStack(

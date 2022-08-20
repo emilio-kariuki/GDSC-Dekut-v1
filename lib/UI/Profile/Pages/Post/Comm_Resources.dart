@@ -89,7 +89,7 @@ class _CommunityResourcesState extends State<CommunityResources> {
                   ActionFirebase.createResource(ResourceModel(
                     title.text,
                     description.text,
-                    url!,
+                    url,
                     link.text,
                   ));
                   Get.back();
@@ -103,7 +103,7 @@ class _CommunityResourcesState extends State<CommunityResources> {
 
   Future<void> getImage(ImageSource source) async {
     final image = await picker.pickImage(
-        source: source, maxHeight: 480, maxWidth: 640, imageQuality: 90);
+        source: source, imageQuality: 90);
     try {
       if (image == null) return;
 
@@ -178,7 +178,7 @@ class _CommunityResourcesState extends State<CommunityResources> {
             await getImage(source);
             Get.back();
             await Components.uploadFile(image!);
- 
+
         },
         child: Text(text,
             style: GoogleFonts.quicksand(

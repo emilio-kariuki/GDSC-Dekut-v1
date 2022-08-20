@@ -104,7 +104,7 @@ class _LoginState extends State<Login> {
                         userName = user.displayName!;
                         userEmail = user.email!;
                         createUser(
-                            UserClass(user.displayName!, user.email!, ''),
+                            UserClass(user.displayName!, user.email!, '',user.uid,''),
                             user.uid);
                         Get.offAll(() => const Home());
                       }
@@ -133,7 +133,7 @@ class _LoginState extends State<Login> {
                         case TwitterLoginStatus.error:
                           // error
                           break;
-                        default: 
+                        default:
                            TwitterLoginStatus.error;
                       }
                     })
