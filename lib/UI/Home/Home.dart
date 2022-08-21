@@ -1,6 +1,7 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gdsc_app/Controller/app_controller.dart';
 import 'package:gdsc_app/UI/Announcement/UI/announcement.dart';
 import 'package:gdsc_app/UI/Meetings/UI/meetings.dart';
@@ -24,10 +25,10 @@ class _HomeState extends State<Home> {
   var myGroup = AutoSizeGroup();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     controller.fetchEvents();
     controller.getTechology();
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
   }
 
   @override

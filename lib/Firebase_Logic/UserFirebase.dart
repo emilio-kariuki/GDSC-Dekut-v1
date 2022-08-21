@@ -10,9 +10,13 @@ void createUser(UserClass user, String id) async {
   firestoreInstance.collection('users').doc(id).set({
     "username": user.name,
     "email": user.email,
-    "password": user.password,
+    "phone": user.phone,
+    "github": user.github,
+    "linkedin": user.linkedin,
+    "twitter": user.twitter,
     "userID": user.userID,
     "technology": user.technology,
+    "imageUrl": user.imageUrl,
   });
 }
 

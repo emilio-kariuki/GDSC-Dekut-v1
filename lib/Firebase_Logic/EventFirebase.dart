@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:gdsc_app/UI/Announcement/Model/announcement_model.dart';
 import 'package:gdsc_app/UI/Meetings/Model/meetings_model.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Leads/Model/leads_model.dart';
@@ -36,6 +37,7 @@ class ActionFirebase {
     firestoreInstance.collection('announcements').doc().set({
       "title": ann.title,
       "description": ann.description,
+      "link": ann.link ?? "No link",
       "imageUrl": ann.imageUrl,
     },SetOptions(merge: true));
   }
@@ -60,5 +62,6 @@ class ActionFirebase {
   }
   static void deleteDoc(String id,String collection) async {
     firestoreInstance.collection(collection).doc(id).delete();
+    
   }
 }

@@ -53,6 +53,7 @@ class _CommunityEventsState extends State<CommunityEvents>
               title: "Title",
               hint: "Enter the title of the event?",
               controller: title,
+              maxLength: 22,
             ),
             InputField(
               showRequired: true,
@@ -266,9 +267,7 @@ class _CommunityEventsState extends State<CommunityEvents>
       onTap: ()  async {
           await getImage(source);
           Get.back();
-          await Components.uploadFile(
-            image!,
-          );
+          
 
       },
       leading: Icon(icon, color: const Color.fromARGB(255, 0, 0, 0)),
@@ -276,7 +275,7 @@ class _CommunityEventsState extends State<CommunityEvents>
         onTap: ()  async {
             await getImage(source);
             Get.back();
-            await Components.uploadFile(image!);
+
 
         },
         child: Text(text,

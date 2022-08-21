@@ -32,14 +32,14 @@ class _MeetingState extends State<Meeting> {
       () => Scaffold(
         backgroundColor:
             controller.isDark.value ? Colors.grey[900] : Colors.white,
-        appBar: AppBar(
-          // leading: const Icon(Icons.home, size: 20,color: Colors.black87,),
-          backgroundColor:
-              controller.isDark.value ? Colors.grey[900] : Colors.white,
-          title: Components.header_3("Virtual Meetings",
-              controller.isDark.value ? Colors.white : Colors.black87),
-          elevation: 0,
-        ),
+        // appBar: AppBar(
+        //   // leading: const Icon(Icons.home, size: 20,color: Colors.black87,),
+        //   backgroundColor:
+        //       controller.isDark.value ? Colors.grey[900] : Colors.white,
+        //   title: Components.header_3("Virtual Meetings",
+        //       controller.isDark.value ? Colors.white : Colors.black87),
+        //   elevation: 0,
+        // ),
         body: SafeArea(
             child: SingleChildScrollView(
           //physics: const NeverScrollableScrollPhysics(),
@@ -47,12 +47,12 @@ class _MeetingState extends State<Meeting> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: Components.meetingListSlider(context),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 5),
+              //   child: Components.meetingListSlider(context),
+              // ),
 
-              Components.spacerHeight(15),
+              // Components.spacerHeight(15),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
@@ -64,14 +64,14 @@ class _MeetingState extends State<Meeting> {
                           : Colors.black),
                 ),
               ),
-              Components.spacerHeight(15),
+              Components.spacerHeight(8),
               // Padding(
               //   padding: const EdgeInsets.symmetric(horizontal: 35),
               //   child: Components.showDividerLine(),
               // ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: Components.meetingGridListCard(context),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Components.meetingListCard(context),
               ),
             ],
           ),

@@ -48,6 +48,13 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
                   controller: title,
                 ),
                 InputField(
+                  showRequired: false,
+                  title: "Link",
+                  hint: "Enter the link of the annoucement?",
+                  controller: link,
+
+                ),
+                InputField(
                   showRequired: true,
                   title: "Description",
                   hint: "Enter the description of the annoucement?",
@@ -55,6 +62,7 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
                   maxLength: 80,
                   linesCount: 3,
                 ),
+
                 Components.spacerHeight(10),
                 Row(
                   children: [
@@ -84,6 +92,7 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
                   ActionFirebase.createAnnouncement(AnnouncementModel(
                     title.text,
                     description.text,
+                    link.text ,
                     url,
                   ));
                   Get.back();
@@ -114,6 +123,7 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
 
   Future<String?> imageDialog() async {
     final size = MediaQuery.of(context).size;
+     FocusScope.of(context).requestFocus(FocusNode());
     return showDialog<String>(
       context: context,
       builder: (BuildContext context) => Container(
@@ -159,9 +169,7 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
       onTap: ()  async {
           await getImage(source);
           Get.back();
-          await Components.uploadFile(
-            image!,
-          );
+
 
       },
       leading: Icon(icon, color: const Color.fromARGB(255, 0, 0, 0)),
@@ -169,7 +177,7 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
         onTap: ()  async {
             await getImage(source);
             Get.back();
-            await Components.uploadFile(image!);
+            
 
         },
         child: Text(text,

@@ -130,6 +130,7 @@ final email = TextEditingController();
 
   Future<String?> imageDialog() async {
     final size = MediaQuery.of(context).size;
+     FocusScope.of(context).requestFocus(FocusNode());
     return showDialog<String>(
       context: context,
       builder: (BuildContext context) => Container(
@@ -175,9 +176,7 @@ final email = TextEditingController();
       onTap: () async {
           await getImage(source);
           //Get.back();
-          await Components.uploadFile(
-            image!,
-          );
+
 
       },
       leading: Icon(icon, color: const Color.fromARGB(255, 0, 0, 0)),
@@ -185,8 +184,7 @@ final email = TextEditingController();
         onTap: ()  async {
             await getImage(source);
             // Get.back();
-            await Components.uploadFile(image!);
-
+         
         },
         child: Text(text,
             style: GoogleFonts.quicksand(

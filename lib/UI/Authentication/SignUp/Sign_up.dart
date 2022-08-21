@@ -100,6 +100,10 @@ class _RegisterState extends State<Register> {
                         _isSigningIn = true;
                       });
 
+
+
+
+
                       User? user = await Authentication.signInWithGoogle(
                               context: context)
                           .then((value) {
@@ -113,7 +117,7 @@ class _RegisterState extends State<Register> {
                         userName = user.displayName!;
                         userEmail = user.email!;
                         createUser(
-                            UserClass(user.displayName!, user.email!, '',user.uid,''),
+                            UserClass(user.displayName!, user.email!, 'empty', 'empty', 'empty', 'empty',user.uid,'empty','empty'),
                             user.uid);
                         Get.offAll(() => const Home(),duration:const Duration(milliseconds: 100));
                       }

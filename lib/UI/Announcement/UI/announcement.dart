@@ -20,9 +20,9 @@ class _AnnouncementsState extends State<Announcements> {
             controller.isDark.value ? Colors.grey[900] : Colors.white,
         appBar: AppBar(
           // leading: const Icon(Icons.home, size: 20,color: Colors.black87,),
-          backgroundColor: 
+          backgroundColor:
               controller.isDark.value ? Colors.grey[900] : Colors.white,
-          title: Components.header_3("Announcements", controller.isDark.value ? Colors.white : Colors.black87),
+          title: Components.header_3("News", controller.isDark.value ? Colors.white : Colors.black87),
           elevation: 0,
         ),
         body: SafeArea(

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:gdsc_app/Firebase_Logic/EventFirebase.dart';
 import 'package:gdsc_app/UI/Authentication/user_logic.dart';
 import 'package:gdsc_app/Util/App_Constants.dart';
+import 'package:gdsc_app/Util/App_components.dart';
 import 'package:gdsc_app/main.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -33,7 +34,7 @@ class AppController extends GetxController {
   void onInit() {
     super.onInit();
     getThemeStatus();
-    
+
   }
 
   getTechology() async {
@@ -45,8 +46,25 @@ class AppController extends GetxController {
         .then((snapshot) {
           print ("The tech is ${snapshot['technology']}");
       stack.value = snapshot['technology'];
+      nameDetails.text = snapshot['username'];
+      emailDetails.text = snapshot['email'];
+      phoneDetails.text = snapshot['phone'];
+      githubDetails.text = snapshot['github'];
+      linkedinDetails.text = snapshot['linkedin'];
+      twitterDetails.text = snapshot['twitter'];
+      technologyDetails.text = snapshot['technology'];
+      urlDetails = snapshot['imageUrl'];
+
     });
 
+  }
+
+
+  Future queryData(String queryString){
+    return FirebaseFirestore.instance
+        .collection('resources')
+        .where('title', isEqualTo: queryString)
+        .get();
   }
 
   void fetchEvents() async {

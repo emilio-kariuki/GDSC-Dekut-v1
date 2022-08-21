@@ -34,7 +34,8 @@ class _LoginState extends State<Login> {
     final controller = Get.put(AppController());
 
     return Scaffold(
-      backgroundColor: controller.isDark.value ? Colors.grey[900] : Colors.white,
+      backgroundColor:
+          controller.isDark.value ? Colors.grey[900] : Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -104,7 +105,8 @@ class _LoginState extends State<Login> {
                         userName = user.displayName!;
                         userEmail = user.email!;
                         createUser(
-                            UserClass(user.displayName!, user.email!, '',user.uid,''),
+                            UserClass(user.displayName!, user.email!, 'empty',
+                                'empty', 'empty', 'empty', user.uid, 'empty', 'empty'),
                             user.uid);
                         Get.offAll(() => const Home());
                       }
@@ -114,7 +116,7 @@ class _LoginState extends State<Login> {
                       });
                     }),
                     Components.spacerWidth(Dimensions.PADDING_SIZE_SMALL),
-                    Components.signInWith(Constants.twitter, () async{
+                    Components.signInWith(Constants.twitter, () async {
                       final twitterLogin = TwitterLogin(
                         apiKey: '4Fn8237nn65kNWmiVgmMMCsWc',
                         apiSecretKey:
@@ -134,7 +136,7 @@ class _LoginState extends State<Login> {
                           // error
                           break;
                         default:
-                           TwitterLoginStatus.error;
+                          TwitterLoginStatus.error;
                       }
                     })
                   ],

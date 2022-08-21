@@ -19,7 +19,7 @@ class Authentication {
         .user;
 
     if (user != null) {
-      createUser(UserClass(name, email, password,user.uid,''), user.uid);
+      createUser(UserClass(name, email,'empty', 'empty', 'empty', 'empty', user.uid,'empty','empty'), user.uid);
       userName = user.displayName ?? "Unknown";
       email = user.email!;
     }
@@ -35,11 +35,7 @@ class Authentication {
       password: password,
     ))
         .user;
-    if (user != null) {
-      createUser(UserClass(name, email, password,user.uid,''), user.uid);
-      userName = user.displayName ?? "Unknown";
-      userEmail = user.email!;
-    }
+
     return user;
   }
 
