@@ -29,12 +29,19 @@ class AppController extends GetxController {
   var i = 0.0.obs;
   var docsLength = 5.obs;
   var stack = "No Stacking".obs;
+  var profileImage = Constants.defaultIcon.obs;
+  var profileName = "User".obs;
+  var profileEmail = "".obs;
+  var profilePhone = "".obs;
+  var profileGithub = "".obs;
+  var profileTwitter = "".obs;
+  var profileLinkedin = "".obs;
+
 
   @override
   void onInit() {
     super.onInit();
     getThemeStatus();
-
   }
 
   getTechology() async {
@@ -43,8 +50,8 @@ class AppController extends GetxController {
         .collection('users')
         .doc(userID)
         .get()
-        .then((snapshot) {
-          print ("The tech is ${snapshot['technology']}");
+        .then((snapshot) async {
+      print("The tech is ${snapshot['technology']}");
       stack.value = snapshot['technology'];
       nameDetails.text = snapshot['username'];
       emailDetails.text = snapshot['email'];
@@ -54,13 +61,19 @@ class AppController extends GetxController {
       twitterDetails.text = snapshot['twitter'];
       technologyDetails.text = snapshot['technology'];
       urlDetails = snapshot['imageUrl'];
+      SharedPreferences pref = await _prefs;
+      pref.setString('image', urlDetails!);
+      pref.setString('name', snapshot['username']);
+      pref.setString('email', snapshot['email']);
+      pref.setString('phone', snapshot['phone']);
+      pref.setString('github', snapshot['github']);
+      pref.setString('linkedin', snapshot['linkedin']);
+      pref.setString('twitter', snapshot['twitter']);
 
     });
-
   }
 
-
-  Future queryData(String queryString){
+  Future queryData(String queryString) {
     return FirebaseFirestore.instance
         .collection('resources')
         .where('title', isEqualTo: queryString)
@@ -104,5 +117,46 @@ class AppController extends GetxController {
       return prefs.getBool('theme') ?? true;
     }).obs;
     isDark.value = (await isDarkTheme.value);
+  }
+
+  getProfileImage() async {
+    var image = _prefs.then((SharedPreferences prefs) {
+      return prefs.getString('image') ?? Constants.announceLogo;
+    }).obs;
+
+    profileImage.value = (await image.value);
+  }
+  getProfileDetails() async{
+    var name = _prefs.then((SharedPreferences prefs) {
+      return prefs.getString('name') ?? "User";
+    }).obs;
+    var email = _prefs.then((SharedPreferences prefs) {
+      return prefs.getString('email') ?? "";
+    }).obs;
+    var phone = _prefs.then((SharedPreferences prefs) {
+      return prefs.getString('phone') ?? "";
+    }).obs;
+    var github = _prefs.then((SharedPreferences prefs) {
+      return prefs.getString('github') ?? "";
+    }).obs;
+    var linkedin = _prefs.then((SharedPreferences prefs) {
+      return prefs.getString('linkedin') ?? "";
+    }).obs;
+    var twitter = _prefs.then((SharedPreferences prefs) {
+      return prefs.getString('twitter') ?? "";
+    }).obs;
+
+    profileName.value = (await name.value);
+    profileEmail.value = (await email.value);
+    profilePhone.value = (await phone.value);
+    profileGithub.value = (await github.value);
+    profileLinkedin.value = (await linkedin.value);
+    profileTwitter.value = (await twitter.value);
+    
+  }
+
+  saveProfileImage() async {
+    SharedPreferences pref = await _prefs;
+    pref.setString('image', urlDetails!);
   }
 }

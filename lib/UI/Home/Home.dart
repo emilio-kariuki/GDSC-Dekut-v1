@@ -27,8 +27,11 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     controller.fetchEvents();
-    controller.getTechology();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
+    controller.getTechology();
+
+    controller.getProfileImage();
+    controller.getProfileDetails();
   }
 
   @override
@@ -48,7 +51,6 @@ class _HomeState extends State<Home> {
       Icons.notifications,
       Icons.missed_video_call_outlined,
       Icons.person,
-
     ];
     List<String> names = [
       "Events",
@@ -56,7 +58,6 @@ class _HomeState extends State<Home> {
       "News",
       "Meeting",
       "Profile",
-
     ];
     return AnimatedBottomNavigationBar.builder(
       backgroundColor:

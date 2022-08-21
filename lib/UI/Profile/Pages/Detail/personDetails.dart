@@ -50,7 +50,9 @@ class _PersonaState extends State<Persona> {
                       height: MediaQuery.of(context).size.height * 0.11,
                       width: MediaQuery.of(context).size.height * 0.13,
                       fit: BoxFit.cover,
-                      imageUrl: urlDetails == 'empty' ? Constants.announceLogo : urlDetails!,
+                      imageUrl: urlDetails == 'empty'
+                          ? Constants.announceLogo
+                          : urlDetails!,
                       progressIndicatorBuilder:
                           (context, url, downloadProgress) =>
                               CircularProgressIndicator(
@@ -65,10 +67,11 @@ class _PersonaState extends State<Persona> {
                       controller.isDark.value ? Colors.white : Colors.black87),
                   Components.spacerWidth(20),
                   InkWell(
-                      onTap: () async{
+                      onTap: () async {
                         await Components.imageDialog(context);
 
-                        await Components.uploadFileDetails(controller.image.value);
+                        await Components.uploadFileDetails(
+                            controller.image.value);
                       },
                       child: Icon(
                         Icons.add_a_photo_outlined,
@@ -90,7 +93,7 @@ class _PersonaState extends State<Persona> {
                 controller: emailDetails,
               ),
               InputField(
-                title: "Phone",
+                title: "Phone starting with 7...",
                 hint: "phone",
                 controller: phoneDetails,
               ),
@@ -114,34 +117,34 @@ class _PersonaState extends State<Persona> {
                 hint: "Stack",
                 controller: technologyDetails,
               ),
-
               Components.button("Update", () async {
-                        await firestoreInstance
-                            .collection("users")
-                            .doc(userID)
-                            .update({
-                          "username": nameDetails.value,
-                          "email": emailDetails.value,
-                          "phone": phoneDetails.value,
-                          "github": githubDetails.value,
-                          "linkedin": linkedinDetails.value,
-                          "twitter": twitterDetails.value,
-                          "userId": userID,
-                          "technology": technologyDetails.value,
-                          "imageUrl": urlDetails == 'empty' ? Constants.announceLogo : urlDetails!,
-
-
-
-
-
-                        }).then((value) {
-                          Components.showMessage("Data Updated successfully");
-                        }).catchError((error) {
-                          Components.showMessage("Failed to update");
-                        });
-                        Get.back();
-                        Get.back();
-                      }, context)
+                await firestoreInstance.collection("users").doc(userID).update({
+                  "username": nameDetails.text,
+                  "email": emailDetails.text,
+                  "phone": phoneDetails.text,
+                  "github": githubDetails.text,
+                  "linkedin": linkedinDetails.text,
+                  "twitter": twitterDetails.text,
+                  "userID": userID,
+                  "technology": technologyDetails.text,
+                  "imageUrl": urlDetails == 'empty'
+                      ? Constants.announceLogo
+                      : urlDetails!,
+                }).then((value) async {
+                  await FirebaseStorage.instance
+                      .refFromURL(controller.profileImage.value)
+                      .delete();
+                  Components.showMessage("Data Updated successfully");
+                  controller.getTechology();
+                  controller.getProfileImage();
+                  controller.getProfileDetails();
+                }).catchError((error) {
+                  Components.showMessage("Failed to update");
+                  print(error);
+                });
+                Get.back();
+                Get.back();
+              }, context)
             ]),
           ),
         )),

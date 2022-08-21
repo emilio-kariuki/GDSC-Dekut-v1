@@ -82,14 +82,14 @@ final organizersMeeting = TextEditingController();
 String? urlMeeting;
 
 //Details
-  final nameDetails = TextEditingController();
-  final emailDetails = TextEditingController();
-  final phoneDetails = TextEditingController();
-  final githubDetails = TextEditingController();
-  final linkedinDetails = TextEditingController();
-  final twitterDetails = TextEditingController();
-  final technologyDetails = TextEditingController();
-  String? urlDetails;
+final nameDetails = TextEditingController();
+final emailDetails = TextEditingController();
+final phoneDetails = TextEditingController();
+final githubDetails = TextEditingController();
+final linkedinDetails = TextEditingController();
+final twitterDetails = TextEditingController();
+final technologyDetails = TextEditingController();
+String? urlDetails;
 
 class Components {
   static File? image;
@@ -182,19 +182,19 @@ class Components {
   }
 
   static Widget avatar() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(100),
-      child: CachedNetworkImage(
-        height: 90,
-        width: 50,
-        fit: BoxFit.cover,
-        imageUrl: profileUrl ?? Constants.defaultIcon,
-        progressIndicatorBuilder: (context, url, downloadProgress) =>
-            CircularProgressIndicator(
-                strokeWidth: 1, value: downloadProgress.progress),
-        errorWidget: (context, url, error) => const Icon(Icons.error),
-      ),
-    );
+    return Obx(() => ClipRRect(
+          borderRadius: BorderRadius.circular(100),
+          child: CachedNetworkImage(
+            height: 90,
+            width: 50,
+            fit: BoxFit.cover,
+            imageUrl: controller.profileImage.value,
+            progressIndicatorBuilder: (context, url, downloadProgress) =>
+                CircularProgressIndicator(
+                    strokeWidth: 1, value: downloadProgress.progress),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
+          ),
+        ));
   }
 
   static Widget personalInformation() {
@@ -214,7 +214,9 @@ class Components {
                   header_3(userEmail,
                       controller.isDark.value ? Colors.white : Colors.black54),
                   header_3(controller.stack.value,
-                      controller.isDark.value ? Colors.white : Colors.black54)
+                      controller.isDark.value ? Colors.white : Colors.black54),
+                      showDividerLine(3),
+
                 ],
               )),
         ],
@@ -439,7 +441,8 @@ class Components {
       ),
     );
   }
-    static Future<String?> uploadFileDetails(File image) async {
+
+  static Future<String?> uploadFileDetails(File image) async {
     try {
       FirebaseStorage storage = FirebaseStorage.instance;
       String filename = path.basename(image.path);
@@ -457,7 +460,7 @@ class Components {
             content: const CircularProgressIndicator());
         await ref.putFile(image);
 
-       // await FirebaseStorage.instance.refFromURL(urlDetails!).delete();
+        // await FirebaseStorage.instance.refFromURL(urlDetails!).delete();
         urlDetails = await ref.getDownloadURL();
         controller.isSent.value = false;
 
@@ -986,7 +989,7 @@ class Components {
                         linkResource.text = data['link'];
                         urlResource = data['imageUrl'];
                         Components.adminResourcesBottomSheet(
-                            docs[index].id, urlResource!,context);
+                            docs[index].id, urlResource!, context);
                       },
                       child: Icon(
                         Icons.edit,
@@ -1250,7 +1253,7 @@ class Components {
                         linkAnnouncement.text = data['link'];
                         urlAnnouncement = data['imageUrl'];
                         Components.adminAnnouncementBottomSheet(
-                            docs[index].id,urlAnnouncement!, context);
+                            docs[index].id, urlAnnouncement!, context);
                       },
                       child: Icon(
                         Icons.edit,
@@ -1310,19 +1313,19 @@ class Components {
 
                   return ListTile(
                     onTap: () async {
-                              FocusScope.of(context).requestFocus(FocusNode());
-                              String url = data['link'];
-                              if (await canLaunchUrl(Uri.parse(url))) {
-                                await launch(url,
-                                    forceWebView: true,
-                                    enableJavaScript: true,
-                                    enableDomStorage: true,
-                                    forceSafariVC: false);
-                              } else {
-                                Components.showMessage("No link attached");
-                                throw 'Could not launch $url';
-                              }
-                            },
+                      FocusScope.of(context).requestFocus(FocusNode());
+                      String url = data['link'];
+                      if (await canLaunchUrl(Uri.parse(url))) {
+                        await launch(url,
+                            forceWebView: true,
+                            enableJavaScript: true,
+                            enableDomStorage: true,
+                            forceSafariVC: false);
+                      } else {
+                        Components.showMessage("No link attached");
+                        throw 'Could not launch $url';
+                      }
+                    },
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
                       child: CachedNetworkImage(
@@ -1453,7 +1456,7 @@ class Components {
                         organizersEvent.text = data['organizers'];
                         linkEvent.text = data['link'];
                         Components.adminEventBottomSheet(
-                            docs[index].id,urlEvent!, context);
+                            docs[index].id, urlEvent!, context);
                       },
                       child: Icon(
                         Icons.edit,
@@ -1709,7 +1712,7 @@ class Components {
                         organizersMeeting.text = data['organizers'];
                         linkMeeting.text = data['link'];
                         Components.adminMeetingBottomSheet(
-                            docs[index].id,urlMeeting!, context);
+                            docs[index].id, urlMeeting!, context);
                       },
                       child: Icon(
                         Icons.edit,
@@ -1959,7 +1962,8 @@ class Components {
     );
   }
 
-  static adminResourcesBottomSheet(String id,String url, BuildContext context) {
+  static adminResourcesBottomSheet(
+      String id, String url, BuildContext context) {
     final size = MediaQuery.of(context).size;
     Get.bottomSheet(
       elevation: 0,
@@ -1978,10 +1982,9 @@ class Components {
                 await editResources(id, context);
               }, context)),
               Expanded(
-                  child: button("Delete", () async{
-                    ActionFirebase.deleteDoc(id, 'resources');
-                    await FirebaseStorage.instance.refFromURL(url).delete();
-
+                  child: button("Delete", () async {
+                ActionFirebase.deleteDoc(id, 'resources');
+                await FirebaseStorage.instance.refFromURL(url).delete();
 
                 Get.back();
               }, context))
@@ -1992,7 +1995,7 @@ class Components {
     );
   }
 
-  static adminEventBottomSheet(String id, String url,BuildContext context) {
+  static adminEventBottomSheet(String id, String url, BuildContext context) {
     final size = MediaQuery.of(context).size;
     Get.bottomSheet(
       elevation: 0,
@@ -2011,7 +2014,7 @@ class Components {
                 await editEvent(id, context);
               }, context)),
               Expanded(
-                  child: button("Delete", () async{
+                  child: button("Delete", () async {
                 ActionFirebase.deleteDoc(id, 'events');
                 await FirebaseStorage.instance.refFromURL(url).delete();
                 Get.back();
@@ -2023,7 +2026,7 @@ class Components {
     );
   }
 
-  static adminMeetingBottomSheet(String id, String url,BuildContext context) {
+  static adminMeetingBottomSheet(String id, String url, BuildContext context) {
     final size = MediaQuery.of(context).size;
     Get.bottomSheet(
       elevation: 0,
@@ -2042,7 +2045,7 @@ class Components {
                 await editMeeting(id, context);
               }, context)),
               Expanded(
-                  child: button("Delete", () async{
+                  child: button("Delete", () async {
                 ActionFirebase.deleteDoc(id, 'meetings');
                 await FirebaseStorage.instance.refFromURL(url).delete();
                 Get.back();
@@ -2054,7 +2057,7 @@ class Components {
     );
   }
 
-  static adminLeadBottomSheet(String id, String url,BuildContext context) {
+  static adminLeadBottomSheet(String id, String url, BuildContext context) {
     final size = MediaQuery.of(context).size;
     Get.bottomSheet(
       elevation: 0,
@@ -2073,7 +2076,7 @@ class Components {
                 await editLeads(id, context);
               }, context)),
               Expanded(
-                  child: button("Delete", () async{
+                  child: button("Delete", () async {
                 ActionFirebase.deleteDoc(id, 'leads');
                 await FirebaseStorage.instance.refFromURL(url).delete();
                 Get.back();
@@ -2085,7 +2088,8 @@ class Components {
     );
   }
 
-  static adminAnnouncementBottomSheet(String id, String url,BuildContext context) {
+  static adminAnnouncementBottomSheet(
+      String id, String url, BuildContext context) {
     final size = MediaQuery.of(context).size;
     Get.bottomSheet(
       elevation: 0,
@@ -2104,7 +2108,7 @@ class Components {
                 await editAnnouncement(id, context);
               }, context)),
               Expanded(
-                  child: button("Delete", () async{
+                  child: button("Delete", () async {
                 ActionFirebase.deleteDoc(id, 'announcements');
                 await FirebaseStorage.instance.refFromURL(url).delete();
                 Get.back();
@@ -2150,7 +2154,7 @@ class Components {
               Expanded(child: Container()),
               InkWell(
                 onTap: () async {
-                   FocusScope.of(context).requestFocus(FocusNode());
+                  FocusScope.of(context).requestFocus(FocusNode());
                   await imageDialog(context);
                   await Components.uploadFileLead(controller.image.value);
                 },
@@ -2315,7 +2319,6 @@ class Components {
             title: "Link",
             hint: "Enter the link of the announcement?",
             controller: linkAnnouncement,
-
           ),
           InputField(
             showRequired: true,
@@ -2333,9 +2336,10 @@ class Components {
               Expanded(child: Container()),
               InkWell(
                 onTap: () async {
-                   FocusScope.of(context).requestFocus(FocusNode());
+                  FocusScope.of(context).requestFocus(FocusNode());
                   await imageDialog(context);
-                  await Components.uploadFileAnnouncement(controller.image.value);
+                  await Components.uploadFileAnnouncement(
+                      controller.image.value);
                 },
                 child: Icon(
                   Icons.add_a_photo_outlined,
@@ -2409,7 +2413,7 @@ class Components {
               Expanded(child: Container()),
               InkWell(
                 onTap: () async {
-                   FocusScope.of(context).requestFocus(FocusNode());
+                  FocusScope.of(context).requestFocus(FocusNode());
                   await imageDialog(context);
                   await Components.uploadFileResource(controller.image.value);
                 },
@@ -2450,7 +2454,7 @@ class Components {
     return showDialog(
         context: context,
         builder: (context) {
-           FocusScope.of(context).requestFocus(FocusNode());
+          FocusScope.of(context).requestFocus(FocusNode());
           return AlertDialog(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -2493,9 +2497,10 @@ class Components {
                       Expanded(child: Container()),
                       InkWell(
                         onTap: () async {
-                           FocusScope.of(context).requestFocus(FocusNode());
+                          FocusScope.of(context).requestFocus(FocusNode());
                           await imageDialog(context);
-                          await Components.uploadFileMeeting(controller.image.value);
+                          await Components.uploadFileMeeting(
+                              controller.image.value);
                         },
                         child: Icon(
                           Icons.add_a_photo_outlined,
@@ -2560,7 +2565,7 @@ class Components {
     return showDialog(
         context: context,
         builder: (context) {
-           FocusScope.of(context).requestFocus(FocusNode());
+          FocusScope.of(context).requestFocus(FocusNode());
           return AlertDialog(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -2609,9 +2614,10 @@ class Components {
                       Expanded(child: Container()),
                       InkWell(
                         onTap: () async {
-                           FocusScope.of(context).requestFocus(FocusNode());
+                          FocusScope.of(context).requestFocus(FocusNode());
                           await imageDialog(context);
-                          await Components.uploadFileEvent(controller.image.value);
+                          await Components.uploadFileEvent(
+                              controller.image.value);
                         },
                         child: Icon(
                           Icons.add_a_photo_outlined,
@@ -2806,7 +2812,6 @@ class Components {
         onTap: () async {
           await controller.getImage(source);
           Get.back();
-
         },
         child: Text(text,
             style: GoogleFonts.quicksand(
@@ -3483,8 +3488,6 @@ class Components {
       }),
     );
   }
-
-
 }
 
 class InputField extends StatelessWidget {
