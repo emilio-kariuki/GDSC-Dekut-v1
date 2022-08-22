@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gdsc_app/Firebase_Logic/UserFirebase.dart';
 import 'package:gdsc_app/Models/user_model.dart';
+import 'package:gdsc_app/Util/App_Constants.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../main.dart';
@@ -19,7 +20,7 @@ class Authentication {
         .user;
 
     if (user != null) {
-      createUser(UserClass(name, email,'empty', 'empty', 'empty', 'empty', user.uid,'empty','empty'), user.uid);
+      createUser(UserClass(name, email,'empty', 'empty', 'empty', 'empty', user.uid,'empty',Constants.defaultIcon), user.uid);
       userName = user.displayName ?? "Unknown";
       email = user.email!;
     }
@@ -66,6 +67,7 @@ class Authentication {
 
     final GoogleSignInAccount? googleSignInAccount =
         await googleSignIn.signIn();
+
 
     if (googleSignInAccount != null) {
       final GoogleSignInAuthentication googleSignInAuthentication =

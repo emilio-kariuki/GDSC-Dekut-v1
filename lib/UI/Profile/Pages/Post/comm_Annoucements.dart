@@ -89,6 +89,7 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
                 ),
                 Components.spacerHeight(10),
                 Components.button("Submit", () {
+                  FocusScope.of(context).requestFocus(FocusNode());
                   ActionFirebase.createAnnouncement(AnnouncementModel(
                     title.text,
                     description.text,
@@ -177,7 +178,7 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
         onTap: ()  async {
             await getImage(source);
             Get.back();
-            
+
 
         },
         child: Text(text,

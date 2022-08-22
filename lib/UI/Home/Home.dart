@@ -29,9 +29,15 @@ class _HomeState extends State<Home> {
     controller.fetchEvents();
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     controller.getTechology();
-
     controller.getProfileImage();
     controller.getProfileDetails();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    controller.getPassword();
+        controller.getProfileImage();
   }
 
   @override

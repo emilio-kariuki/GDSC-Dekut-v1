@@ -43,29 +43,29 @@ class _AccountState extends State<Account> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Components.personalInformation(),
-                      Row(
-                   mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: () => launch('https://github.com/${controller.profileGithub.value}' ),
-                        child: Image.asset(Constants.githubProfile,height: 22,width: 22,color: controller.isDark.value ? Colors.white : Colors.black,)),
-                      Components.spacerWidth(8),
-                      Image.asset(Constants.linkedinProfile,height: 22,width: 22,),
-                      Components.spacerWidth(8),
-                      InkWell(
-                        onTap:() => launch('https://twitter.com/${controller.profileTwitter.value}' ),
-                        child: Image.asset(Constants.twitterProfile,height: 22,width: 22,)),
-                      Components.spacerWidth(8),
-                      InkWell(
-                        onTap: () => launch('mailto:${controller.profileEmail.value}'),
-                        child: Image.asset(Constants.gmailProfile,height: 22,width: 22,)),
-                      Components.spacerWidth(8),
-                      InkWell(
-                        onTap: (() => launch('https://wa.me/+254${controller.profilePhone.value}')),
-                        child: Image.asset(Constants.whatsappProfile,height: 22,width: 22,)),
+                  //     Row(
+                  //  mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     InkWell(
+                  //       onTap: () => launch('https://github.com/${controller.profileGithub.value}' ),
+                  //       child: Image.asset(Constants.githubProfile,height: 22,width: 22,color: controller.isDark.value ? Colors.white : Colors.black,)),
+                  //     Components.spacerWidth(8),
+                  //     Image.asset(Constants.linkedinProfile,height: 22,width: 22,),
+                  //     Components.spacerWidth(8),
+                  //     InkWell(
+                  //       onTap:() => launch('https://twitter.com/${controller.profileTwitter.value}' ),
+                  //       child: Image.asset(Constants.twitterProfile,height: 22,width: 22,)),
+                  //     Components.spacerWidth(8),
+                  //     InkWell(
+                  //       onTap: () => launch('mailto:${controller.profileEmail.value}'),
+                  //       child: Image.asset(Constants.gmailProfile,height: 22,width: 22,)),
+                  //     Components.spacerWidth(8),
+                  //     InkWell(
+                  //       onTap: (() => launch('https://wa.me/+254${controller.profilePhone.value}')),
+                  //       child: Image.asset(Constants.whatsappProfile,height: 22,width: 22,)),
 
-                    ],
-                  ),
+                  //   ],
+                  // ),
                       const SizedBox(height: 10),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 15),
@@ -77,7 +77,7 @@ class _AccountState extends State<Account> {
                       ),
                       Components.showDividerLine(Dimensions.PADDING_SIZE_SMALL),
                       Components.cardButton(
-                          Icons.badge, Constants.details, () => Get.to(()=>const  Persona())),
+                          Icons.verified_user_rounded, Constants.details, () => Get.to(()=> const Persona())),
                       Components.showDividerLine(Dimensions.PADDING_SIZE_SMALL),
                       Components.cardButton(Icons.leaderboard, Constants.admins,
                           () => Components.confirmAdmin(password)),
@@ -93,9 +93,7 @@ class _AccountState extends State<Account> {
                           () => Get.to(() => const Leads(),
                               duration: const Duration(milliseconds: 100))),
                       Components.showDividerLine(Dimensions.PADDING_SIZE_SMALL),
-                      Components.cardButton(Icons.notifications_active,
-                          Constants.notifications, () => null),
-                      Components.showDividerLine(Dimensions.PADDING_SIZE_SMALL),
+
                       Components.cardButton(Icons.info_outline_rounded,
                           Constants.about, () => null),
                       Components.showDividerLine(Dimensions.PADDING_SIZE_SMALL),

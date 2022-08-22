@@ -92,7 +92,7 @@ final email = TextEditingController();
                 ),
                 Components.spacerHeight(10),
                 Components.button("Submit", () {
-
+                  FocusScope.of(context).requestFocus(FocusNode());
                   ActionFirebase.createLead(LeadsModel(
                     name.text,
                     role.text,
@@ -184,7 +184,7 @@ final email = TextEditingController();
         onTap: ()  async {
             await getImage(source);
             // Get.back();
-         
+
         },
         child: Text(text,
             style: GoogleFonts.quicksand(

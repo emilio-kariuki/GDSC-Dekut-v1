@@ -96,6 +96,7 @@ class _CommunityMeetingState extends State<CommunityMeeting>
             Components.spacerHeight(10),
             Components.spacerHeight(10),
             Components.button("Submit", () {
+              FocusScope.of(context).requestFocus(FocusNode());
               ActionFirebase.createMeeting(MeetingModel(
                   title.text,
                   description.text,
@@ -263,7 +264,7 @@ class _CommunityMeetingState extends State<CommunityMeeting>
         onTap: () async {
           await getImage(source);
           Get.back();
-          
+
         },
         child: Text(text,
             style: GoogleFonts.quicksand(

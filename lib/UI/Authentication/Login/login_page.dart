@@ -106,7 +106,7 @@ class _LoginState extends State<Login> {
                         userEmail = user.email!;
                         createUser(
                             UserClass(user.displayName!, user.email!, 'empty',
-                                'empty', 'empty', 'empty', user.uid, 'empty', 'empty'),
+                                'empty', 'empty', 'empty', user.uid, 'empty', Constants.defaultIcon),
                             user.uid);
                         Get.offAll(() => const Home());
                       }

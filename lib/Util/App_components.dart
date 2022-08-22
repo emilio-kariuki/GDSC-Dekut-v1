@@ -215,8 +215,7 @@ class Components {
                       controller.isDark.value ? Colors.white : Colors.black54),
                   header_3(controller.stack.value,
                       controller.isDark.value ? Colors.white : Colors.black54),
-                      showDividerLine(3),
-
+                  showDividerLine(3),
                 ],
               )),
         ],
@@ -375,11 +374,8 @@ class Components {
               color: controller.isDark.value ? Colors.white : Colors.black87,
             ),
           )),
-          Text("OR",
-              style: GoogleFonts.roboto(
-                  fontSize: 20,
-                  color:
-                      controller.isDark.value ? Colors.white : Colors.black87)),
+          header_3(
+              "OR", controller.isDark.value ? Colors.white : Colors.black87),
           Expanded(
               child: Container(
             margin: const EdgeInsets.only(
@@ -1055,6 +1051,7 @@ class Components {
 
                   return ListTile(
                     onTap: () async {
+                      FocusScope.of(context).requestFocus(FocusNode());
                       String url = data['link'];
                       if (await canLaunchUrl(Uri.parse(url))) {
                         await launch(url,
@@ -1316,11 +1313,9 @@ class Components {
                       FocusScope.of(context).requestFocus(FocusNode());
                       String url = data['link'];
                       if (await canLaunchUrl(Uri.parse(url))) {
-                        await launch(url,
-                            forceWebView: true,
-                            enableJavaScript: true,
-                            enableDomStorage: true,
-                            forceSafariVC: false);
+                        await launch(
+                          url,
+                        );
                       } else {
                         Components.showMessage("No link attached");
                         throw 'Could not launch $url';
@@ -1519,6 +1514,19 @@ class Components {
                       docs![index].data() as Map<String, dynamic>;
 
                   return ListTile(
+                    onTap: () async {
+                      String url = data['link'];
+                      if (await canLaunchUrl(Uri.parse(url))) {
+                        await launch(url,
+                            // forceWebView: true,
+                            // enableJavaScript: true,
+                            // enableDomStorage: true,
+                            forceSafariVC: false);
+                      } else {
+                        showMessage("Cannot launch url");
+                        throw 'Could not launch $url';
+                      }
+                    },
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(50),
                       child: InkWell(
@@ -1779,7 +1787,7 @@ class Components {
 
                   return ListTile(
                     leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(100),
                       child: InkWell(
                         onTap: () {
                           Navigator.of(context).push(
@@ -1916,7 +1924,7 @@ class Components {
       onConfirm: () {
         if (password.text.isEmpty) {
           showMessage("Enter password");
-        } else if (password.text == Constants.adminPassword) {
+        } else if (password.text == controller.adminPassword.value) {
           Get.back();
           Get.to(() => const Post());
         } else {
@@ -1950,7 +1958,7 @@ class Components {
       onConfirm: () {
         if (password.text.isEmpty) {
           showMessage("Enter password");
-        } else if (password.text == Constants.adminPassword) {
+        } else if (password.text == controller.adminPassword.value) {
           Get.back();
           Get.to(() => const Admin(),
               duration: const Duration(milliseconds: 100));
@@ -2454,7 +2462,6 @@ class Components {
     return showDialog(
         context: context,
         builder: (context) {
-          FocusScope.of(context).requestFocus(FocusNode());
           return AlertDialog(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -2565,7 +2572,6 @@ class Components {
     return showDialog(
         context: context,
         builder: (context) {
-          FocusScope.of(context).requestFocus(FocusNode());
           return AlertDialog(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -3143,11 +3149,11 @@ class Components {
                           ),
                         ),
                       ),
-                      Positioned(
-                          top: 5,
-                          right: 15,
-                          child: Icon(Icons.link,
-                              size: 20, color: Colors.deepOrange)),
+                      // Positioned(
+                      //     top: 5,
+                      //     right: 15,
+                      //     child: Icon(Icons.link,
+                      //         size: 20, color: Colors.deepOrange)),
                     ],
                   );
                 },
@@ -3374,15 +3380,13 @@ class Components {
                                         //spacerHeight(3),
                                         Row(
                                           children: [
-                                            Icon(
-                                              Icons.title,
-                                              size: 18,
-                                              color: controller.isDark.value
-                                                  ? Color.fromARGB(
-                                                      255, 255, 149, 0)
-                                                  : Color.fromARGB(
-                                                      255, 255, 149, 0),
-                                            ),
+                                            Icon(Icons.title,
+                                                size: 18,
+                                                color: controller.isDark.value
+                                                    ? Color.fromARGB(
+                                                        255, 255, 149, 0)
+                                                    : Color.fromARGB(
+                                                        255, 255, 149, 0)),
                                             spacerWidth(2),
                                             header_4(
                                                 "Title: ${data['title']}",
@@ -3394,15 +3398,13 @@ class Components {
                                         spacerHeight(1),
                                         Row(
                                           children: [
-                                            Icon(
-                                              Icons.calendar_month,
-                                              size: 18,
-                                              color: controller.isDark.value
-                                                  ? Color.fromARGB(
-                                                      255, 255, 149, 0)
-                                                  : Color.fromARGB(
-                                                      255, 255, 149, 0),
-                                            ),
+                                            Icon(Icons.calendar_month,
+                                                size: 18,
+                                                color: controller.isDark.value
+                                                    ? Color.fromARGB(
+                                                        255, 255, 149, 0)
+                                                    : Color.fromARGB(
+                                                        255, 255, 149, 0)),
                                             spacerWidth(2),
                                             header_4(
                                                 "Date : ${data['date']}",
@@ -3414,15 +3416,13 @@ class Components {
                                         spacerHeight(1),
                                         Row(
                                           children: [
-                                            Icon(
-                                              Icons.alarm,
-                                              size: 18,
-                                              color: controller.isDark.value
-                                                  ? Color.fromARGB(
-                                                      255, 255, 149, 0)
-                                                  : Color.fromARGB(
-                                                      255, 255, 149, 0),
-                                            ),
+                                            Icon(Icons.alarm,
+                                                size: 18,
+                                                color: controller.isDark.value
+                                                    ? Color.fromARGB(
+                                                        255, 255, 149, 0)
+                                                    : Color.fromARGB(
+                                                        255, 255, 149, 0)),
                                             spacerWidth(2),
                                             header_4(
                                                 "Time : ${data['time']}",
@@ -3435,15 +3435,13 @@ class Components {
 
                                         Row(
                                           children: [
-                                            Icon(
-                                              Icons.desktop_windows_outlined,
-                                              size: 18,
-                                              color: controller.isDark.value
-                                                  ? Color.fromARGB(
-                                                      255, 255, 149, 0)
-                                                  : Color.fromARGB(
-                                                      255, 255, 149, 0),
-                                            ),
+                                            Icon(Icons.desktop_windows_outlined,
+                                                size: 18,
+                                                color: controller.isDark.value
+                                                    ? Color.fromARGB(
+                                                        255, 255, 149, 0)
+                                                    : Color.fromARGB(
+                                                        255, 255, 149, 0)),
                                             spacerWidth(2),
                                             header_4(
                                                 "Organizer : ${data['organizers']}",

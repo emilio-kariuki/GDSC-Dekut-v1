@@ -15,8 +15,8 @@ class Constants {
   static String adminPassword = "q";
   static String cancel = "Cancel";
   static String announceLogo =
-      "https://firebasestorage.googleapis.com/v0/b/apt-rite-346310.appspot.com/o/EcoVille%2Fscaled_image_picker1637068389106274777.jpg?alt=media&token=31198752-de9a-4d26-b8f9-1350dd0028f6";
-  static String defaultIcon = "https://firebasestorage.googleapis.com/v0/b/apt-rite-346310.appspot.com/o/EcoVille%2Fscaled_image_picker2659552306094200554.jpg?alt=media&token=185b6f13-335e-4d83-ae3f-5f61a837dcf8";
+      "https://firebasestorage.googleapis.com/v0/b/apt-rite-346310.appspot.com/o/profile.jpg?alt=media&token=1f3f8ce7-20d4-4f4d-ab33-0477d07bc6ad";
+  static String defaultIcon = "https://firebasestorage.googleapis.com/v0/b/apt-rite-346310.appspot.com/o/profile.jpg?alt=media&token=1f3f8ce7-20d4-4f4d-ab33-0477d07bc6ad";
   static String email = "Email";
   static String password = "Password";
   static String confirmPassword = "Confirm Password";
@@ -31,10 +31,11 @@ class Constants {
   static String empty = "Fill Empty Fields!";
   static String passwordMatch = "Password does not match!";
   static String notifications = "Notifications";
+  static String users = "Users";
   static String about = "About";
   static String help = "Help";
   static String logout = "Logout";
-  static String details = "Details";
+  static String details = "Profile Info";
   static String leads = "Google Leads";
   static String admins = "Admins";
   static String post = "Post";

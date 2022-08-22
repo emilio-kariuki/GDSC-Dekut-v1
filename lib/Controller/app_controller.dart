@@ -36,12 +36,21 @@ class AppController extends GetxController {
   var profileGithub = "".obs;
   var profileTwitter = "".obs;
   var profileLinkedin = "".obs;
-
+  var adminPassword = '1234'.obs;
 
   @override
   void onInit() {
     super.onInit();
     getThemeStatus();
+  }
+
+  getPassword() async {
+    await FirebaseFirestore.instance
+    .collection('password')
+    .doc('9Sr6EDDtf2icFY4XX3Sh')
+    .get().then((value) {
+      adminPassword.value = value['password'];
+    });
   }
 
   getTechology() async {
@@ -69,7 +78,6 @@ class AppController extends GetxController {
       pref.setString('github', snapshot['github']);
       pref.setString('linkedin', snapshot['linkedin']);
       pref.setString('twitter', snapshot['twitter']);
-
     });
   }
 
@@ -126,7 +134,8 @@ class AppController extends GetxController {
 
     profileImage.value = (await image.value);
   }
-  getProfileDetails() async{
+
+  getProfileDetails() async {
     var name = _prefs.then((SharedPreferences prefs) {
       return prefs.getString('name') ?? "User";
     }).obs;
@@ -152,7 +161,6 @@ class AppController extends GetxController {
     profileGithub.value = (await github.value);
     profileLinkedin.value = (await linkedin.value);
     profileTwitter.value = (await twitter.value);
-    
   }
 
   saveProfileImage() async {

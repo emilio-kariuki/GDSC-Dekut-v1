@@ -104,6 +104,7 @@ class _CommunityEventsState extends State<CommunityEvents>
             Components.spacerHeight(10),
             Components.spacerHeight(10),
             Components.button("Submit", () {
+              FocusScope.of(context).requestFocus(FocusNode());
               ActionFirebase.createEvent(EventModel(
                   title.text,
                   description.text,
@@ -267,7 +268,7 @@ class _CommunityEventsState extends State<CommunityEvents>
       onTap: ()  async {
           await getImage(source);
           Get.back();
-          
+
 
       },
       leading: Icon(icon, color: const Color.fromARGB(255, 0, 0, 0)),

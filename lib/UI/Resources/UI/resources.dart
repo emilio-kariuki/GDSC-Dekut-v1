@@ -105,6 +105,7 @@ class _ResourcesState extends State<Resources> {
           flexibleSpace: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: InputField(
+              linesCount: 1,
               hint: "Search for a resource",
               widget: InkWell(
                 onTap: () {},
@@ -118,6 +119,10 @@ class _ResourcesState extends State<Resources> {
               controller: searchController,
             ),
           ),
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(10), child: Components.spacerHeight(10),
+
+          ),
         ),
         body: SafeArea(
           child: RefreshIndicator(
@@ -126,15 +131,14 @@ class _ResourcesState extends State<Resources> {
               await getResourcesList();
             },
             child: CustomScrollView(
-
               shrinkWrap: true,
               physics: const AlwaysScrollableScrollPhysics(),
               slivers: [
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
-                      Map<String, dynamic> data = resultsList[index]
-                          .data() as Map<String, dynamic>;
+                      Map<String, dynamic> data =
+                          resultsList[index].data() as Map<String, dynamic>;
 
                       return Column(
                         children: [
@@ -157,7 +161,8 @@ class _ResourcesState extends State<Resources> {
                               borderRadius: BorderRadius.circular(10),
                               child: InkWell(
                                 onTap: () {
-                                  FocusScope.of(context).requestFocus(FocusNode());
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode());
                                   Navigator.of(context).push(
                                     PageRouteBuilder(
                                       opaque: true,
@@ -175,18 +180,17 @@ class _ResourcesState extends State<Resources> {
                                                   MainAxisAlignment.center,
                                               children: <Widget>[
                                                 Align(
-                                                  alignment:
-                                                      Alignment.topRight,
+                                                  alignment: Alignment.topRight,
                                                   child: IconButton(
                                                     onPressed: () =>
                                                         Navigator.of(context)
                                                             .pop(),
                                                     icon: const Icon(
                                                         Icons.cancel_sharp),
-                                                    color: controller
-                                                            .isDark.value
-                                                        ? Colors.white
-                                                        : Colors.black87,
+                                                    color:
+                                                        controller.isDark.value
+                                                            ? Colors.white
+                                                            : Colors.black87,
                                                   ),
                                                 ),
                                                 Expanded(
@@ -194,17 +198,16 @@ class _ResourcesState extends State<Resources> {
                                                     scaleEnabled: true,
                                                     panEnabled: true,
                                                     child: Hero(
-                                                      tag: resultsList[index]
-                                                          .id,
+                                                      tag:
+                                                          resultsList[index].id,
                                                       child: Center(
                                                         child:
                                                             CachedNetworkImage(
                                                           //height: 300,
-                                                          width:
-                                                              MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width,
+                                                          width: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .width,
                                                           fit: BoxFit.fill,
                                                           filterQuality:
                                                               FilterQuality
@@ -268,8 +271,10 @@ class _ResourcesState extends State<Resources> {
                                   : Colors.black87,
                             ),
                           ),
-                          Padding(padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Components.showDividerLine(12),),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: Components.showDividerLine(12),
+                          ),
                         ],
                       );
                     },

@@ -86,6 +86,7 @@ class _CommunityResourcesState extends State<CommunityResources> {
                 ),
                 Components.spacerHeight(10),
                 Components.button("Submit", () {
+                  FocusScope.of(context).requestFocus(FocusNode());
                   ActionFirebase.createResource(ResourceModel(
                     title.text,
                     description.text,
@@ -175,7 +176,7 @@ class _CommunityResourcesState extends State<CommunityResources> {
 
             await getImage(source);
             Get.back();
-            
+
 
         },
         child: Text(text,
