@@ -1,11 +1,20 @@
+// ignore_for_file: avoid_print, unused_field, unused_local_variable
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:gdsc_app/UI/Notification/pushNotification.dart';
 import 'package:gdsc_app/Util/App_components.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+
 import '../../../Controller/app_controller.dart';
+import '../../../main.dart';
 
 int itemCount = 5;
+
 
 class Events extends StatefulWidget {
   const Events({Key? key}) : super(key: key);
@@ -16,15 +25,69 @@ class Events extends StatefulWidget {
 
 class _EventsState extends State<Events> {
   final controller = Get.put(AppController());
+
   int initCount = 5;
+  late final FirebaseMessaging _messaging;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), () {
-      itemCount = controller.docsLength.value;
+    var initializationSettingsAndroid =
+        const AndroidInitializationSettings('ic_launcher');
+    var initialzationSettingsAndroid =
+        const AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettings =
+        InitializationSettings(android: initialzationSettingsAndroid);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification ?android = message.notification?.android;
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channelDescription: channel.description,
+                color: Colors.blue,
+
+              ),
+            ));
+      }
     });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      RemoteNotification ?notification = message.notification;
+      AndroidNotification ?android = message.notification?.android;
+      if (notification != null && android != null) {
+        showDialog(
+            // context: context,
+            builder: (_) {
+          return AlertDialog(
+            title: Text(notification.title!),
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [Text(notification.body!)],
+              ),
+            ),
+          );
+        }, context: context);
+      }
+    });
+
+    getToken();
   }
+
+
+String ?token;
+getToken() async {
+  token = (await FirebaseMessaging.instance.getToken())!;
+}
 
   @override
   Widget build(BuildContext context) {

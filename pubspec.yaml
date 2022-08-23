@@ -67,6 +67,7 @@ dependencies:
 
   dots_indicator: ^2.1.0
   progress_indicators: ^1.0.0
+  flutter_local_notifications: ^9.8.0+1
 
 dev_dependencies:
   flutter_test:

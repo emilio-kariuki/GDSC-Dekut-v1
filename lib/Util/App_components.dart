@@ -4,7 +4,8 @@ import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -18,6 +19,7 @@ import 'package:gdsc_app/Controller/app_controller.dart';
 import 'package:gdsc_app/Firebase_Logic/EventFirebase.dart';
 import 'package:gdsc_app/Firebase_Logic/UserFirebase.dart';
 import 'package:gdsc_app/UI/Events/UI/Events.dart';
+import 'package:gdsc_app/UI/Notification/pushNotification.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Admins/Admins.dart';
 
 import 'package:gdsc_app/UI/Profile/Pages/Post/Post.dart';
@@ -89,6 +91,7 @@ final githubDetails = TextEditingController();
 final linkedinDetails = TextEditingController();
 final twitterDetails = TextEditingController();
 final technologyDetails = TextEditingController();
+
 String? urlDetails;
 
 class Components {
@@ -97,6 +100,8 @@ class Components {
   static var myGroup = AutoSizeGroup();
   static double sizeHeight = Get.mediaQuery.size.height;
   static double sizeWidth = Get.mediaQuery.size.width;
+
+
   static Widget header_1(String text) {
     return AutoSizeText(
       text,
@@ -2859,7 +2864,7 @@ class Components {
               return CarouselSlider.builder(
                 options: CarouselOptions(
                     height: MediaQuery.of(context).size.height * 0.2,
-                    enlargeCenterPage: true,
+                    enlargeCenterPage: false,
                     viewportFraction: 1,
                     autoPlay: true,
                     //enlargeCenterPage: true,

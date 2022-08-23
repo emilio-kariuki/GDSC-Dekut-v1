@@ -37,6 +37,7 @@ class _ResourcesState extends State<Resources> {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
   }
 
+  @override
   void dispose() {
     searchController.removeListener(onSearchChanged);
     searchController.dispose();
@@ -265,7 +266,7 @@ class _ResourcesState extends State<Resources> {
                                         : Colors.black87)),
                             trailing: Icon(
                               Icons.link,
-                              size: 20,
+                              size: 18,
                               color: controller.isDark.value
                                   ? Colors.white
                                   : Colors.black87,
