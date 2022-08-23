@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'package:gdsc_app/Firebase_Logic/EventFirebase.dart';
 import 'package:gdsc_app/UI/Events/Model/Event_model.dart';
+import 'package:gdsc_app/UI/Notification/pushNotification.dart';
 import 'package:path/path.dart' as path;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -35,7 +36,6 @@ class _CommunityEventsState extends State<CommunityEvents>
   TimeOfDay time = TimeOfDay.now();
   File? image;
   final picker = ImagePicker();
-
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +116,12 @@ class _CommunityEventsState extends State<CommunityEvents>
                   url));
               Get.back();
               Components.showMessage("Data sent successfully");
+              controller.isEventEnabled.value
+                  ? FirebaseNotification.sendFirebaseNotification(
+                      purpose: "Event",
+                      title: title.text,
+                     )
+                  : null;
             }, context)
           ],
         ),
@@ -203,8 +209,7 @@ class _CommunityEventsState extends State<CommunityEvents>
   }
 
   Future<void> getImage(ImageSource source) async {
-    final image = await picker.pickImage(
-        source: source,  imageQuality: 90);
+    final image = await picker.pickImage(source: source, imageQuality: 90);
     try {
       if (image == null) return;
 
@@ -260,24 +265,18 @@ class _CommunityEventsState extends State<CommunityEvents>
     );
   }
 
-
-
- Widget imageTile(ImageSource source, String text, IconData icon) {
+  Widget imageTile(ImageSource source, String text, IconData icon) {
     return ListTile(
       selectedColor: Colors.grey,
-      onTap: ()  async {
-          await getImage(source);
-          Get.back();
-
-
+      onTap: () async {
+        await getImage(source);
+        Get.back();
       },
       leading: Icon(icon, color: const Color.fromARGB(255, 0, 0, 0)),
       title: GestureDetector(
-        onTap: ()  async {
-            await getImage(source);
-            Get.back();
-
-
+        onTap: () async {
+          await getImage(source);
+          Get.back();
         },
         child: Text(text,
             style: GoogleFonts.quicksand(
@@ -287,6 +286,7 @@ class _CommunityEventsState extends State<CommunityEvents>
       ),
     );
   }
+
   Widget iconImage() {
     return IconButton(
         onPressed: () {

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gdsc_app/UI/Notification/pushNotification.dart';
 import 'package:gdsc_app/Util/App_Constants.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -98,6 +99,12 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
                   ));
                   Get.back();
                   Components.showMessage("Data sent successfully");
+                  controller.isAnnouncementEnabled.value
+                  ? FirebaseNotification.sendFirebaseNotification(
+                      purpose: "Announcement",
+                      title: title.text,
+                     )
+                  : null;
                 }, context)
               ],
             )),

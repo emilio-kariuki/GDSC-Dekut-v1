@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:gdsc_app/Firebase_Logic/EventFirebase.dart';
 import 'package:gdsc_app/UI/Events/Model/Event_model.dart';
 import 'package:gdsc_app/UI/Meetings/Model/meetings_model.dart';
+import 'package:gdsc_app/UI/Notification/pushNotification.dart';
 import 'package:path/path.dart' as path;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -107,6 +108,12 @@ class _CommunityMeetingState extends State<CommunityMeeting>
                   url));
               Get.back();
               Components.showMessage("Data sent successfully");
+              controller.isMeetingEnabled.value
+                  ? FirebaseNotification.sendFirebaseNotification(
+                      purpose: "Meeting",
+                      title: title.text,
+                     )
+                  : null;
             }, context)
           ],
         ),

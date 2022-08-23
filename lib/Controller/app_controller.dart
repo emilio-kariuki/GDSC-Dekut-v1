@@ -37,6 +37,11 @@ class AppController extends GetxController {
   var profileTwitter = "".obs;
   var profileLinkedin = "".obs;
   var adminPassword = '1234'.obs;
+  var isEventEnabled = true.obs;
+  var isResourceEnabled = true.obs;
+  var isAnnouncementEnabled = false.obs;
+  var isMeetingEnabled = false.obs;
+  var isLeadsEnabled = false.obs;
 
   @override
   void onInit() {

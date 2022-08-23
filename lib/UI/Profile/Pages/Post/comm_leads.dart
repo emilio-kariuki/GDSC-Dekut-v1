@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gdsc_app/UI/Notification/pushNotification.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Leads/Model/leads_model.dart';
 import 'package:gdsc_app/Util/App_Constants.dart';
 import 'package:get/get.dart';
@@ -103,6 +104,12 @@ final email = TextEditingController();
                   ));
                   Get.back();
                   Components.showMessage("Data sent successfully");
+                  controller.isLeadsEnabled.value
+                  ? FirebaseNotification.sendFirebaseNotification(
+                      purpose: "Leads",
+                      title: title.text,
+                     )
+                  : null;
                 }, context)
               ],
             )),

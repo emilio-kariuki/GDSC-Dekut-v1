@@ -131,14 +131,12 @@ class _PersonaState extends State<Persona> {
                       ? Constants.announceLogo
                       : urlDetails!,
                 }).then((value) async {
-                  await FirebaseStorage.instance
-                      .refFromURL(controller.profileImage.value)
-                      .delete();
                   Components.showMessage("Data Updated successfully");
                   controller.getTechology();
                   controller.getProfileImage();
                   controller.getProfileDetails();
                 }).catchError((error) {
+                  print("The error is $error");
                   Components.showMessage("Failed to update");
                   print(error);
                 });

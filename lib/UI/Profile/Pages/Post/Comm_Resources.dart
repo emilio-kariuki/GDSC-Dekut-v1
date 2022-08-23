@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gdsc_app/UI/Notification/pushNotification.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -95,6 +96,11 @@ class _CommunityResourcesState extends State<CommunityResources> {
                   ));
                   Get.back();
                   Components.showMessage("Data sent successfully");
+                  controller.isResourceEnabled.value
+                      ? FirebaseNotification.sendFirebaseNotification(
+                        purpose: "Resource",
+                          title: title.text,)
+                      : null;
                 }, context)
               ],
             )),
@@ -103,8 +109,7 @@ class _CommunityResourcesState extends State<CommunityResources> {
   }
 
   Future<void> getImage(ImageSource source) async {
-    final image = await picker.pickImage(
-        source: source, imageQuality: 90);
+    final image = await picker.pickImage(source: source, imageQuality: 90);
     try {
       if (image == null) return;
 
@@ -121,7 +126,7 @@ class _CommunityResourcesState extends State<CommunityResources> {
 
   Future<String?> imageDialog() async {
     final size = MediaQuery.of(context).size;
-     FocusScope.of(context).requestFocus(FocusNode());
+    FocusScope.of(context).requestFocus(FocusNode());
     return showDialog<String>(
       context: context,
       builder: (BuildContext context) => Container(
@@ -164,20 +169,15 @@ class _CommunityResourcesState extends State<CommunityResources> {
   Widget imageTile(ImageSource source, String text, IconData icon) {
     return ListTile(
       selectedColor: Colors.grey,
-      onTap: () async{
-
-          await getImage(source);
-          Get.back();
-
+      onTap: () async {
+        await getImage(source);
+        Get.back();
       },
       leading: Icon(icon, color: const Color.fromARGB(255, 0, 0, 0)),
       title: GestureDetector(
-        onTap: () async{
-
-            await getImage(source);
-            Get.back();
-
-
+        onTap: () async {
+          await getImage(source);
+          Get.back();
         },
         child: Text(text,
             style: GoogleFonts.quicksand(

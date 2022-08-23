@@ -9,7 +9,6 @@ import 'package:gdsc_app/UI/Authentication/Login/login_page.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
 
-
 import 'Controller/app_controller.dart';
 import 'UI/Authentication/user_logic.dart';
 import 'UI/Home/Home.dart';
@@ -22,19 +21,13 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print('Handling a background message ${message.messageId}');
 }
-const AndroidNotificationChannel channel = AndroidNotificationChannel(
-  'high_importance_channel', // id
-  'High Importance Notifications', // title
-  description:  'this channel is used for important notifications.', // description
-  importance: Importance.high,
-);
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  Firebase.initializeApp();
+  await Firebase.initializeApp();
+
+  await FirebaseMessaging.instance.subscribeToTopic("Name");
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await flutterLocalNotificationsPlugin
@@ -57,6 +50,16 @@ void main() async {
   runApp(MyApp());
 }
 
+const AndroidNotificationChannel channel = AndroidNotificationChannel(
+  'high_importance_channel', // id
+  'High Importance Notifications', // title
+  description:
+      'this channel is used for important notifications.', // description
+  importance: Importance.high,
+);
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
   final controller = Get.put(AppController());
@@ -78,10 +81,8 @@ class MyApp extends StatelessWidget {
           User? user = FirebaseAuth.instance.currentUser;
 
           if (user != null) {
-
             return GetMaterialApp(
               debugShowCheckedModeBanner: false,
-
               theme: ThemeData(
                 primarySwatch: Colors.blue,
               ),
