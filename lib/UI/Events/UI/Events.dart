@@ -53,6 +53,8 @@ class _EventsState extends State<Events> {
                 channel.id,
                 channel.name,
                 channelDescription: channel.description,
+                timeoutAfter: 3000,
+                onlyAlertOnce: true,
                 color: Colors.blue,
 
               ),
@@ -60,25 +62,7 @@ class _EventsState extends State<Events> {
       }
     });
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      RemoteNotification ?notification = message.notification;
-      AndroidNotification ?android = message.notification?.android;
-      if (notification != null && android != null) {
-        showDialog(
-            // context: context,
-            builder: (_) {
-          return AlertDialog(
-            title: Text(notification.title!),
-            content: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [Text(notification.body!)],
-              ),
-            ),
-          );
-        }, context: context);
-      }
-    });
+
 
     getToken();
   }

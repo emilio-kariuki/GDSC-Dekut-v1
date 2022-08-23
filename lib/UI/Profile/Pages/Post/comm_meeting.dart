@@ -96,6 +96,22 @@ class _CommunityMeetingState extends State<CommunityMeeting>
             rowTimeAndEvent(),
             Components.spacerHeight(10),
             Components.spacerHeight(10),
+            notificationCard(
+                      iconName: Icons.missed_video_call_outlined,
+                      action: "Notify about meeting",
+                      widget: Switch(
+                          trackColor: MaterialStateProperty.all(
+                              controller.isDark.value
+                                  ? Colors.white
+                                  : Colors.black54),
+                          thumbColor:
+                              MaterialStateProperty.all(Colors.deepOrange),
+                          value: controller.isMeetingEnabled.value,
+                          onChanged: ((value) {
+                            controller.isMeetingEnabled.value = value;
+                            print(value);
+                            setState(() {});
+                          }))),
             Components.button("Submit", () {
               FocusScope.of(context).requestFocus(FocusNode());
               ActionFirebase.createMeeting(MeetingModel(
@@ -118,6 +134,33 @@ class _CommunityMeetingState extends State<CommunityMeeting>
           ],
         ),
       )),
+    );
+  }
+    Widget notificationCard(
+      {required IconData iconName,
+      required String action,
+      required Widget widget}) {
+    return SizedBox(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height * 0.06,
+      child: Row(
+        children: [
+          Row(
+            children: [
+              Icon(
+                iconName,
+                size: 18,
+                color: controller.isDark.value ? Colors.white : Colors.black87,
+              ),
+              const SizedBox(width: 15),
+              Components.header_3(action,
+                  controller.isDark.value ? Colors.white : Colors.black87),
+            ],
+          ),
+          Expanded(child: Container()),
+          widget
+        ],
+      ),
     );
   }
 

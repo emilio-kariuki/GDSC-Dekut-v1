@@ -89,6 +89,22 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
                   ],
                 ),
                 Components.spacerHeight(10),
+                notificationCard(
+                      iconName: Icons.notifications_active,
+                      action: "Notify about announcement",
+                      widget: Switch(
+                          trackColor: MaterialStateProperty.all(
+                              controller.isDark.value
+                                  ? Colors.white
+                                  : Colors.black54),
+                          thumbColor:
+                              MaterialStateProperty.all(Colors.deepOrange),
+                          value: controller.isAnnouncementEnabled.value,
+                          onChanged: ((value) {
+                            controller.isAnnouncementEnabled.value = value;
+                            print(value);
+                            setState(() {});
+                          }))),
                 Components.button("Submit", () {
                   FocusScope.of(context).requestFocus(FocusNode());
                   ActionFirebase.createAnnouncement(AnnouncementModel(
@@ -127,6 +143,33 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
         "Failed to pick image $e",
       );
     }
+  }
+    Widget notificationCard(
+      {required IconData iconName,
+      required String action,
+      required Widget widget}) {
+    return SizedBox(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height * 0.06,
+      child: Row(
+        children: [
+          Row(
+            children: [
+              Icon(
+                iconName,
+                size: 18,
+                color: controller.isDark.value ? Colors.white : Colors.black87,
+              ),
+              const SizedBox(width: 15),
+              Components.header_3(action,
+                  controller.isDark.value ? Colors.white : Colors.black87),
+            ],
+          ),
+          Expanded(child: Container()),
+          widget
+        ],
+      ),
+    );
   }
 
   Future<String?> imageDialog() async {

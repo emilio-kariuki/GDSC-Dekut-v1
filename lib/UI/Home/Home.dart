@@ -73,6 +73,7 @@ class _HomeState extends State<Home> {
       "Profile",
     ];
     return AnimatedBottomNavigationBar.builder(
+      elevation: 0,
       backgroundColor:
           controller.isDark.value ? Colors.grey[900] : Colors.white,
       splashColor: Colors.deepOrangeAccent,

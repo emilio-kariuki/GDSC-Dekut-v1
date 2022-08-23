@@ -86,7 +86,7 @@ class _GDSCNotificationsState extends State<GDSCNotifications> {
                             print(value);
                             setState(() {});
                           }))),
-                          Components.showDividerLine(2),
+                  Components.showDividerLine(2),
                   notificationCard(
                       iconName: Icons.missed_video_call_outlined,
                       action: "Meetings",
@@ -103,7 +103,7 @@ class _GDSCNotificationsState extends State<GDSCNotifications> {
                             print(value);
                             setState(() {});
                           }))),
-                          Components.showDividerLine(2),
+                  Components.showDividerLine(2),
                   notificationCard(
                       iconName: Icons.person,
                       action: "Leads",

@@ -92,6 +92,22 @@ final email = TextEditingController();
                   controller: email,
                 ),
                 Components.spacerHeight(10),
+                 notificationCard(
+                      iconName: Icons.person,
+                      action: "Notify about the lead",
+                      widget: Switch(
+                          trackColor: MaterialStateProperty.all(
+                              controller.isDark.value
+                                  ? Colors.white
+                                  : Colors.black54),
+                          thumbColor:
+                              MaterialStateProperty.all(Colors.deepOrange),
+                          value: controller.isLeadsEnabled.value,
+                          onChanged: ((value) {
+                            controller.isLeadsEnabled.value = value;
+                            print(value);
+                            setState(() {});
+                          }))),
                 Components.button("Submit", () {
                   FocusScope.of(context).requestFocus(FocusNode());
                   ActionFirebase.createLead(LeadsModel(
@@ -114,6 +130,33 @@ final email = TextEditingController();
               ],
             )),
       )),
+    );
+  }
+    Widget notificationCard(
+      {required IconData iconName,
+      required String action,
+      required Widget widget}) {
+    return SizedBox(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height * 0.06,
+      child: Row(
+        children: [
+          Row(
+            children: [
+              Icon(
+                iconName,
+                size: 18,
+                color: controller.isDark.value ? Colors.white : Colors.black87,
+              ),
+              const SizedBox(width: 15),
+              Components.header_3(action,
+                  controller.isDark.value ? Colors.white : Colors.black87),
+            ],
+          ),
+          Expanded(child: Container()),
+          widget
+        ],
+      ),
     );
   }
 
