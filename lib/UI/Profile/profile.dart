@@ -97,7 +97,7 @@ class _AccountState extends State<Account> {
                       Components.showDividerLine(Dimensions.PADDING_SIZE_SMALL),
 
                       Components.cardButton(Icons.info_outline_rounded,
-                          "Notifications", () => Get.to(()=>const GDSCNotifications())),
+                          "App Version 1.0.0", () => null),
                       Components.showDividerLine(Dimensions.PADDING_SIZE_SMALL),
                       Components.cardButton(
                           Icons.help_outline_sharp,
