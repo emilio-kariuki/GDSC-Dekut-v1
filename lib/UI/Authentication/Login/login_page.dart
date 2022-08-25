@@ -26,15 +26,14 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool _isSigningIn = false;
-   
+  final username = TextEditingController();
+  final email = TextEditingController();
+  final password = TextEditingController();
+  final controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
-    final username = TextEditingController();
-    final email = TextEditingController();
-    final password = TextEditingController();
-    final controller = Get.put(AppController());  
-
     return Scaffold(
+
       backgroundColor:
           controller.isDark.value ? Colors.grey[900] : Colors.white,
       body: SafeArea(
@@ -106,8 +105,16 @@ class _LoginState extends State<Login> {
                         userName = user.displayName!;
                         userEmail = user.email!;
                         createUser(
-                            UserClass(user.displayName!, user.email!, 'empty',
-                                'empty', 'empty', 'empty', user.uid, 'empty', Constants.defaultIcon),
+                            UserClass(
+                                user.displayName!,
+                                user.email!,
+                                'empty',
+                                'empty',
+                                'empty',
+                                'empty',
+                                user.uid,
+                                'empty',
+                                Constants.defaultIcon),
                             user.uid);
                         Get.offAll(() => const Home());
                       }
