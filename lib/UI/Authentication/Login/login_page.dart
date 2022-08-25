@@ -26,13 +26,13 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool _isSigningIn = false;
-   final username = TextEditingController();
-    final email = TextEditingController();
-    final password = TextEditingController();
-    final controller = Get.put(AppController());
+   
   @override
   Widget build(BuildContext context) {
-   
+    final username = TextEditingController();
+    final email = TextEditingController();
+    final password = TextEditingController();
+    final controller = Get.put(AppController());  
 
     return Scaffold(
       backgroundColor:
