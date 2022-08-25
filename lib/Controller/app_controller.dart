@@ -42,6 +42,7 @@ class AppController extends GetxController {
   var isAnnouncementEnabled = false.obs;
   var isMeetingEnabled = false.obs;
   var isLeadsEnabled = false.obs;
+  var initialProfileName = "User".obs;
 
   @override
   void onInit() {
@@ -66,6 +67,7 @@ class AppController extends GetxController {
         .get()
         .then((snapshot) async {
       print("The tech is ${snapshot['technology']}");
+      initialProfileName.value = snapshot['username'];
       stack.value = snapshot['technology'];
       nameDetails.text = snapshot['username'];
       emailDetails.text = snapshot['email'];
@@ -161,6 +163,7 @@ class AppController extends GetxController {
     }).obs;
 
     profileName.value = (await name.value);
+    initialProfileName.value = (await name.value);
     profileEmail.value = (await email.value);
     profilePhone.value = (await phone.value);
     profileGithub.value = (await github.value);

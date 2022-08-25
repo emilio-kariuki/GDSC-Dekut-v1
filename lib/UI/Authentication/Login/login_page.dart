@@ -51,6 +51,7 @@ class _LoginState extends State<Login> {
                 ),
                 Components.spacerHeight(Dimensions.PADDING_SIZE_OVER_LARGE),
                 Components.header_1(Constants.login),
+                
                 InputField(
                     title: Constants.name,
                     hint: "Enter your user name",

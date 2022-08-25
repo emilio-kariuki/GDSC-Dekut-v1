@@ -214,7 +214,7 @@ class Components {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  header_3(userName,
+                  header_3(controller.initialProfileName.value ,
                       controller.isDark.value ? Colors.white : Colors.black87),
                   header_3(userEmail,
                       controller.isDark.value ? Colors.white : Colors.black54),
