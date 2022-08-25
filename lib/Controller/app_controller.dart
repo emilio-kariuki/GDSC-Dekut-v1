@@ -18,6 +18,7 @@ import '../UI/Events/Model/Event_model.dart';
 class AppController extends GetxController {
   var isDark = false.obs;
   var events = <EventModel>[].obs;
+  var isSignedIn = false.obs;
   var currentPage = 0.obs;
   var isSent = false.obs;
   var isLoading = true.obs;

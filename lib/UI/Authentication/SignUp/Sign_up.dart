@@ -78,6 +78,10 @@ class _RegisterState extends State<Register> {
                     if (password.text == confirmPassword.text) {
                       final user = await Authentication.registerWithEmail(
                           username.text, email.text, password.text);
+                          controller.isSignedIn.value
+                        ? const CircularProgressIndicator()
+                        : Components.showMessage("Logged in successfully");
+                    controller.isSignedIn.value = false;
                       Get.offAll(() => const Home());
                       if (user != null) {
                         userID = user.uid;
@@ -121,7 +125,7 @@ class _RegisterState extends State<Register> {
                             user.uid);
                         Get.offAll(() => const Home(),duration:const Duration(milliseconds: 100));
                       }
-
+                      
                       setState(() {
                         _isSigningIn = false;
                       });

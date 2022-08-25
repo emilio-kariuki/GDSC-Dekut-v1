@@ -9,12 +9,10 @@ import 'package:gdsc_app/Util/App_components.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 import '../../../Controller/app_controller.dart';
 import '../../../main.dart';
 
 int itemCount = 5;
-
 
 class Events extends StatefulWidget {
   const Events({Key? key}) : super(key: key);
@@ -32,46 +30,10 @@ class _EventsState extends State<Events> {
   @override
   void initState() {
     super.initState();
-    var initializationSettingsAndroid =
-        const AndroidInitializationSettings('ic_launcher');
-    var initialzationSettingsAndroid =
-        const AndroidInitializationSettings('@mipmap/ic_launcher');
-    var initializationSettings =
-        InitializationSettings(android: initialzationSettingsAndroid);
-    flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification ?android = message.notification?.android;
-      if (notification != null && android != null) {
-        flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                channelDescription: channel.description,
-                timeoutAfter: 3000,
-                onlyAlertOnce: true,
-                color: Colors.blue,
-
-              ),
-            ));
-      }
-    });
-
-
-
-    getToken();
   }
 
 
-String ?token;
-getToken() async {
-  token = (await FirebaseMessaging.instance.getToken())!;
-}
 
   @override
   Widget build(BuildContext context) {

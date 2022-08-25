@@ -1,14 +1,19 @@
+// ignore_for_file: unused_local_variable, avoid_print
+
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gdsc_app/Controller/app_controller.dart';
 import 'package:gdsc_app/UI/Announcement/UI/announcement.dart';
 import 'package:gdsc_app/UI/Meetings/UI/meetings.dart';
 import 'package:gdsc_app/UI/Profile/profile.dart';
 import 'package:gdsc_app/UI/Resources/UI/resources.dart';
+import 'package:gdsc_app/Util/App_components.dart';
+import 'package:gdsc_app/main.dart';
 import 'package:get/get.dart';
 
 import '../../Util/dimensions.dart';
@@ -26,7 +31,6 @@ class _HomeState extends State<Home> {
   int activeIndex = 0;
   var myGroup = AutoSizeGroup();
 
-
   @override
   void initState() {
     super.initState();
@@ -36,15 +40,16 @@ class _HomeState extends State<Home> {
     controller.getProfileImage();
     controller.getProfileDetails();
     Firebase.initializeApp();
+    Components.flutterNotificationSettings();
   }
-
   @override
-  void didChangeDependencies() async{
+  void didChangeDependencies() async {
     super.didChangeDependencies();
     controller.getPassword();
-        controller.getProfileImage();
-        String? token =  await FirebaseMessaging.instance.getToken();
-        print("Token is $token");
+    controller.getProfileImage();
+    String? token = await FirebaseMessaging.instance.getToken();
+    print("Token is $token");
+    getToken();
   }
 
   @override
