@@ -30,11 +30,10 @@ class _LoginState extends State<Login> {
   final email = TextEditingController();
   final password = TextEditingController();
   final controller = Get.put(AppController());
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
+
       backgroundColor:
           controller.isDark.value ? Colors.grey[900] : Colors.white,
       body: SafeArea(
