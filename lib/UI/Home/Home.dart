@@ -39,9 +39,11 @@ class _HomeState extends State<Home> {
     controller.getTechology();
     controller.getProfileImage();
     controller.getProfileDetails();
+    controller.getThemeStatus();
     Firebase.initializeApp();
     Components.flutterNotificationSettings();
   }
+
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
