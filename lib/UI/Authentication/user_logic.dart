@@ -86,16 +86,23 @@ class Authentication {
 
       try {
         final UserCredential userCredential =
-            await auth.signInWithCredential(credential);
+            await auth.signInWithCredential(credential);  
         controller.isSignedIn.value = true;
         user = userCredential.user;
       } on FirebaseAuthException catch (e) {
+        print("The errors");
+        print(e.code);
+        print(e.message);
+
         if (e.code == 'account-exists-with-different-credential') {
+          print("Account exists with different credential");
           // handle the error here
         } else if (e.code == 'invalid-credential') {
+          print("Invalid credential");
           // handle the error here
         }
       } catch (e) {
+        print("The error for google sign in is : $e");
         // handle the error here
       }
     }

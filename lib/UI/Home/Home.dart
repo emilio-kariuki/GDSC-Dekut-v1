@@ -40,7 +40,6 @@ class _HomeState extends State<Home> {
     controller.getProfileImage();
     controller.getProfileDetails();
     controller.getThemeStatus();
-    Firebase.initializeApp();
     Components.flutterNotificationSettings();
   }
 

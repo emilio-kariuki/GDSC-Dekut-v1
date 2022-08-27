@@ -22,7 +22,6 @@ String userEmail = '';
     token = (await FirebaseMessaging.instance.getToken())!;
   }
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
   print('Handling a background message ${message.messageId}');
 }
 
@@ -32,6 +31,7 @@ void main() async {
   await Firebase.initializeApp();
 
   await FirebaseMessaging.instance.subscribeToTopic("Name");
+
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await flutterLocalNotificationsPlugin
