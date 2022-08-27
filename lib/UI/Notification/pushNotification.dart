@@ -22,6 +22,7 @@ class FirebaseNotification {
   static Future<void> sendFirebaseNotification(
       {required String purpose,required String title}) async {
     const postUrl = 'https://fcm.googleapis.com/fcm/send';
+    
     final data = {
       "to": "/topics/Name",
       'notification': {
