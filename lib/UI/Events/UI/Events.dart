@@ -28,14 +28,6 @@ class _EventsState extends State<Events> {
   late final FirebaseMessaging _messaging;
 
   @override
-  void initState() {
-    super.initState();
-
-  }
-
-
-
-  @override
   Widget build(BuildContext context) {
     return Obx(
       () => Scaffold(

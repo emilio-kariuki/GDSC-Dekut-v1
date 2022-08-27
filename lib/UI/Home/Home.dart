@@ -40,7 +40,6 @@ class _HomeState extends State<Home> {
     controller.getProfileImage();
     controller.getProfileDetails();
     controller.getThemeStatus();
-    Firebase.initializeApp();
     Components.flutterNotificationSettings();
   }
 
@@ -50,7 +49,7 @@ class _HomeState extends State<Home> {
     controller.getPassword();
     controller.getProfileImage();
     String? token = await FirebaseMessaging.instance.getToken();
-    print("Token of the app is :  $token");
+    print("Token of the app is :$token");
     getToken();
   }
 
