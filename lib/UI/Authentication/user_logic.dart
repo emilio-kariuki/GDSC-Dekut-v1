@@ -6,6 +6,7 @@ import 'package:gdsc_app/Controller/app_controller.dart';
 import 'package:gdsc_app/Firebase_Logic/UserFirebase.dart';
 import 'package:gdsc_app/Models/user_model.dart';
 import 'package:gdsc_app/Util/App_Constants.dart';
+import 'package:gdsc_app/Util/App_components.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -19,9 +20,13 @@ class Authentication {
   static Future<User?> registerWithEmail(
       String name, String email, String password) async {
     User? user;
-    user = (await auth.createUserWithEmailAndPassword(
+    try{
+      user = (await auth.createUserWithEmailAndPassword(
             email: email, password: password))
         .user;
+    }catch(e){
+      Components.showMessage(e.toString());
+    }
 
     if (user != null) {
       createUser(
@@ -86,7 +91,7 @@ class Authentication {
 
       try {
         final UserCredential userCredential =
-            await auth.signInWithCredential(credential);  
+            await auth.signInWithCredential(credential);
         controller.isSignedIn.value = true;
         user = userCredential.user;
       } on FirebaseAuthException catch (e) {
