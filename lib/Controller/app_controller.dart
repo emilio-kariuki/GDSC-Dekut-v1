@@ -44,6 +44,7 @@ class AppController extends GetxController {
   var isMeetingEnabled = false.obs;
   var isLeadsEnabled = false.obs;
   var initialProfileName = "User".obs;
+  var isObscured = false.obs;
 
   @override
   void onInit() {
