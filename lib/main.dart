@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:gdsc_app/InternetConnection/chechConnection.dart';
 import 'package:gdsc_app/UI/Authentication/Login/login_page.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
@@ -17,10 +18,11 @@ String userID = '';
 User? the_User;
 String userName = '';
 String userEmail = '';
-  String? token;
-  getToken() async {
-    token = (await FirebaseMessaging.instance.getToken())!;
-  }
+String? token;
+getToken() async {
+  token = (await FirebaseMessaging.instance.getToken())!;
+}
+
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('Handling a background message ${message.messageId}');
 }
@@ -31,7 +33,6 @@ void main() async {
   await Firebase.initializeApp();
 
   await FirebaseMessaging.instance.subscribeToTopic("Name");
-
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await flutterLocalNotificationsPlugin
@@ -48,6 +49,9 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+
+  ConnectionStatusSingleton connectionStatus = ConnectionStatusSingleton.getInstance();
+    connectionStatus.initialize();
 
   Get.lazyPut<AppController>(() => AppController(), fenix: true);
 

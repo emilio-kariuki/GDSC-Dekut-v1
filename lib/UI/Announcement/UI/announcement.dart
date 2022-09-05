@@ -27,7 +27,12 @@ class _AnnouncementsState extends State<Announcements> {
         ),
         body: SafeArea(
             child: SingleChildScrollView(
-              child: Components.announcementListCard(context),
+              child: Column(
+                children: [
+                  Text("."),
+                  Components.announcementListCard(context),
+                ],
+              ),
             )),
       ),);
   }

@@ -35,91 +35,10 @@ class _GDSCNotificationsState extends State<GDSCNotifications> {
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Column(children: [
-                  notificationCard(
-                      iconName: Icons.event,
-                      action: "Event",
-                      widget: Switch(
-                          trackColor: MaterialStateProperty.all(
-                              controller.isDark.value
-                                  ? Colors.white
-                                  : Colors.black54),
-                          thumbColor:
-                              MaterialStateProperty.all(Colors.deepOrange),
-                          value: controller.isEventEnabled.value,
-                          onChanged: ((value) {
-                            controller.isEventEnabled.value = value;
-                            print(value);
-                            setState(() {});
-                          }))),
-                  Components.showDividerLine(2),
-                  notificationCard(
-                      iconName: Icons.layers,
-                      action: "Resources",
-                      widget: Switch(
-                          trackColor: MaterialStateProperty.all(
-                              controller.isDark.value
-                                  ? Colors.white
-                                  : Colors.black54),
-                          thumbColor:
-                              MaterialStateProperty.all(Colors.deepOrange),
-                          value: controller.isResourceEnabled.value,
-                          onChanged: ((value) {
-                            controller.isResourceEnabled.value = value;
-                            print(value);
-                            setState(() {});
-                          }))),
-                  Components.showDividerLine(2),
-                  notificationCard(
-                      iconName: Icons.notifications_active,
-                      action: "Announcements",
-                      widget: Switch(
-                          trackColor: MaterialStateProperty.all(
-                              controller.isDark.value
-                                  ? Colors.white
-                                  : Colors.black54),
-                          thumbColor:
-                              MaterialStateProperty.all(Colors.deepOrange),
-                          value: controller.isAnnouncementEnabled.value,
-                          onChanged: ((value) {
-                            controller.isAnnouncementEnabled.value = value;
-                            print(value);
-                            setState(() {});
-                          }))),
-                  Components.showDividerLine(2),
-                  notificationCard(
-                      iconName: Icons.missed_video_call_outlined,
-                      action: "Meetings",
-                      widget: Switch(
-                          trackColor: MaterialStateProperty.all(
-                              controller.isDark.value
-                                  ? Colors.white
-                                  : Colors.black54),
-                          thumbColor:
-                              MaterialStateProperty.all(Colors.deepOrange),
-                          value: controller.isMeetingEnabled.value,
-                          onChanged: ((value) {
-                            controller.isMeetingEnabled.value = value;
-                            print(value);
-                            setState(() {});
-                          }))),
-                  Components.showDividerLine(2),
-                  notificationCard(
-                      iconName: Icons.person,
-                      action: "Leads",
-                      widget: Switch(
-                          trackColor: MaterialStateProperty.all(
-                              controller.isDark.value
-                                  ? Colors.white
-                                  : Colors.black54),
-                          thumbColor:
-                              MaterialStateProperty.all(Colors.deepOrange),
-                          value: controller.isLeadsEnabled.value,
-                          onChanged: ((value) {
-                            controller.isLeadsEnabled.value = value;
-                            print(value);
-                            setState(() {});
-                          }))),
+                child: Column(
+                  children: [
+                    InputField(hint: "Enter the title of the notification"),
+
                 ]),
               ),
             ),
@@ -127,31 +46,5 @@ class _GDSCNotificationsState extends State<GDSCNotifications> {
         ));
   }
 
-  Widget notificationCard(
-      {required IconData iconName,
-      required String action,
-      required Widget widget}) {
-    return SizedBox(
-      width: double.infinity,
-      height: MediaQuery.of(context).size.height * 0.06,
-      child: Row(
-        children: [
-          Row(
-            children: [
-              Icon(
-                iconName,
-                size: 18,
-                color: controller.isDark.value ? Colors.white : Colors.black87,
-              ),
-              const SizedBox(width: 15),
-              Components.header_3(action,
-                  controller.isDark.value ? Colors.white : Colors.black87),
-            ],
-          ),
-          Expanded(child: Container()),
-          widget
-        ],
-      ),
-    );
-  }
+
 }
