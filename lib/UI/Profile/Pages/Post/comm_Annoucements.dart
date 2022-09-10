@@ -114,7 +114,8 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
                     url,
                   ));
                   Get.back();
-                  Components.showMessage("Data sent successfully");
+                  Components.createScaffoldMessanger(
+                  "Data sent successfully", context);
                   controller.isAnnouncementEnabled.value
                   ? FirebaseNotification.sendFirebaseNotification(
                       purpose: "Announcement",

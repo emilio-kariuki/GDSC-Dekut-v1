@@ -77,7 +77,7 @@ class _AccountState extends State<Account> {
                           () => Get.to(() => Contact(),
                               duration: const Duration(milliseconds: 1))),
                       Components.showDividerLine(Dimensions.PADDING_SIZE_SMALL),
-                      Components.cardButton(Icons.feedback, "Share Feedback",
+                      Components.cardButton(Icons.feedback, "Feedback",
                           () => Components.sendFeedback(description)),
                       Components.showDividerLine(Dimensions.PADDING_SIZE_SMALL),
                       Components.showLogOutButton(Constants.logout, () async {

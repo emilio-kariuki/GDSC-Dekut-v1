@@ -46,7 +46,7 @@ class _AdminState extends State<Admin>
     ),
     Tab(
       child: Components.header_3(
-          "Meet", controller.isDark.value ? Colors.white : Colors.black87),
+          "Virtual", controller.isDark.value ? Colors.white : Colors.black87),
     ),
   ];
   @override

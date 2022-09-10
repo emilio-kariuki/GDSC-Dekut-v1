@@ -3,7 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:gdsc_app/Models/user_model.dart';
-import 'package:gdsc_app/UI/Profile/Pages/FeedBack/Model/feedback.dart';
+import 'package:gdsc_app/Util/App_Constants.dart';
 
 final firestoreInstance = FirebaseFirestore.instance;
 
@@ -19,7 +19,7 @@ void createUser(UserClass user, String id) async {
     "twitter": user.twitter,
     "userID": user.userID,
     "technology": user.technology,
-    "imageUrl": user.imageUrl,
+    "imageUrl": user.imageUrl  ?? Constants.defaultIcon,
   });
 }
 

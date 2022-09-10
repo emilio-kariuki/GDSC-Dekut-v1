@@ -111,7 +111,8 @@ class _CommunityResourcesState extends State<CommunityResources> {
                     link.text,
                   ));
                   Get.back();
-                  Components.showMessage("Data sent successfully");
+                 Components.createScaffoldMessanger(
+                  "Data sent successfully", context);
                   controller.isResourceEnabled.value
                       ? FirebaseNotification.sendFirebaseNotification(
                         purpose: "Resource",

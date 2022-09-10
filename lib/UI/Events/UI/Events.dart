@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,28 @@ class _EventsState extends State<Events> {
   StreamSubscription ?_connectionChangeStream;
 
   bool isOffline = false;
+
+  Future<void> showScheduledNotification(int id, String channelKey,
+  String title, String body, DateTime interval) async {
+String localTZ = await AwesomeNotifications().getLocalTimeZoneIdentifier();
+
+await AwesomeNotifications().createNotification(
+  content: NotificationContent(
+    id: id,
+    channelKey: channelKey,
+    title: "We are about to start.....",
+    body: "Looking forward to see you there",
+    locked: true,
+    criticalAlert: true,
+    category: NotificationCategory.Alarm,
+
+  ),
+  schedule: NotificationCalendar.fromDate(date: interval),
+  actionButtons: <NotificationActionButton>[
+    NotificationActionButton(key: 'remove', label: 'Stop', buttonType: ActionButtonType.DisabledAction),
+
+  ],
+);}
 
   @override
   initState() {

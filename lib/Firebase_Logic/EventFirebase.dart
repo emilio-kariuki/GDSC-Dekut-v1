@@ -4,6 +4,7 @@ import 'package:gdsc_app/UI/Announcement/Model/announcement_model.dart';
 import 'package:gdsc_app/UI/Meetings/Model/meetings_model.dart';
 import 'package:gdsc_app/UI/Profile/Pages/FeedBack/Model/feedback.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Leads/Model/leads_model.dart';
+import 'package:gdsc_app/Util/App_Constants.dart';
 
 import '../UI/Events/Model/Event_model.dart';
 import '../UI/Resources/Model/resources_model.dart';
@@ -19,14 +20,14 @@ class ActionFirebase {
       "link": eve.registrationLink,
       "date": eve.date,
       "time": eve.time,
-      "imageUrl": eve.imageUrl,
+      "imageUrl": eve.imageUrl  ?? Constants.defaultIcon,
     }, SetOptions(merge: true));
   }
 
   static void createFeedback(FeedBackModel feedback) {
     firestoreInstance.collection('feedback').doc().set({
-      "name": feedback.title,
-      "email": feedback.description,
+
+      "feedback": feedback.description,
     });
   }
 
@@ -38,7 +39,7 @@ class ActionFirebase {
       "link": eve.registrationLink,
       "date": eve.date,
       "time": eve.time,
-      "imageUrl": eve.imageUrl,
+      "imageUrl": eve.imageUrl  ?? Constants.defaultIcon,
     }, SetOptions(merge: true));
   }
 
@@ -47,7 +48,7 @@ class ActionFirebase {
       "title": ann.title,
       "description": ann.description,
       "link": ann.link ?? "No link",
-      "imageUrl": ann.imageUrl,
+      "imageUrl": ann.imageUrl  ?? Constants.defaultIcon,
     }, SetOptions(merge: true));
   }
 
@@ -55,7 +56,7 @@ class ActionFirebase {
     firestoreInstance.collection('resources').doc().set({
       "title": res.title,
       "description": res.description,
-      "imageUrl": res.imageUrl,
+      "imageUrl": res.imageUrl  ?? Constants.defaultIcon,
       "link": res.link,
     }, SetOptions(merge: true));
   }
@@ -64,7 +65,7 @@ class ActionFirebase {
     firestoreInstance.collection('leads').doc().set({
       "name": lead.name,
       "role": lead.role,
-      "imageUrl": lead.imageUrl,
+      "imageUrl": lead.imageUrl ?? Constants.defaultIcon,
       "phone": lead.phone,
       "email": lead.email
     }, SetOptions(merge: true));

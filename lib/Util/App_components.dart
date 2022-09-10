@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -979,11 +980,11 @@ class Components {
                             : Colors.black87,
                       ),
                     ),
-                    subtitle: Text(data['description'],
-                        style: TextStyle(
-                            color: controller.isDark.value
-                                ? Colors.white
-                                : Colors.black87)),
+                    // subtitle: Text(data['description'],
+                    //     style: TextStyle(
+                    //         color: controller.isDark.value
+                    //             ? Colors.white
+                    //             : Colors.black87)),
                     trailing: InkWell(
                       onTap: () {
                         titleResource.text = data['title'];
@@ -1244,11 +1245,11 @@ class Components {
                             : Colors.black87,
                       ),
                     ),
-                    subtitle: Text(data['description'],
-                        style: TextStyle(
-                            color: controller.isDark.value
-                                ? Colors.white
-                                : Colors.black87)),
+                    // subtitle: Text(data['description'],
+                    //     style: TextStyle(
+                    //         color: controller.isDark.value
+                    //             ? Colors.white
+                    //             : Colors.black87)),
                     trailing: InkWell(
                       onTap: () {
                         titleAnnouncement.text = data['title'];
@@ -1443,11 +1444,11 @@ class Components {
                             : Colors.black87,
                       ),
                     ),
-                    subtitle: Text(data['description'],
-                        style: TextStyle(
-                            color: controller.isDark.value
-                                ? Colors.white
-                                : Colors.black87)),
+                    // subtitle: Text(data['description'],
+                    //     style: TextStyle(
+                    //         color: controller.isDark.value
+                    //             ? Colors.white
+                    //             : Colors.black87)),
                     trailing: InkWell(
                       onTap: () {
                         titleEvent.text = data['title'];
@@ -1511,6 +1512,16 @@ class Components {
             ));
       }
     });
+  }
+
+  static createScaffoldMessanger(String text, BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: Duration(seconds: 1),
+        backgroundColor: Colors.green,
+        content: Text(text),
+      ),
+    );
   }
 
   static Widget eventListCard(BuildContext context) {
@@ -1741,11 +1752,11 @@ class Components {
                             : Colors.black87,
                       ),
                     ),
-                    subtitle: Text(data['description'],
-                        style: TextStyle(
-                            color: controller.isDark.value
-                                ? Colors.white
-                                : Colors.black87)),
+                    // subtitle: Text(data['description'],
+                    //     style: TextStyle(
+                    //         color: controller.isDark.value
+                    //             ? Colors.white
+                    //             : Colors.black87)),
                     trailing: InkWell(
                       onTap: () {
                         titleMeeting.text = data['title'];
@@ -1980,7 +1991,7 @@ class Components {
       buttonColor: Colors.deepOrange,
       backgroundColor:
           controller.isDark.value ? Colors.grey[900] : Colors.white,
-      title: Constants.confirmAdmin,
+      title: "Feedback",
       content: InputField(
           title: "Please fill your feedback",
           hint: "Enter feedback",
@@ -1997,13 +2008,12 @@ class Components {
         } else {
           Get.back();
           ActionFirebase.createFeedback(FeedBackModel(
-            title: title.text,
             description: description.text,
           ));
           flutterLocalNotificationsPlugin.show(
               0,
               "Feedback Sent",
-              "$description.text",
+              "${description.text}",
               NotificationDetails(
                   android: AndroidNotificationDetails(
                 channel.id,
@@ -2013,6 +2023,58 @@ class Components {
                 color: Colors.blue,
                 playSound: true,
               )));
+        }
+      },
+    );
+  }
+
+  static sendNotification() {
+    Get.defaultDialog(
+      //titlePadding: EdgeInsets.only(top: 5),
+      contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      cancelTextColor: controller.isDark.value ? Colors.white : Colors.black87,
+      confirmTextColor: Colors.white,
+      buttonColor: Colors.deepOrange,
+      backgroundColor:
+          controller.isDark.value ? Colors.grey[900] : Colors.white,
+      title: "Notification",
+      content: InputField(
+          //title: "Enter Notification to send",
+          hint: "Enter Notification",
+          controller: description),
+      titleStyle: GoogleFonts.quicksand(
+        color: controller.isDark.value ? Colors.white : Colors.black87,
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+      ),
+      onCancel: (() => Get.back()),
+      onConfirm: () async {
+        if (description.text.isEmpty) {
+          showMessage("Enter Description");
+        } else {
+          Get.back();
+          // await FirebaseNotification.sendFirebaseNotification(
+          //             purpose: "message",
+          //             title: description.text,
+          //           );
+          await AwesomeNotifications().createNotification(
+            content: NotificationContent(
+              id: 1,
+              //channelKey: channelKey,
+              title: "We are about to start.....",
+              body: "Looking forward to see you there",
+              locked: true,
+              criticalAlert: true,
+              category: NotificationCategory.Alarm, channelKey: 'base',
+            ),
+            //schedule: NotificationCalendar.fromDate(date: interval),
+            actionButtons: <NotificationActionButton>[
+              NotificationActionButton(
+                  key: 'remove',
+                  label: 'Stop',
+                  buttonType: ActionButtonType.DisabledAction),
+            ],
+          );
         }
       },
     );
@@ -2168,9 +2230,9 @@ class Components {
               }, context)),
               Expanded(
                   child: button("Delete", () async {
+                Get.back();
                 ActionFirebase.deleteDoc(id, 'leads');
                 await FirebaseStorage.instance.refFromURL(url).delete();
-                Get.back();
               }, context))
             ],
           )),

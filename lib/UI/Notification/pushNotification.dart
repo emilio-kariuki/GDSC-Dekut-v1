@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:gdsc_app/Util/App_components.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class PushNotification {
@@ -22,12 +23,12 @@ class FirebaseNotification {
   static Future<void> sendFirebaseNotification(
       {required String purpose,required String title}) async {
     const postUrl = 'https://fcm.googleapis.com/fcm/send';
-    
+
     final data = {
       "to": "/topics/Name",
       'notification': {
 
-        'title': "New $purpose Added",
+        'title': "New $purpose",
 
         'body': title,
 
@@ -56,7 +57,7 @@ class FirebaseNotification {
 
     if (response.statusCode == 200) {
       print('Notification sent successfully.');
-      Components.showMessage("message sent successfully");
+      Components.createScaffoldMessanger("Message sent successfully", Get.context!);
     } else {
       print('Notification sent failed.');
     }

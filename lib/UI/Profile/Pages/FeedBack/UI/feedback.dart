@@ -54,7 +54,6 @@ class _FeedBackState extends State<FeedBack> {
                   ),
                   Components.button("Send Feedback", () {
                     ActionFirebase.createFeedback(FeedBackModel(
-                      title: title.text,
                       description: description.text,
                     ));
                     flutterLocalNotificationsPlugin.show(
@@ -66,7 +65,7 @@ class _FeedBackState extends State<FeedBack> {
                           channel.id,
                           channel.name,
                           channelDescription: channel.description,
-                          importance: Importance.high,
+                          importance: Importance.low,
                           color: Colors.blue,
                           playSound: true,
                         )));

@@ -134,7 +134,8 @@ class _CommunityEventsState extends State<CommunityEvents>
                   organizers.text,
                   url));
               Get.back();
-              Components.showMessage("Data sent successfully");
+              Components.createScaffoldMessanger(
+                  "Data sent successfully", context);
               controller.isEventEnabled.value
                   ? FirebaseNotification.sendFirebaseNotification(
                       purpose: "Event",

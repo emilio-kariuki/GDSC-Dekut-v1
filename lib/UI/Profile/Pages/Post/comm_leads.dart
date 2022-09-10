@@ -113,13 +113,14 @@ final email = TextEditingController();
                   ActionFirebase.createLead(LeadsModel(
                     name.text,
                     role.text,
-                    url,
+                    url ?? Constants.defaultIcon,
                     phone.text,
                     email.text
 
                   ));
                   Get.back();
-                  Components.showMessage("Data sent successfully");
+                  Components.createScaffoldMessanger(
+                  "Data sent successfully", context);
                   controller.isLeadsEnabled.value
                   ? FirebaseNotification.sendFirebaseNotification(
                       purpose: "Leads",

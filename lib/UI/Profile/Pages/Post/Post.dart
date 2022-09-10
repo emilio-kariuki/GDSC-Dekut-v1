@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, must_call_super
 
 import 'package:flutter/material.dart';
+import 'package:gdsc_app/UI/Notification/pushNotification.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Post/comm_Events.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Post/comm_leads.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Post/comm_meeting.dart';
@@ -30,17 +31,16 @@ class _PostState extends State<Post>
           "Event", controller.isDark.value ? Colors.white : Colors.black87),
     ),
     Tab(
-      child: Components.header_3("News",
-          controller.isDark.value ? Colors.white : Colors.black87),
+      child: Components.header_3(
+          "News", controller.isDark.value ? Colors.white : Colors.black87),
     ),
     Tab(
       child: Components.header_3(
           "Resources", controller.isDark.value ? Colors.white : Colors.black87),
     ),
-
     Tab(
       child: Components.header_3(
-          "Meetings", controller.isDark.value ? Colors.white : Colors.black87),
+          "Virtual", controller.isDark.value ? Colors.white : Colors.black87),
     ),
     Tab(
       child: Components.header_3(
@@ -61,6 +61,21 @@ class _PostState extends State<Post>
           backgroundColor:
               controller.isDark.value ? Colors.grey[900] : Colors.white,
           appBar: AppBar(
+            actions: [
+              Tooltip(
+                message: "Send Notification",
+                child: IconButton(
+                    onPressed: () {
+                      Components.sendNotification();
+                    },
+                    icon: Icon(
+                      Icons.send,
+                      size: 20,
+                      color:
+                          controller.isDark.value ? Colors.white : Colors.black,
+                    )),
+              )
+            ],
             iconTheme: IconThemeData(
                 color:
                     controller.isDark.value ? Colors.white : Colors.grey[900],
@@ -73,7 +88,8 @@ class _PostState extends State<Post>
                 controller.isDark.value ? Colors.grey[900] : Colors.white,
             elevation: 0,
             bottom: TabBar(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+              padding: EdgeInsets.symmetric(
+                  horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
               tabs: tabs,
               //controller: tabController,
               indicatorWeight: 2,

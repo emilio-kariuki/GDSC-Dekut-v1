@@ -1,6 +1,8 @@
 // ignore_for_file: deprecated_member_use, unrelated_type_equality_checks, avoid_print
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:clipboard/clipboard.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -121,8 +123,8 @@ class _ResourcesState extends State<Resources> {
             ),
           ),
           bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(10), child: Components.spacerHeight(10),
-
+            preferredSize: const Size.fromHeight(10),
+            child: Components.spacerHeight(10),
           ),
         ),
         body: SafeArea(
@@ -149,9 +151,9 @@ class _ResourcesState extends State<Resources> {
                               String url = data['link'];
                               if (await canLaunchUrl(Uri.parse(url))) {
                                 await launch(url,
-                                    forceWebView: true,
-                                    enableJavaScript: true,
-                                    enableDomStorage: true,
+                                    // forceWebView: true,
+                                    // enableJavaScript: true,
+                                    // enableDomStorage: true,
                                     forceSafariVC: false);
                               } else {
                                 Components.showMessage("Cannot launch url");
@@ -259,17 +261,35 @@ class _ResourcesState extends State<Resources> {
                                     : Colors.black87,
                               ),
                             ),
-                            subtitle: Text(data['description'],
+                            subtitle: Text(
+                                data['description'].length > 35
+                                    ? data['description'].substring(0, 35) +
+                                        "..."
+                                    : data['description'],
                                 style: TextStyle(
                                     color: controller.isDark.value
                                         ? Colors.white
                                         : Colors.black87)),
-                            trailing: Icon(
-                              Icons.link,
-                              size: 18,
-                              color: controller.isDark.value
-                                  ? Colors.white
-                                  : Colors.black87,
+                            trailing: InkWell(
+                              onTap: () async {
+                                FlutterClipboard.copy(data['link']).then(
+                                    (value) => ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            duration: Duration(seconds: 1),
+                                            backgroundColor: Colors.green,
+                                            content: Text(
+                                                "Link copied to clipboard"),
+                                          ),
+                                        ));
+                              },
+                              child: Icon(
+                                Icons.link,
+                                size: 18,
+                                color: controller.isDark.value
+                                    ? Colors.white
+                                    : Colors.black87,
+                              ),
                             ),
                           ),
                           Padding(
