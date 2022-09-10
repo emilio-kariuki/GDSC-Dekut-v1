@@ -104,25 +104,24 @@ class _CommunityEventsState extends State<CommunityEvents>
             Components.spacerHeight(10),
             Components.spacerHeight(10),
             notificationCard(
-                      iconName: Icons.event,
-                      action: "Notify about the Event",
-                      widget: Switch(
-                        // inactiveThumbColor: Colors.orangeAccent,
-                        // activeColor: Colors.deepOrange,
-                        // inactiveTrackColor: Colors.grey,
-                        // activeTrackColor: controller.isDark.value ? Colors.white : const Color.fromARGB(255, 240, 173, 73),
-                          trackColor: MaterialStateProperty.all(
-                              controller.isDark.value
-                                  ? Colors.white
-                                  : Colors.black54),
-                          thumbColor:
-                              MaterialStateProperty.all(Colors.deepOrange),
-                          value: controller.isEventEnabled.value,
-                          onChanged: ((value) {
-                            controller.isEventEnabled.value = value;
-                            print(value);
-                            setState(() {});
-                          }))),
+                iconName: Icons.event,
+                action: "Notify about the Event",
+                widget: Switch(
+                    // inactiveThumbColor: Colors.orangeAccent,
+                    // activeColor: Colors.deepOrange,
+                    // inactiveTrackColor: Colors.grey,
+                    // activeTrackColor: controller.isDark.value ? Colors.white : const Color.fromARGB(255, 240, 173, 73),
+                    trackColor: MaterialStateProperty.all(
+                        controller.isDark.value
+                            ? Colors.white
+                            : Colors.black54),
+                    thumbColor: MaterialStateProperty.all(Colors.deepOrange),
+                    value: controller.isEventEnabled.value,
+                    onChanged: ((value) {
+                      controller.isEventEnabled.value = value;
+                      print(value);
+                      setState(() {});
+                    }))),
             Components.button("Submit", () {
               FocusScope.of(context).requestFocus(FocusNode());
               ActionFirebase.createEvent(EventModel(
@@ -140,7 +139,7 @@ class _CommunityEventsState extends State<CommunityEvents>
                   ? FirebaseNotification.sendFirebaseNotification(
                       purpose: "Event",
                       title: title.text,
-                     )
+                    )
                   : null;
             }, context)
           ],
@@ -148,7 +147,8 @@ class _CommunityEventsState extends State<CommunityEvents>
       )),
     );
   }
-    Widget notificationCard(
+
+  Widget notificationCard(
       {required IconData iconName,
       required String action,
       required Widget widget}) {
