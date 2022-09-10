@@ -76,7 +76,7 @@ class _AccountState extends State<Account> {
                               duration: const Duration(milliseconds: 100))),
                       Components.showDividerLine(Dimensions.PADDING_SIZE_SMALL),
                       Components.cardButton(Icons.info_outline_rounded,
-                          "App Version 1.0.0", () => null),
+                          "Send a Notification", () => null),
                       Components.showDividerLine(Dimensions.PADDING_SIZE_SMALL),
                       Components.cardButton(
                           Icons.help_outline_sharp,

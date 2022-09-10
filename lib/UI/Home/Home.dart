@@ -75,7 +75,7 @@ class _HomeState extends State<Home> {
       "Events",
       "Resources",
       "News",
-      "Meeting",
+      "Virtual",
       "Profile",
     ];
     return AnimatedBottomNavigationBar.builder(

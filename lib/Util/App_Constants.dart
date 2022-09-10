@@ -11,6 +11,7 @@ class Constants {
   static String whatsappProfile = "lib/Assets/images/whatsapp.png";
   static String gmailProfile = "lib/Assets/images/gmail.png";
   static String linkedinProfile = "lib/Assets/images/linkedin.png";
+  static String no_internet = "lib/Assets/images/no_internet.png";
   static String confirmAdmin = "Are you an admin?";
   static String adminPassword = "q";
   static String cancel = "Cancel";

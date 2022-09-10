@@ -1,9 +1,13 @@
 // ignore_for_file: avoid_print, unused_field, unused_local_variable
 
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:gdsc_app/InternetConnection/chechConnection.dart';
+import 'package:gdsc_app/InternetConnection/noInternetConnection.dart';
 import 'package:gdsc_app/UI/Notification/pushNotification.dart';
 import 'package:gdsc_app/Util/App_components.dart';
 import 'package:get/get.dart';
@@ -26,10 +30,27 @@ class _EventsState extends State<Events> {
 
   int initCount = 5;
   late final FirebaseMessaging _messaging;
+  StreamSubscription ?_connectionChangeStream;
+
+  bool isOffline = false;
+
+  @override
+  initState() {
+    super.initState();
+
+    ConnectionStatusSingleton connectionStatus = ConnectionStatusSingleton.getInstance();
+    _connectionChangeStream = connectionStatus.connectionChange.listen(connectionChanged);
+  }
+
+  void connectionChanged(dynamic hasConnection) {
+    setState(() {
+      isOffline = !hasConnection;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
+    return (isOffline) ? NoInternetScreen() : Obx(
       () => Scaffold(
         backgroundColor:
             controller.isDark.value ? Colors.grey[900] : Colors.white,

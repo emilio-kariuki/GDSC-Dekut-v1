@@ -1307,6 +1307,8 @@ class Components {
               }
               final docs = snapshot.data?.docs;
               return ListView.builder(
+                scrollDirection: Axis.vertical,
+                physics: AlwaysScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: docs!.length,
                 itemBuilder: (context, int index) {
@@ -3746,5 +3748,74 @@ class InputPasswordField extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class CustomButton extends StatelessWidget {
+  final Function() onPressed;
+  final String buttonText;
+  final bool? transparent;
+  final EdgeInsets? margin;
+  final double? height;
+  final double? width;
+  final double? fontSize;
+  final double? radius;
+  final IconData? icon;
+  CustomButton(
+      {required this.onPressed,
+      required this.buttonText,
+      this.transparent = false,
+      this.margin,
+      this.width,
+      this.height,
+      this.fontSize,
+      this.radius = 5,
+      this.icon});
+  final controller = Get.put(AppController());
+
+  @override
+  Widget build(BuildContext context) {
+    final ButtonStyle flatButtonStyle = TextButton.styleFrom(
+      backgroundColor: controller.isDark.value ? Colors.white : Colors.black87,
+      minimumSize: Size(width ?? 100, height ?? 50),
+      padding: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(radius ?? 5),
+      ),
+    );
+
+    return Center(
+        child: SizedBox(
+            width: 10,
+            child: Padding(
+              padding: margin ?? EdgeInsets.all(0),
+              child: TextButton(
+                onPressed: onPressed,
+                style: flatButtonStyle,
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  icon != null
+                      ? Padding(
+                          padding: EdgeInsets.only(
+                              right: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                          child: Icon(
+                            icon,
+                            color: controller.isDark.value
+                                ? Colors.white
+                                : Colors.black87,
+                          ),
+                        )
+                      : SizedBox(),
+                  Text(buttonText,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.quicksand(
+                          fontSize: fontSize ?? 16,
+                          fontWeight: FontWeight.w600,
+                          color: controller.isDark.value
+                              ? Colors.black87
+                              : Colors.white)),
+                ]),
+              ),
+            )));
   }
 }
