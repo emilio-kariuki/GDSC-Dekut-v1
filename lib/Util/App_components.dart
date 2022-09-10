@@ -22,6 +22,7 @@ import 'package:gdsc_app/Firebase_Logic/UserFirebase.dart';
 import 'package:gdsc_app/UI/Events/UI/Events.dart';
 import 'package:gdsc_app/UI/Notification/pushNotification.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Admins/Admins.dart';
+import 'package:gdsc_app/UI/Profile/Pages/FeedBack/Model/feedback.dart';
 
 import 'package:gdsc_app/UI/Profile/Pages/Post/Post.dart';
 import 'package:gdsc_app/Util/App_Constants.dart';
@@ -1965,6 +1966,53 @@ class Components {
         } else {
           showMessage("Incorrect password");
           Get.back();
+        }
+      },
+    );
+  }
+
+  static sendFeedback(description) {
+    Get.defaultDialog(
+      //titlePadding: EdgeInsets.only(top: 5),
+      contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      cancelTextColor: controller.isDark.value ? Colors.white : Colors.black87,
+      confirmTextColor: Colors.white,
+      buttonColor: Colors.deepOrange,
+      backgroundColor:
+          controller.isDark.value ? Colors.grey[900] : Colors.white,
+      title: Constants.confirmAdmin,
+      content: InputField(
+          title: "Please fill your feedback",
+          hint: "Enter feedback",
+          controller: description),
+      titleStyle: GoogleFonts.quicksand(
+        color: controller.isDark.value ? Colors.white : Colors.black87,
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+      ),
+      onCancel: (() => Get.back()),
+      onConfirm: () {
+        if (description.text.isEmpty) {
+          showMessage("Enter Description");
+        } else {
+          Get.back();
+          ActionFirebase.createFeedback(FeedBackModel(
+            title: title.text,
+            description: description.text,
+          ));
+          flutterLocalNotificationsPlugin.show(
+              0,
+              "Feedback Sent",
+              "$description.text",
+              NotificationDetails(
+                  android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channelDescription: channel.description,
+                importance: Importance.high,
+                color: Colors.blue,
+                playSound: true,
+              )));
         }
       },
     );
