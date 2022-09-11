@@ -239,8 +239,7 @@ class _CommunityEventsState extends State<CommunityEvents>
                   lastDate: DateTime(2025),
                 ).then((date) {
                   setState(() {
-                    controller.selectedDate.value =
-                        DateFormat.yMMMd().format(date ?? DateTime.now());
+                    controller.selectedDate.value =DateFormat.yMMMd().format(date ?? DateTime.now());
                   });
                 });
               },

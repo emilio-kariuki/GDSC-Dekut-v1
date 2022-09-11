@@ -51,6 +51,7 @@ class _HomeState extends State<Home> {
     String? token = await FirebaseMessaging.instance.getToken();
     print("Token of the app is :$token");
     getToken();
+    //controller.sendSpecific();
   }
 
   @override

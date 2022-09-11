@@ -103,6 +103,7 @@ class Components {
   static var myGroup = AutoSizeGroup();
   static double sizeHeight = Get.mediaQuery.size.height;
   static double sizeWidth = Get.mediaQuery.size.width;
+  static String now = DateFormat.yMMMd().format(DateTime.now()).toString();
 
   static Widget header_1(String text) {
     return AutoSizeText(
@@ -1559,7 +1560,29 @@ class Components {
                 itemBuilder: (context, int index) {
                   Map<String, dynamic> data =
                       docs![index].data() as Map<String, dynamic>;
-
+                  print("The date today is : ${DateFormat.yMMMd().format(DateTime.now())}");
+                  AwesomeNotifications().createNotification(
+                    content: NotificationContent(
+                      id: 1,
+                      //channelKey: channelKey,
+                      title: data['title'],
+                      body: "Looking forward to see you there",
+                      locked: false,
+                      criticalAlert: true,
+                      category: NotificationCategory.Alarm, channelKey: 'base',
+                    ),
+                    schedule: NotificationCalendar.fromDate(
+                      date : DateFormat.yMMMd().parse(data['date']).add(Duration(seconds: 5)),
+                        // ignore: unrelated_type_equality_checks
+                        // date:
+                        ),
+                    actionButtons: <NotificationActionButton>[
+                      NotificationActionButton(
+                          key: 'remove',
+                          label: 'Stop',
+                          buttonType: ActionButtonType.DisabledAction),
+                    ],
+                  );
                   return ListTile(
                     onTap: () async {
                       String url = data['link'];
@@ -2041,6 +2064,8 @@ class Components {
       content: InputField(
           //title: "Enter Notification to send",
           hint: "Enter Notification",
+          maxLength: 200,
+          linesCount: 5,
           controller: description),
       titleStyle: GoogleFonts.quicksand(
         color: controller.isDark.value ? Colors.white : Colors.black87,
@@ -2053,27 +2078,9 @@ class Components {
           showMessage("Enter Description");
         } else {
           Get.back();
-          // await FirebaseNotification.sendFirebaseNotification(
-          //             purpose: "message",
-          //             title: description.text,
-          //           );
-          await AwesomeNotifications().createNotification(
-            content: NotificationContent(
-              id: 1,
-              //channelKey: channelKey,
-              title: "We are about to start.....",
-              body: "Looking forward to see you there",
-              locked: true,
-              criticalAlert: true,
-              category: NotificationCategory.Alarm, channelKey: 'base',
-            ),
-            //schedule: NotificationCalendar.fromDate(date: interval),
-            actionButtons: <NotificationActionButton>[
-              NotificationActionButton(
-                  key: 'remove',
-                  label: 'Stop',
-                  buttonType: ActionButtonType.DisabledAction),
-            ],
+          await FirebaseNotification.sendFirebaseNotification(
+            purpose: "reminder",
+            title: description.text,
           );
         }
       },
@@ -2168,9 +2175,9 @@ class Components {
               }, context)),
               Expanded(
                   child: button("Delete", () async {
+                Get.back();
                 ActionFirebase.deleteDoc(id, 'events');
                 await FirebaseStorage.instance.refFromURL(url).delete();
-                Get.back();
               }, context))
             ],
           )),
