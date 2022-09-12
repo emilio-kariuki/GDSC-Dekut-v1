@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gdsc_app/Firebase_Logic/EventFirebase.dart';
@@ -11,6 +12,7 @@ import 'package:gdsc_app/Util/App_components.dart';
 import 'package:gdsc_app/main.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../UI/Events/Model/Event_model.dart';
@@ -18,6 +20,7 @@ import '../UI/Events/Model/Event_model.dart';
 class AppController extends GetxController {
   var isDark = false.obs;
   var events = <EventModel>[].obs;
+  var isSignedIn = false.obs;
   var currentPage = 0.obs;
   var isSent = false.obs;
   var isLoading = true.obs;
@@ -42,6 +45,8 @@ class AppController extends GetxController {
   var isAnnouncementEnabled = false.obs;
   var isMeetingEnabled = false.obs;
   var isLeadsEnabled = false.obs;
+  var initialProfileName = "User".obs;
+  var isObscured = false.obs;
 
   @override
   void onInit() {
@@ -49,11 +54,103 @@ class AppController extends GetxController {
     getThemeStatus();
   }
 
+  void sendScheduledNotification(int id, String channelKey, String title,
+      String body, DateTime interval) async {
+    String localTZ = await AwesomeNotifications().getLocalTimeZoneIdentifier();
+
+    AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: id,
+        channelKey: channelKey,
+        title: "We are about to start.....",
+        body: "Looking forward to see you there",
+        locked: true,
+        criticalAlert: true,
+        category: NotificationCategory.Alarm,
+      ),
+      schedule: NotificationCalendar.fromDate(date: interval),
+      actionButtons: <NotificationActionButton>[
+        NotificationActionButton(
+            key: 'remove',
+            label: 'Stop',
+            buttonType: ActionButtonType.DisabledAction),
+      ],
+    );
+  }
+
+  void sendSpecific() async {
+    print("Sending scheduled notfication has started");
+    await FirebaseFirestore.instance
+        .collection('events')
+        .get()
+        .then((querySnapshot) => {
+              querySnapshot.docs.map((doc) => {
+                    AwesomeNotifications().createNotification(
+                      content: NotificationContent(
+                        id: 1,
+                        //channelKey: channelKey,
+                        title: " Today we have an upcoming event.....",
+                        body: "Looking forward to see you there",
+                        locked: true,
+                        criticalAlert: true,
+                        category: NotificationCategory.Alarm,
+                        channelKey: 'base',
+                      ),
+                      schedule: NotificationCalendar.fromDate(
+                          // ignore: unrelated_type_equality_checks
+                          date: (DateFormat.yMMMd()
+                                          .parse(doc['date'])
+                                          .toString())
+                                      .substring(0, 10) ==
+                                  (DateFormat.yMMMd()
+                                          .parse(Components.now)
+                                          .toString())
+                                      .substring(0, 10)
+                              ? DateTime.now().add(const Duration(seconds: 5))
+                              : DateFormat.yMMMd().parse(doc['date'])),
+                      actionButtons: <NotificationActionButton>[
+                        NotificationActionButton(
+                            key: 'remove',
+                            label: 'Stop',
+                            buttonType: ActionButtonType.DisabledAction),
+                      ],
+                    ),
+                  })
+            });
+  }
+
+  //   await AwesomeNotifications().createNotification(
+  //   content: NotificationContent(
+  //     id: 1,
+  //     //channelKey: channelKey,
+  //     title: " Today we have an upcoming event.....",
+  //     body: "Looking forward to see you there",
+  //     locked: true,
+  //     criticalAlert: true,
+  //     category: NotificationCategory.Alarm, channelKey: 'base',
+  //   ),
+  //   schedule: NotificationCalendar.fromDate(
+  //       // ignore: unrelated_type_equality_checks
+  //       date: (DateFormat.yMMMd().parse(data['date']).toString())
+  //                             .substring(0, 10) ==
+  //                         (DateFormat.yMMMd().parse(Components.now).toString())
+  //                             .substring(0, 10)
+  //                     ? DateTime.now().add(const Duration(seconds: 5))
+  //                     : DateFormat.yMMMd().parse(data['date'])),
+  //   actionButtons: <NotificationActionButton>[
+  //     NotificationActionButton(
+  //         key: 'remove',
+  //         label: 'Stop',
+  //         buttonType: ActionButtonType.DisabledAction),
+  //   ],
+  // );
+
   getPassword() async {
     await FirebaseFirestore.instance
-    .collection('password')
-    .doc('9Sr6EDDtf2icFY4XX3Sh')
-    .get().then((value) {
+        .collection('password')
+        .doc('9Sr6EDDtf2icFY4XX3Sh')
+        .get()
+        .then((value) {
       adminPassword.value = value['password'];
     });
   }
@@ -66,6 +163,7 @@ class AppController extends GetxController {
         .get()
         .then((snapshot) async {
       print("The tech is ${snapshot['technology']}");
+      initialProfileName.value = snapshot['username'];
       stack.value = snapshot['technology'];
       nameDetails.text = snapshot['username'];
       emailDetails.text = snapshot['email'];
@@ -161,6 +259,7 @@ class AppController extends GetxController {
     }).obs;
 
     profileName.value = (await name.value);
+    initialProfileName.value = (await name.value);
     profileEmail.value = (await email.value);
     profilePhone.value = (await phone.value);
     profileGithub.value = (await github.value);

@@ -1,20 +1,23 @@
 // ignore_for_file: avoid_print, unused_field, unused_local_variable
 
+import 'dart:async';
+
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:gdsc_app/InternetConnection/chechConnection.dart';
+import 'package:gdsc_app/InternetConnection/noInternetConnection.dart';
 import 'package:gdsc_app/UI/Notification/pushNotification.dart';
 import 'package:gdsc_app/Util/App_components.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 import '../../../Controller/app_controller.dart';
 import '../../../main.dart';
 
 int itemCount = 5;
-
 
 class Events extends StatefulWidget {
   const Events({Key? key}) : super(key: key);
@@ -28,54 +31,49 @@ class _EventsState extends State<Events> {
 
   int initCount = 5;
   late final FirebaseMessaging _messaging;
+  StreamSubscription ?_connectionChangeStream;
+
+  bool isOffline = false;
+
+  Future<void> showScheduledNotification(int id, String channelKey,
+  String title, String body, DateTime interval) async {
+String localTZ = await AwesomeNotifications().getLocalTimeZoneIdentifier();
+
+await AwesomeNotifications().createNotification(
+  content: NotificationContent(
+    id: id,
+    channelKey: channelKey,
+    title: "We are about to start.....",
+    body: "Looking forward to see you there",
+    locked: true,
+    criticalAlert: true,
+    category: NotificationCategory.Alarm,
+
+  ),
+  schedule: NotificationCalendar.fromDate(date: interval),
+  actionButtons: <NotificationActionButton>[
+    NotificationActionButton(key: 'remove', label: 'Stop', buttonType: ActionButtonType.DisabledAction),
+
+  ],
+);}
 
   @override
-  void initState() {
+  initState() {
     super.initState();
-    var initializationSettingsAndroid =
-        const AndroidInitializationSettings('ic_launcher');
-    var initialzationSettingsAndroid =
-        const AndroidInitializationSettings('@mipmap/ic_launcher');
-    var initializationSettings =
-        InitializationSettings(android: initialzationSettingsAndroid);
-    flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification ?android = message.notification?.android;
-      if (notification != null && android != null) {
-        flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                channelDescription: channel.description,
-                timeoutAfter: 3000,
-                onlyAlertOnce: true,
-                color: Colors.blue,
-
-              ),
-            ));
-      }
-    });
-
-
-
-    getToken();
+    ConnectionStatusSingleton connectionStatus = ConnectionStatusSingleton.getInstance();
+    _connectionChangeStream = connectionStatus.connectionChange.listen(connectionChanged);
   }
 
-
-String ?token;
-getToken() async {
-  token = (await FirebaseMessaging.instance.getToken())!;
-}
+  void connectionChanged(dynamic hasConnection) {
+    setState(() {
+      isOffline = !hasConnection;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
+    return (isOffline) ? NoInternetScreen() : Obx(
       () => Scaffold(
         backgroundColor:
             controller.isDark.value ? Colors.grey[900] : Colors.white,

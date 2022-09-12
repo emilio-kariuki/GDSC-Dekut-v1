@@ -2,19 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:gdsc_app/Controller/app_controller.dart';
 import 'package:gdsc_app/UI/Authentication/Login/login_page.dart';
 import 'package:gdsc_app/UI/Authentication/user_logic.dart';
-import 'package:gdsc_app/UI/Notification/pushNotification.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Detail/personDetails.dart';
+import 'package:gdsc_app/UI/Profile/Pages/FeedBack/UI/feedback.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Help/help.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Leads/UI/leads.dart';
-import 'package:gdsc_app/UI/Profile/Pages/Notifications/gdscNotifications.dart';
-import 'package:gdsc_app/UI/Profile/Pages/Post/Post.dart';
 import 'package:gdsc_app/Util/App_Constants.dart';
 import 'package:gdsc_app/Util/dimensions.dart';
-import 'package:gdsc_app/main.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import '../../Util/App_components.dart';
 
 class Account extends StatefulWidget {
@@ -29,7 +23,7 @@ class _AccountState extends State<Account> {
   final password = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Obx(() => Scaffold(
         backgroundColor:
             controller.isDark.value ? Colors.grey[900] : Colors.white,
         body: SafeArea(
@@ -45,29 +39,6 @@ class _AccountState extends State<Account> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Components.personalInformation(),
-                  //     Row(
-                  //  mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     InkWell(
-                  //       onTap: () => launch('https://github.com/${controller.profileGithub.value}' ),
-                  //       child: Image.asset(Constants.githubProfile,height: 22,width: 22,color: controller.isDark.value ? Colors.white : Colors.black,)),
-                  //     Components.spacerWidth(8),
-                  //     Image.asset(Constants.linkedinProfile,height: 22,width: 22,),
-                  //     Components.spacerWidth(8),
-                  //     InkWell(
-                  //       onTap:() => launch('https://twitter.com/${controller.profileTwitter.value}' ),
-                  //       child: Image.asset(Constants.twitterProfile,height: 22,width: 22,)),
-                  //     Components.spacerWidth(8),
-                  //     InkWell(
-                  //       onTap: () => launch('mailto:${controller.profileEmail.value}'),
-                  //       child: Image.asset(Constants.gmailProfile,height: 22,width: 22,)),
-                  //     Components.spacerWidth(8),
-                  //     InkWell(
-                  //       onTap: (() => launch('https://wa.me/+254${controller.profilePhone.value}')),
-                  //       child: Image.asset(Constants.whatsappProfile,height: 22,width: 22,)),
-
-                  //   ],
-                  // ),
                       const SizedBox(height: 10),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 15),
@@ -79,7 +50,9 @@ class _AccountState extends State<Account> {
                       ),
                       Components.showDividerLine(Dimensions.PADDING_SIZE_SMALL),
                       Components.cardButton(
-                          Icons.verified_user_rounded, Constants.details, () => Get.to(()=> const Persona())),
+                          Icons.verified_user_rounded,
+                          Constants.details,
+                          () => Get.to(() => const Persona())),
                       Components.showDividerLine(Dimensions.PADDING_SIZE_SMALL),
                       Components.cardButton(Icons.leaderboard, Constants.admins,
                           () => Components.confirmAdmin(password)),
@@ -95,15 +68,18 @@ class _AccountState extends State<Account> {
                           () => Get.to(() => const Leads(),
                               duration: const Duration(milliseconds: 100))),
                       Components.showDividerLine(Dimensions.PADDING_SIZE_SMALL),
-
                       Components.cardButton(Icons.info_outline_rounded,
-                          "Notifications", () => Get.to(()=>const GDSCNotifications())),
+                          "Send a Notification", () => null),
                       Components.showDividerLine(Dimensions.PADDING_SIZE_SMALL),
                       Components.cardButton(
                           Icons.help_outline_sharp,
                           Constants.help,
                           () => Get.to(() => Contact(),
                               duration: const Duration(milliseconds: 1))),
+                      Components.showDividerLine(Dimensions.PADDING_SIZE_SMALL),
+                      Components.cardButton(Icons.feedback, "Feedback",
+                          () => Components.sendFeedback(description)),
+                      Components.showDividerLine(Dimensions.PADDING_SIZE_SMALL),
                       Components.showLogOutButton(Constants.logout, () async {
                         await Authentication.signOut();
                         Get.offAll(() => const Login());
@@ -147,6 +123,6 @@ class _AccountState extends State<Account> {
               ],
             ),
           ),
-        ));
+        )));
   }
 }

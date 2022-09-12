@@ -123,7 +123,8 @@ class _CommunityMeetingState extends State<CommunityMeeting>
                   organizers.text,
                   url));
               Get.back();
-              Components.showMessage("Data sent successfully");
+              Components.createScaffoldMessanger(
+                  "Data sent successfully", context);
               controller.isMeetingEnabled.value
                   ? FirebaseNotification.sendFirebaseNotification(
                       purpose: "Meeting",

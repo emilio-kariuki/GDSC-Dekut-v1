@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -12,6 +13,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -21,6 +23,7 @@ import 'package:gdsc_app/Firebase_Logic/UserFirebase.dart';
 import 'package:gdsc_app/UI/Events/UI/Events.dart';
 import 'package:gdsc_app/UI/Notification/pushNotification.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Admins/Admins.dart';
+import 'package:gdsc_app/UI/Profile/Pages/FeedBack/Model/feedback.dart';
 
 import 'package:gdsc_app/UI/Profile/Pages/Post/Post.dart';
 import 'package:gdsc_app/Util/App_Constants.dart';
@@ -100,7 +103,7 @@ class Components {
   static var myGroup = AutoSizeGroup();
   static double sizeHeight = Get.mediaQuery.size.height;
   static double sizeWidth = Get.mediaQuery.size.width;
-
+  static String now = DateFormat.yMMMd().format(DateTime.now());
 
   static Widget header_1(String text) {
     return AutoSizeText(
@@ -214,7 +217,7 @@ class Components {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  header_3(userName,
+                  header_3(controller.initialProfileName.value,
                       controller.isDark.value ? Colors.white : Colors.black87),
                   header_3(userEmail,
                       controller.isDark.value ? Colors.white : Colors.black54),
@@ -978,11 +981,11 @@ class Components {
                             : Colors.black87,
                       ),
                     ),
-                    subtitle: Text(data['description'],
-                        style: TextStyle(
-                            color: controller.isDark.value
-                                ? Colors.white
-                                : Colors.black87)),
+                    // subtitle: Text(data['description'],
+                    //     style: TextStyle(
+                    //         color: controller.isDark.value
+                    //             ? Colors.white
+                    //             : Colors.black87)),
                     trailing: InkWell(
                       onTap: () {
                         titleResource.text = data['title'];
@@ -1243,11 +1246,11 @@ class Components {
                             : Colors.black87,
                       ),
                     ),
-                    subtitle: Text(data['description'],
-                        style: TextStyle(
-                            color: controller.isDark.value
-                                ? Colors.white
-                                : Colors.black87)),
+                    // subtitle: Text(data['description'],
+                    //     style: TextStyle(
+                    //         color: controller.isDark.value
+                    //             ? Colors.white
+                    //             : Colors.black87)),
                     trailing: InkWell(
                       onTap: () {
                         titleAnnouncement.text = data['title'];
@@ -1307,6 +1310,8 @@ class Components {
               }
               final docs = snapshot.data?.docs;
               return ListView.builder(
+                scrollDirection: Axis.vertical,
+                physics: AlwaysScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: docs!.length,
                 itemBuilder: (context, int index) {
@@ -1440,11 +1445,11 @@ class Components {
                             : Colors.black87,
                       ),
                     ),
-                    subtitle: Text(data['description'],
-                        style: TextStyle(
-                            color: controller.isDark.value
-                                ? Colors.white
-                                : Colors.black87)),
+                    // subtitle: Text(data['description'],
+                    //     style: TextStyle(
+                    //         color: controller.isDark.value
+                    //             ? Colors.white
+                    //             : Colors.black87)),
                     trailing: InkWell(
                       onTap: () {
                         titleEvent.text = data['title'];
@@ -1479,6 +1484,44 @@ class Components {
           ),
         );
       }),
+    );
+  }
+
+  static flutterNotificationSettings() async {
+    var initialzationSettingsAndroid =
+        const AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettings =
+        InitializationSettings(android: initialzationSettingsAndroid);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channelDescription: channel.description,
+                timeoutAfter: 3000,
+                onlyAlertOnce: true,
+                color: Colors.blue,
+              ),
+            ));
+      }
+    });
+  }
+
+  static createScaffoldMessanger(String text, BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: Duration(seconds: 1),
+        backgroundColor: Colors.green,
+        content: Text(text),
+      ),
     );
   }
 
@@ -1517,7 +1560,46 @@ class Components {
                 itemBuilder: (context, int index) {
                   Map<String, dynamic> data =
                       docs![index].data() as Map<String, dynamic>;
-
+                  // print(
+                  //     "The actual time today is : ${DateFormat.yMMMd().parse(now).toString().substring(0, 10)}");
+                  // print(
+                  //     "The date today is : ${DateFormat.yMMMd().parse(data['date']).toString().substring(0, 10)}");
+                  bool isMatching = DateFormat.yMMMd()
+                          .parse(now)
+                          .toString()
+                          .substring(0, 10) ==
+                      DateFormat.yMMMd()
+                          .parse(data['date'])
+                          .toString()
+                          .substring(0, 10);
+                  print("Check is the dates matching : $isMatching");
+                  AwesomeNotifications().createNotification(
+                    content: NotificationContent(
+                      id: 1,
+                      //channelKey: channelKey,
+                      title: data['title'],
+                      body: "Looking forward to see you there",
+                      locked: false,
+                      criticalAlert: false,
+                      category: NotificationCategory.Alarm, channelKey: 'base',
+                    ),
+                    schedule: NotificationCalendar.fromDate(
+                      date: (DateFormat.yMMMd().parse(data['date']).toString())
+                                  .substring(0, 10) ==
+                              (DateFormat.yMMMd().parse(now).toString())
+                                  .substring(0, 10)
+                          ? DateTime.now().add(Duration(seconds: 5))
+                          : DateFormat.yMMMd().parse(data['date']),
+                      // ignore: unrelated_type_equality_checks
+                      // date:
+                    ),
+                    actionButtons: <NotificationActionButton>[
+                      NotificationActionButton(
+                          key: 'remove',
+                          label: 'Stop',
+                          buttonType: ActionButtonType.DisabledAction),
+                    ],
+                  );
                   return ListTile(
                     onTap: () async {
                       String url = data['link'];
@@ -1710,11 +1792,11 @@ class Components {
                             : Colors.black87,
                       ),
                     ),
-                    subtitle: Text(data['description'],
-                        style: TextStyle(
-                            color: controller.isDark.value
-                                ? Colors.white
-                                : Colors.black87)),
+                    // subtitle: Text(data['description'],
+                    //     style: TextStyle(
+                    //         color: controller.isDark.value
+                    //             ? Colors.white
+                    //             : Colors.black87)),
                     trailing: InkWell(
                       onTap: () {
                         titleMeeting.text = data['title'];
@@ -1940,6 +2022,88 @@ class Components {
     );
   }
 
+  static sendFeedback(description) {
+    Get.defaultDialog(
+      //titlePadding: EdgeInsets.only(top: 5),
+      contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      cancelTextColor: controller.isDark.value ? Colors.white : Colors.black87,
+      confirmTextColor: Colors.white,
+      buttonColor: Colors.deepOrange,
+      backgroundColor:
+          controller.isDark.value ? Colors.grey[900] : Colors.white,
+      title: "Feedback",
+      content: InputField(
+          title: "Please fill your feedback",
+          hint: "Enter feedback",
+          controller: description),
+      titleStyle: GoogleFonts.quicksand(
+        color: controller.isDark.value ? Colors.white : Colors.black87,
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+      ),
+      onCancel: (() => Get.back()),
+      onConfirm: () {
+        if (description.text.isEmpty) {
+          showMessage("Enter Description");
+        } else {
+          Get.back();
+          ActionFirebase.createFeedback(FeedBackModel(
+            description: description.text,
+          ));
+          flutterLocalNotificationsPlugin.show(
+              0,
+              "Feedback Sent",
+              "${description.text}",
+              NotificationDetails(
+                  android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channelDescription: channel.description,
+                importance: Importance.high,
+                color: Colors.blue,
+                playSound: true,
+              )));
+        }
+      },
+    );
+  }
+
+  static sendNotification() {
+    Get.defaultDialog(
+      //titlePadding: EdgeInsets.only(top: 5),
+      contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      cancelTextColor: controller.isDark.value ? Colors.white : Colors.black87,
+      confirmTextColor: Colors.white,
+      buttonColor: Colors.deepOrange,
+      backgroundColor:
+          controller.isDark.value ? Colors.grey[900] : Colors.white,
+      title: "Notification",
+      content: InputField(
+          //title: "Enter Notification to send",
+          hint: "Enter Notification",
+          maxLength: 200,
+          linesCount: 5,
+          controller: description),
+      titleStyle: GoogleFonts.quicksand(
+        color: controller.isDark.value ? Colors.white : Colors.black87,
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+      ),
+      onCancel: (() => Get.back()),
+      onConfirm: () async {
+        if (description.text.isEmpty) {
+          showMessage("Enter Description");
+        } else {
+          Get.back();
+          await FirebaseNotification.sendFirebaseNotification(
+            purpose: "reminder",
+            title: description.text,
+          );
+        }
+      },
+    );
+  }
+
   static confirmAdmin(password) {
     Get.defaultDialog(
       //titlePadding: EdgeInsets.only(top: 5),
@@ -2028,9 +2192,9 @@ class Components {
               }, context)),
               Expanded(
                   child: button("Delete", () async {
+                Get.back();
                 ActionFirebase.deleteDoc(id, 'events');
                 await FirebaseStorage.instance.refFromURL(url).delete();
-                Get.back();
               }, context))
             ],
           )),
@@ -2090,9 +2254,9 @@ class Components {
               }, context)),
               Expanded(
                   child: button("Delete", () async {
+                Get.back();
                 ActionFirebase.deleteDoc(id, 'leads');
                 await FirebaseStorage.instance.refFromURL(url).delete();
-                Get.back();
               }, context))
             ],
           )),
@@ -3498,6 +3662,7 @@ class InputField extends StatelessWidget {
   final String? title;
   final String hint;
   final int? linesCount;
+
   final TextEditingController? controller;
   final Widget? widget;
   final TextInputType? inputType;
@@ -3556,45 +3721,46 @@ class InputField extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                    child: TextFormField(
-                  style: GoogleFonts.quicksand(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: appController.isDark.value
-                          ? Colors.white
-                          : Colors.grey),
-                  maxLength: maxLength,
-                  keyboardType: inputType,
-                  maxLines: linesCount,
-                  autofocus: false,
-                  //focusNode: FocusNode(),
-                  cursorColor:
-                      appController.isDark.value ? Colors.white : Colors.grey,
-                  controller: controller,
-                  decoration: InputDecoration(
-                    hintText: hint,
-                    hintStyle: GoogleFonts.quicksand(
+                  child: TextFormField(
+                    style: GoogleFonts.quicksand(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                         color: appController.isDark.value
                             ? Colors.white
                             : Colors.grey),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: appController.isDark.value
-                            ? Colors.white
-                            : Colors.grey,
-                        width: 0,
+                    maxLength: maxLength,
+                    keyboardType: inputType,
+                    maxLines: linesCount,
+                    autofocus: false,
+                    //focusNode: FocusNode(),
+                    cursorColor:
+                        appController.isDark.value ? Colors.white : Colors.grey,
+                    controller: controller,
+                    decoration: InputDecoration(
+                      hintText: hint,
+                      hintStyle: GoogleFonts.quicksand(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: appController.isDark.value
+                              ? Colors.white
+                              : Colors.grey),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: appController.isDark.value
+                              ? Colors.white
+                              : Colors.grey,
+                          width: 0,
+                        ),
                       ),
-                    ),
-                    enabledBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.transparent,
-                        width: 0,
+                      enabledBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.transparent,
+                          width: 0,
+                        ),
                       ),
                     ),
                   ),
-                )),
+                ),
                 widget == null
                     ? Container()
                     : Padding(
@@ -3605,5 +3771,185 @@ class InputField extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class InputPasswordField extends StatelessWidget {
+  var appController = Get.put(AppController());
+  final String? title;
+  final String hint;
+
+  final TextEditingController? controller;
+  final Widget? widget;
+
+  final bool? showRequired;
+  InputPasswordField({
+    Key? key,
+    this.title,
+    required this.hint,
+    this.showRequired,
+    this.controller,
+    this.widget,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(children: [
+            Text(title ?? "",
+                style: GoogleFonts.quicksand(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: appController.isDark.value
+                      ? Colors.white
+                      : Colors.black87,
+                )),
+            Components.spacerWidth(5),
+            Container(
+              child: showRequired == true
+                  ? const Icon(
+                      Icons.star,
+                      size: 12,
+                      color: Colors.red,
+                    )
+                  : Container(),
+            ),
+          ]),
+          Container(
+            //height: 50,
+            margin: const EdgeInsets.only(top: 8),
+            padding: const EdgeInsets.only(left: 10),
+            decoration: BoxDecoration(
+              border: Border.all(
+                  color:
+                      appController.isDark.value ? Colors.white : Colors.grey,
+                  width: 1.0),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                Obx(() => Expanded(
+                        child: TextFormField(
+                      obscureText: appController.isObscured.value,
+                      style: GoogleFonts.quicksand(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: appController.isDark.value
+                              ? Colors.white
+                              : Colors.grey),
+
+                      autofocus: false,
+                      //focusNode: FocusNode(),
+                      cursorColor: appController.isDark.value
+                          ? Colors.white
+                          : Colors.grey,
+                      controller: controller,
+                      decoration: InputDecoration(
+                        hintText: hint,
+                        hintStyle: GoogleFonts.quicksand(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: appController.isDark.value
+                                ? Colors.white
+                                : Colors.grey),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: appController.isDark.value
+                                ? Colors.white
+                                : Colors.grey,
+                            width: 0,
+                          ),
+                        ),
+                        enabledBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.transparent,
+                            width: 0,
+                          ),
+                        ),
+                      ),
+                    ))),
+                widget == null
+                    ? Container()
+                    : Padding(
+                        padding: const EdgeInsets.only(right: 8), child: widget)
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CustomButton extends StatelessWidget {
+  final Function() onPressed;
+  final String buttonText;
+  final bool? transparent;
+  final EdgeInsets? margin;
+  final double? height;
+  final double? width;
+  final double? fontSize;
+  final double? radius;
+  final IconData? icon;
+  CustomButton(
+      {required this.onPressed,
+      required this.buttonText,
+      this.transparent = false,
+      this.margin,
+      this.width,
+      this.height,
+      this.fontSize,
+      this.radius = 5,
+      this.icon});
+  final controller = Get.put(AppController());
+
+  @override
+  Widget build(BuildContext context) {
+    final ButtonStyle flatButtonStyle = TextButton.styleFrom(
+      backgroundColor: controller.isDark.value ? Colors.white : Colors.black87,
+      minimumSize: Size(width ?? 100, height ?? 50),
+      padding: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(radius ?? 5),
+      ),
+    );
+
+    return Center(
+        child: SizedBox(
+            width: 10,
+            child: Padding(
+              padding: margin ?? EdgeInsets.all(0),
+              child: TextButton(
+                onPressed: onPressed,
+                style: flatButtonStyle,
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  icon != null
+                      ? Padding(
+                          padding: EdgeInsets.only(
+                              right: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                          child: Icon(
+                            icon,
+                            color: controller.isDark.value
+                                ? Colors.white
+                                : Colors.black87,
+                          ),
+                        )
+                      : SizedBox(),
+                  Text(buttonText,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.quicksand(
+                          fontSize: fontSize ?? 16,
+                          fontWeight: FontWeight.w600,
+                          color: controller.isDark.value
+                              ? Colors.black87
+                              : Colors.white)),
+                ]),
+              ),
+            )));
   }
 }

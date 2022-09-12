@@ -28,17 +28,17 @@ class Contact extends StatelessWidget {
             ),
             iconTheme: const IconThemeData(color: Colors.white, size: 20),
             title: Text("Contact",
-                style: GoogleFonts.redressed(
-                    fontSize: 28,
+                style: GoogleFonts.quicksand(
+                    fontSize: 20,
                     color: Colors.white,
                     fontWeight: FontWeight.w500))),
         backgroundColor: const Color.fromARGB(255, 7, 9, 15),
         body: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: size.height * 0.03),
+              SizedBox(height: size.height * 0.01),
               ContactUs(
-                logo: AssetImage(Constants.profile),
+                logo:const  NetworkImage("https://firebasestorage.googleapis.com/v0/b/apt-rite-346310.appspot.com/o/EcoVille%2Fscaled_image_picker1666901294178754526.jpg?alt=media&token=1367b1f3-10d3-42d6-a42f-dce96113ce56"),
                 email: 'emilio113kariuki@gmail.com',
                 companyName: 'Emilio kariuki',
                 phoneNumber: '+254 796 250 443',
@@ -47,7 +47,7 @@ class Contact extends StatelessWidget {
                 website: "https://linktr.ee/emiliokariuki",
                 githubUserName: 'emilio-kariuki',
                 linkedinURL: 'https://www.linkedin.com/in/emilio-kariuki/',
-                tagLine: 'Flutter Developer',
+                tagLine: 'Flutter Developer || GDSC Lead',
                 twitterHandle: 'EG_Kariuki',
                 cardColor: const Color.fromARGB(255, 158, 158, 158),
                 companyColor: Colors.white,

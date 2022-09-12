@@ -33,7 +33,6 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       backgroundColor:
           controller.isDark.value ? Colors.grey[900] : Colors.white,
       body: SafeArea(
@@ -51,6 +50,7 @@ class _LoginState extends State<Login> {
                 ),
                 Components.spacerHeight(Dimensions.PADDING_SIZE_OVER_LARGE),
                 Components.header_1(Constants.login),
+
                 InputField(
                     title: Constants.name,
                     hint: "Enter your user name",
@@ -59,10 +59,25 @@ class _LoginState extends State<Login> {
                     title: Constants.email,
                     hint: "Enter your email",
                     controller: email),
-                InputField(
-                    title: Constants.password,
-                    hint: "Enter your password",
-                    controller: password),
+                InputPasswordField(
+                  title: Constants.password,
+                  hint: "Enter your password",
+                  controller: password,
+                  widget: InkWell(
+                    onTap: (() {
+                      setState(() {
+                        controller.isObscured.value =
+                            !controller.isObscured.value;
+                      });
+                    }),
+                    child: Icon(
+                      controller.isObscured.value
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                          color: controller.isDark.value ? Colors.white : Colors.black,
+                    ),
+                  ),
+                ),
                 Components.spacerHeight(Dimensions.PADDING_SIZE_SMALL),
                 Components.button(Constants.login, () async {
                   if (username.text.isEmpty &&
@@ -73,6 +88,10 @@ class _LoginState extends State<Login> {
                     final user =
                         await Authentication.signInWithEmailAndPassword(
                             username.text, email.text, password.text);
+                    controller.isSignedIn.value
+                        ? const CircularProgressIndicator()
+                        : Components.showMessage("Logged in successfully");
+                    controller.isSignedIn.value = false;
                     Get.offAll(() => const Home());
                     if (user != null) {
                       userID = user.uid;
@@ -98,6 +117,7 @@ class _LoginState extends State<Login> {
                         userID = value!.uid;
                         return value;
                       });
+
                       if (user != null) {
                         print("USER IS NOT NULL");
                         userID = user.uid;
@@ -116,6 +136,7 @@ class _LoginState extends State<Login> {
                                 'empty',
                                 Constants.defaultIcon),
                             user.uid);
+
                         Get.offAll(() => const Home());
                       }
 

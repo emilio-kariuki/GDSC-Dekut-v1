@@ -11,12 +11,13 @@ class Constants {
   static String whatsappProfile = "lib/Assets/images/whatsapp.png";
   static String gmailProfile = "lib/Assets/images/gmail.png";
   static String linkedinProfile = "lib/Assets/images/linkedin.png";
+  static String no_internet = "lib/Assets/images/no_internet.png";
   static String confirmAdmin = "Are you an admin?";
   static String adminPassword = "q";
   static String cancel = "Cancel";
   static String announceLogo =
       "https://firebasestorage.googleapis.com/v0/b/apt-rite-346310.appspot.com/o/profile.jpg?alt=media&token=1f3f8ce7-20d4-4f4d-ab33-0477d07bc6ad";
-  static String defaultIcon = "https://firebasestorage.googleapis.com/v0/b/apt-rite-346310.appspot.com/o/profile.jpg?alt=media&token=1f3f8ce7-20d4-4f4d-ab33-0477d07bc6ad";
+  static String defaultIcon = "https://firebasestorage.googleapis.com/v0/b/apt-rite-346310.appspot.com/o/EcoVille%2FAdobeStock_38137330_Preview.jpeg?alt=media&token=9455fe63-a823-426b-bab0-60c3f6ffa1b5";
   static String email = "Email";
   static String password = "Password";
   static String confirmPassword = "Confirm Password";
@@ -36,7 +37,7 @@ class Constants {
   static String help = "Help";
   static String logout = "Logout";
   static String details = "Profile Info";
-  static String leads = "Google Leads";
+  static String leads = "Leads";
   static String admins = "Admins";
   static String post = "Post";
 }

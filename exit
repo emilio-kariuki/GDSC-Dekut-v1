@@ -1,0 +1,124 @@
+[33mcommit 9c08b978ce7b15f2f049bc5256e1f7aebd6e6c59[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Emilio Kariuki <emilio113kariuki@gmail.com>
+Date:   Thu Aug 25 13:11:47 2022 +0300
+
+    added new files
+
+[33mcommit df807bf3095bbb09fc7e72d304b88058d5853058[m
+Author: Emilio Kariuki <emilio113kariuki@gmail.com>
+Date:   Thu Aug 25 13:09:56 2022 +0300
+
+    added new files
+
+[33mcommit f5ad1ba00ab1e87db07d5cd056a1f02038e16ca4[m
+Author: Emilio <70817006+emilio-kariuki@users.noreply.github.com>
+Date:   Thu Aug 25 12:57:03 2022 +0300
+
+    Update login_page.dart
+    
+    rolled back the changes
+    \
+
+[33mcommit d046d8e1f3085e7a5201178dcda54958545399cd[m
+Author: Emilio <70817006+emilio-kariuki@users.noreply.github.com>
+Date:   Thu Aug 25 11:47:04 2022 +0300
+
+    Update login_page.dart
+    
+    Changed the location of the text editing controllers
+
+[33mcommit 6c4b9ef70d769023df67a021437737446de91e72[m
+Author: Emilio Kariuki <emilio113kariuki@gmail.com>
+Date:   Wed Aug 24 01:28:26 2022 +0300
+
+    changed the configuration of how o display the notification
+
+[33mcommit d09b76da064b11ecd5da351c7d7bbccd8c3213be[m
+Author: Emilio Kariuki <emilio113kariuki@gmail.com>
+Date:   Tue Aug 23 21:17:21 2022 +0300
+
+    added notifications to be sent via http
+
+[33mcommit 9815bf8b4a5cd36977512ee31ca96f20757e21be[m
+Author: Emilio Kariuki <emilio113kariuki@gmail.com>
+Date:   Tue Aug 23 15:02:49 2022 +0300
+
+    Added flutter push notifications
+
+[33mcommit 84a17e9905bd9a7f8f0a75c492bfbba8dadee5e0[m
+Author: Emilio Kariuki <emilio113kariuki@gmail.com>
+Date:   Mon Aug 22 21:50:12 2022 +0300
+
+     fixed the bug in the profile info and the resource page
+
+[33mcommit c6ebbea670437cd929900a426b64beb59325d6c2[m
+Author: Emilio Kariuki <emilio113kariuki@gmail.com>
+Date:   Sun Aug 21 19:34:48 2022 +0300
+
+    added profile details
+
+[33mcommit 5883f764ad9d7727d03da5fb48149c35236bcf83[m
+Author: Emilio Kariuki <emilio113kariuki@gmail.com>
+Date:   Sun Aug 21 18:10:29 2022 +0300
+
+    added the details page
+
+[33mcommit ca971d77bff9b77ebe4e7fc3d58524ae93f4a25f[m
+Author: Emilio Kariuki <emilio113kariuki@gmail.com>
+Date:   Sat Aug 20 19:32:18 2022 +0300
+
+    added a meeting page
+
+[33mcommit ffe0e6c32436c2f5df5ecef7ba4cd59263470586[m
+Author: Emilio Kariuki <emilio113kariuki@gmail.com>
+Date:   Sat Aug 20 11:47:54 2022 +0300
+
+    added a carousel indicator in the events page
+
+[33mcommit 2bf0c11030c1792c90d551f4778ee8dd84d2b3da[m
+Author: Emilio Kariuki <emilio113kariuki@gmail.com>
+Date:   Sat Aug 20 01:40:18 2022 +0300
+
+    added new files in the application
+
+[33mcommit 2d76c9495fddb32f1726c1096184902a3d29cad3[m
+Author: Emilio Kariuki <emilio113kariuki@gmail.com>
+Date:   Thu Aug 18 21:46:59 2022 +0300
+
+    added mailing to function
+
+[33mcommit ce03b7c5d1c232e1cbbb004c35fcc659daea139e[m
+Author: Emilio Kariuki <emilio113kariuki@gmail.com>
+Date:   Wed Aug 17 22:49:32 2022 +0300
+
+    added help page
+
+[33mcommit 1784f328b789b2d9cf21eda76448a726def30d6a[m
+Author: Emilio Kariuki <emilio113kariuki@gmail.com>
+Date:   Wed Aug 17 00:44:19 2022 +0300
+
+    added help
+
+[33mcommit 9c1e63439ecafb4967f205cce0365b0732ba140a[m
+Author: Emilio Kariuki <emilio113kariuki@gmail.com>
+Date:   Tue Aug 16 15:01:16 2022 +0300
+
+    added twitter login and the image viewer
+
+[33mcommit 1ec8879d40515b7826f16a4db05411b34fec43dc[m
+Author: Emilio Kariuki <emilio113kariuki@gmail.com>
+Date:   Mon Aug 15 23:23:09 2022 +0300
+
+    customizd the slider
+
+[33mcommit 6741e6f3a5d1df7565f5d86ba012b885562742cc[m
+Author: Emilio Kariuki <emilio113kariuki@gmail.com>
+Date:   Sun Aug 14 22:23:47 2022 +0300
+
+    added a couresel slider
+
+[33mcommit 46bd71b9e9ca9074a2cbf95a1396e6bd9b90da15[m
+Author: Emilio Kariuki <emilio113kariuki@gmail.com>
+Date:   Sat Aug 13 22:57:17 2022 +0300
+
+    added a url launcher

@@ -59,14 +59,44 @@ class _RegisterState extends State<Register> {
                     title: Constants.email,
                     hint: "Enter your email",
                     controller: email),
-                InputField(
-                    title: Constants.password,
-                    hint: "Enter your password",
-                    controller: password),
-                InputField(
-                    title: Constants.confirmPassword,
-                    hint: "Confirm your password",
-                    controller: confirmPassword),
+                 InputPasswordField(
+                  title: Constants.password,
+                  hint: "Enter your password",
+                  controller: password,
+                  widget: InkWell(
+                    onTap: (() {
+                      setState(() {
+                        controller.isObscured.value =
+                            !controller.isObscured.value;
+                      });
+                    }),
+                    child: Icon(
+                      controller.isObscured.value
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                          color: controller.isDark.value ? Colors.white : Colors.black,
+                    ),
+                  ),
+                ),
+                InputPasswordField(
+                  title: Constants.password,
+                  hint: "Confirm your password",
+                  controller: confirmPassword,
+                  widget: InkWell(
+                    onTap: (() {
+                      setState(() {
+                        controller.isObscured.value =
+                            !controller.isObscured.value;
+                      });
+                    }),
+                    child: Icon(
+                      controller.isObscured.value
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                          color: controller.isDark.value ? Colors.white : Colors.black,
+                    ),
+                  ),
+                ),
                 Components.spacerHeight(Dimensions.PADDING_SIZE_SMALL),
                 Components.button(Constants.signUp, () async {
                   if (username.text.isEmpty &&
@@ -78,6 +108,10 @@ class _RegisterState extends State<Register> {
                     if (password.text == confirmPassword.text) {
                       final user = await Authentication.registerWithEmail(
                           username.text, email.text, password.text);
+                          controller.isSignedIn.value
+                        ? const CircularProgressIndicator()
+                        : Components.showMessage("Logged in successfully");
+                    controller.isSignedIn.value = false;
                       Get.offAll(() => const Home());
                       if (user != null) {
                         userID = user.uid;
