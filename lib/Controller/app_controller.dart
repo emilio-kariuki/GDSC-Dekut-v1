@@ -82,33 +82,68 @@ class AppController extends GetxController {
     print("Sending scheduled notfication has started");
     await FirebaseFirestore.instance
         .collection('events')
-        .doc('H8pT9drCYPEjEec0Xc6b')
         .get()
-        .then((value) async{
-      await AwesomeNotifications().createNotification(
-        content: NotificationContent(
-          id: 1,
-          //channelKey: channelKey,
-          title: " Today we have an upcoming event.....",
-          body: "Looking forward to see you there",
-          locked: true,
-          criticalAlert: true,
-          category: NotificationCategory.Alarm, channelKey: 'base',
-        ),
-        schedule: NotificationCalendar.fromDate(
-            // ignore: unrelated_type_equality_checks
-            date: value['date'] == DateFormat.yMMMd().format(DateTime.now()).toString()
-                ? DateTime.now().add(const Duration(seconds: 5))
-                : DateTime.now().add(const Duration(seconds: 5))),
-        actionButtons: <NotificationActionButton>[
-          NotificationActionButton(
-              key: 'remove',
-              label: 'Stop',
-              buttonType: ActionButtonType.DisabledAction),
-        ],
-      );
-    });
+        .then((querySnapshot) => {
+              querySnapshot.docs.map((doc) => {
+                    AwesomeNotifications().createNotification(
+                      content: NotificationContent(
+                        id: 1,
+                        //channelKey: channelKey,
+                        title: " Today we have an upcoming event.....",
+                        body: "Looking forward to see you there",
+                        locked: true,
+                        criticalAlert: true,
+                        category: NotificationCategory.Alarm,
+                        channelKey: 'base',
+                      ),
+                      schedule: NotificationCalendar.fromDate(
+                          // ignore: unrelated_type_equality_checks
+                          date: (DateFormat.yMMMd()
+                                          .parse(doc['date'])
+                                          .toString())
+                                      .substring(0, 10) ==
+                                  (DateFormat.yMMMd()
+                                          .parse(Components.now)
+                                          .toString())
+                                      .substring(0, 10)
+                              ? DateTime.now().add(const Duration(seconds: 5))
+                              : DateFormat.yMMMd().parse(doc['date'])),
+                      actionButtons: <NotificationActionButton>[
+                        NotificationActionButton(
+                            key: 'remove',
+                            label: 'Stop',
+                            buttonType: ActionButtonType.DisabledAction),
+                      ],
+                    ),
+                  })
+            });
   }
+
+  //   await AwesomeNotifications().createNotification(
+  //   content: NotificationContent(
+  //     id: 1,
+  //     //channelKey: channelKey,
+  //     title: " Today we have an upcoming event.....",
+  //     body: "Looking forward to see you there",
+  //     locked: true,
+  //     criticalAlert: true,
+  //     category: NotificationCategory.Alarm, channelKey: 'base',
+  //   ),
+  //   schedule: NotificationCalendar.fromDate(
+  //       // ignore: unrelated_type_equality_checks
+  //       date: (DateFormat.yMMMd().parse(data['date']).toString())
+  //                             .substring(0, 10) ==
+  //                         (DateFormat.yMMMd().parse(Components.now).toString())
+  //                             .substring(0, 10)
+  //                     ? DateTime.now().add(const Duration(seconds: 5))
+  //                     : DateFormat.yMMMd().parse(data['date'])),
+  //   actionButtons: <NotificationActionButton>[
+  //     NotificationActionButton(
+  //         key: 'remove',
+  //         label: 'Stop',
+  //         buttonType: ActionButtonType.DisabledAction),
+  //   ],
+  // );
 
   getPassword() async {
     await FirebaseFirestore.instance

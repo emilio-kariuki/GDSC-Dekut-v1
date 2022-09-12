@@ -103,7 +103,7 @@ class Components {
   static var myGroup = AutoSizeGroup();
   static double sizeHeight = Get.mediaQuery.size.height;
   static double sizeWidth = Get.mediaQuery.size.width;
-  static String now = DateFormat.yMMMd().format(DateTime.now()).toString();
+  static String now = DateFormat.yMMMd().format(DateTime.now());
 
   static Widget header_1(String text) {
     return AutoSizeText(
@@ -1560,7 +1560,19 @@ class Components {
                 itemBuilder: (context, int index) {
                   Map<String, dynamic> data =
                       docs![index].data() as Map<String, dynamic>;
-                  print("The date today is : ${DateFormat.yMMMd().format(DateTime.now())}");
+                  // print(
+                  //     "The actual time today is : ${DateFormat.yMMMd().parse(now).toString().substring(0, 10)}");
+                  // print(
+                  //     "The date today is : ${DateFormat.yMMMd().parse(data['date']).toString().substring(0, 10)}");
+                  bool isMatching = DateFormat.yMMMd()
+                          .parse(now)
+                          .toString()
+                          .substring(0, 10) ==
+                      DateFormat.yMMMd()
+                          .parse(data['date'])
+                          .toString()
+                          .substring(0, 10);
+                  print("Check is the dates matching : $isMatching");
                   AwesomeNotifications().createNotification(
                     content: NotificationContent(
                       id: 1,
@@ -1568,14 +1580,19 @@ class Components {
                       title: data['title'],
                       body: "Looking forward to see you there",
                       locked: false,
-                      criticalAlert: true,
+                      criticalAlert: false,
                       category: NotificationCategory.Alarm, channelKey: 'base',
                     ),
                     schedule: NotificationCalendar.fromDate(
-                      date : DateFormat.yMMMd().parse(data['date']).add(Duration(seconds: 5)),
-                        // ignore: unrelated_type_equality_checks
-                        // date:
-                        ),
+                      date: (DateFormat.yMMMd().parse(data['date']).toString())
+                                  .substring(0, 10) ==
+                              (DateFormat.yMMMd().parse(now).toString())
+                                  .substring(0, 10)
+                          ? DateTime.now().add(Duration(seconds: 5))
+                          : DateFormat.yMMMd().parse(data['date']),
+                      // ignore: unrelated_type_equality_checks
+                      // date:
+                    ),
                     actionButtons: <NotificationActionButton>[
                       NotificationActionButton(
                           key: 'remove',
