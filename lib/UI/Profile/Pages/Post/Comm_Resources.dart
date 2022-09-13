@@ -63,45 +63,60 @@ class _CommunityResourcesState extends State<CommunityResources> {
                 ),
                 Components.spacerHeight(10),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Components.header_3(
-                        "Select Image",
-                        controller.isDark.value
-                            ? Colors.white
-                            : Colors.black87),
-                    Expanded(child: Container()),
-                    InkWell(
-                      onTap: () async {
-                        await imageDialog();
-                        await Components.uploadFile(image!);
-                      },
-                      child: Icon(
-                        Icons.add_a_photo_outlined,
-                        color: controller.isDark.value
-                            ? Colors.white
-                            : Colors.black87,
-                        size: 20,
+                    Text("Select image",
+                        style: GoogleFonts.quicksand(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: controller.isDark.value
+                              ? Colors.white
+                              : Colors.black87,
+                        )),
+                    Components.spacerWidth(18),
+                    Container(
+                      height: 25,
+                      width: 25,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(
+                          color: Colors.deepOrange,
+                          width: 1,
+                        ),
+                      ),
+                      child: InkWell(
+                        onTap: () async {
+                          await imageDialog();
+                          await Components.uploadFile(image!);
+                        },
+                        child: Icon(
+                          Icons.add_a_photo_outlined,
+                          color: controller.isDark.value
+                              ? Colors.white
+                              : Colors.black87,
+                          size: 20,
+                        ),
                       ),
                     ),
                   ],
                 ),
                 Components.spacerHeight(10),
                 notificationCard(
-                      iconName: Icons.layers,
-                      action: "Notify about Resource",
-                      widget: Switch(
-                          trackColor: MaterialStateProperty.all(
-                              controller.isDark.value
-                                  ? Colors.white
-                                  : Colors.black54),
-                          thumbColor:
-                              MaterialStateProperty.all(Colors.deepOrange),
-                          value: controller.isResourceEnabled.value,
-                          onChanged: ((value) {
-                            controller.isResourceEnabled.value = value;
-                            print(value);
-                            setState(() {});
-                          }))),
+                    iconName: Icons.layers,
+                    action: "Notify about Resource",
+                    widget: Switch(
+                        trackColor: MaterialStateProperty.all(
+                            controller.isDark.value
+                                ? Colors.white
+                                : Colors.black54),
+                        thumbColor:
+                            MaterialStateProperty.all(Colors.deepOrange),
+                        value: controller.isResourceEnabled.value,
+                        onChanged: ((value) {
+                          controller.isResourceEnabled.value = value;
+                          print(value);
+                          setState(() {});
+                        }))),
                 Components.button("Submit", () {
                   FocusScope.of(context).requestFocus(FocusNode());
                   ActionFirebase.createResource(ResourceModel(
@@ -111,12 +126,13 @@ class _CommunityResourcesState extends State<CommunityResources> {
                     link.text,
                   ));
                   Get.back();
-                 Components.createScaffoldMessanger(
-                  "Data sent successfully", context);
+                  Components.createScaffoldMessanger(
+                      "Data sent successfully", context);
                   controller.isResourceEnabled.value
                       ? FirebaseNotification.sendFirebaseNotification(
-                        purpose: "Resource",
-                          title: title.text,)
+                          purpose: "Resource",
+                          title: title.text,
+                        )
                       : null;
                 }, context)
               ],
@@ -124,7 +140,8 @@ class _CommunityResourcesState extends State<CommunityResources> {
       )),
     );
   }
-    Widget notificationCard(
+
+  Widget notificationCard(
       {required IconData iconName,
       required String action,
       required Widget widget}) {

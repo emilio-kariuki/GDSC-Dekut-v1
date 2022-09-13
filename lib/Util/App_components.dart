@@ -26,6 +26,7 @@ import 'package:gdsc_app/UI/Profile/Pages/Admins/Admins.dart';
 import 'package:gdsc_app/UI/Profile/Pages/FeedBack/Model/feedback.dart';
 
 import 'package:gdsc_app/UI/Profile/Pages/Post/Post.dart';
+import 'package:gdsc_app/UI/Resources/Model/resources_model.dart';
 import 'package:gdsc_app/Util/App_Constants.dart';
 import 'package:gdsc_app/Util/dimensions.dart';
 import 'package:get/get.dart';
@@ -691,6 +692,7 @@ class Components {
               }
               final docs = snapshot.data?.docs;
               return ListView.separated(
+                physics: const AlwaysScrollableScrollPhysics(),
                 separatorBuilder: (context, index) {
                   return spacerHeight(10);
                 },
@@ -701,6 +703,16 @@ class Components {
                       docs[index].data() as Map<String, dynamic>;
 
                   return ListTile(
+                    onTap : () {
+                      nameLead.text = data['name'];
+                        roleLead.text = data['role'];
+                        emailLead.text = data['email'];
+                        phoneLead.text = data['phone'];
+                        urlLead = data['imageUrl'];
+                        Components.adminLeadBottomSheet(
+                            docs[index].id, urlLead!, context);
+
+                    },
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
                       child: CachedNetworkImage(
@@ -947,6 +959,7 @@ class Components {
               }
               final docs = snapshot.data?.docs;
               return ListView.separated(
+                physics: const AlwaysScrollableScrollPhysics(),
                 separatorBuilder: (context, index) {
                   return spacerHeight(10);
                 },
@@ -957,6 +970,14 @@ class Components {
                       docs[index].data() as Map<String, dynamic>;
 
                   return ListTile(
+                    onTap: () {
+                        titleResource.text = data['title'];
+                        descriptionResource.text = data['description'];
+                        linkResource.text = data['link'];
+                        urlResource = data['imageUrl'];
+                        Components.adminResourcesBottomSheet(
+                            docs[index].id, urlResource!, context);
+                      },
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
                       child: CachedNetworkImage(
@@ -1215,6 +1236,7 @@ class Components {
               }
               final docs = snapshot.data?.docs;
               return ListView.builder(
+                physics: const AlwaysScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: docs?.length,
                 itemBuilder: (context, int index) {
@@ -1222,6 +1244,14 @@ class Components {
                       docs![index].data() as Map<String, dynamic>;
 
                   return ListTile(
+                     onTap: () {
+                        titleAnnouncement.text = data['title'];
+                        descriptionAnnouncement.text = data['description'];
+                        linkAnnouncement.text = data['link'];
+                        urlAnnouncement = data['imageUrl'];
+                        Components.adminAnnouncementBottomSheet(
+                            docs[index].id, urlAnnouncement!, context);
+                      },
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
                       child: CachedNetworkImage(
@@ -1421,7 +1451,18 @@ class Components {
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          titleEvent.text = data['title'];
+                        descriptionEvent.text = data['description'];
+                        urlEvent = data['imageUrl'];
+                        venueEvent.text = data['venue'];
+                        controller.selectTime.value = data['time'];
+                        controller.selectedDate.value = data['date'];
+                        organizersEvent.text = data['organizers'];
+                        linkEvent.text = data['link'];
+                        Components.adminEventBottomSheet(
+                            docs[index].id, urlEvent!, context);
+                        },
                         child: CachedNetworkImage(
                           height: 50,
                           width: 50,
@@ -1576,6 +1617,7 @@ class Components {
                   AwesomeNotifications().createNotification(
                     content: NotificationContent(
                       id: 1,
+                      //icon: data['imageUrl'],
                       //channelKey: channelKey,
                       title: data['title'],
                       body: "Looking forward to see you there",
@@ -1755,6 +1797,7 @@ class Components {
               }
               final docs = snapshot.data?.docs;
               return ListView.separated(
+                physics: const AlwaysScrollableScrollPhysics(),
                 separatorBuilder: (context, index) {
                   return spacerHeight(10);
                 },
@@ -1765,6 +1808,17 @@ class Components {
                       docs[index].data() as Map<String, dynamic>;
 
                   return ListTile(
+                    onTap: () {
+                      titleMeeting.text = data['title'];
+                        descriptionMeeting.text = data['description'];
+                        urlMeeting = data['imageUrl'];
+                        controller.selectTime.value = data['time'];
+                        controller.selectedDate.value = data['date'];
+                        organizersMeeting.text = data['organizers'];
+                        linkMeeting.text = data['link'];
+                        Components.adminMeetingBottomSheet(
+                            docs[index].id, urlMeeting!, context);
+                    },
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
                       child: InkWell(
@@ -2203,6 +2257,94 @@ class Components {
     );
   }
 
+  static resourceSheet(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    Get.bottomSheet(
+      elevation: 0,
+
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+      Container(
+          height: size.height * 0.45,
+          color: controller.isDark.value ? Colors.grey[900] : Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  InputField(
+                    showRequired: true,
+                    title: "Title",
+                    hint: "Enter the title of the resource?",
+                    controller: title,
+                  ),
+                  InputField(
+                    showRequired: true,
+                    title: "Link",
+                    hint: "Enter the link of the resource",
+                    controller: link,
+                  ),
+                  InputField(
+                    showRequired: true,
+                    title: "Description",
+                    hint: "Enter the description of the resource?",
+                    controller: description,
+                    maxLength: 80,
+                    linesCount: 3,
+                  ),
+                  Components.spacerHeight(10),
+                  Row(
+                    children: [
+                      Components.header_3(
+                          "Select Image",
+                          controller.isDark.value
+                              ? Colors.white
+                              : Colors.black87),
+                      Expanded(child: Container()),
+                      InkWell(
+                        onTap: () async {
+                          await imageDialog(context);
+                          await Components.uploadFile(image!);
+                        },
+                        child: Icon(
+                          Icons.add_a_photo_outlined,
+                          color: controller.isDark.value
+                              ? Colors.white
+                              : Colors.black87,
+                          size: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Components.spacerHeight(10),
+                  Components.button("Submit", () {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    ActionFirebase.createResource(ResourceModel(
+                      title.text,
+                      description.text,
+                      url,
+                      link.text,
+                    ));
+                    Get.back();
+                    Components.createScaffoldMessanger(
+                        "Data sent successfully", context);
+                    controller.isResourceEnabled.value
+                        ? FirebaseNotification.sendFirebaseNotification(
+                            purpose: "Resource",
+                            title: title.text,
+                          )
+                        : null;
+                  }, context)
+                ],
+              ),
+            ),
+          )),
+      //barrierColor: Colors.red[50],
+      isDismissible: true,
+    );
+  }
+
   static adminMeetingBottomSheet(String id, String url, BuildContext context) {
     final size = MediaQuery.of(context).size;
     Get.bottomSheet(
@@ -2547,6 +2689,107 @@ class Components {
           Components.showMessage("Failed to update");
         });
         Get.back();
+      },
+    );
+  }
+
+  static sendResources(BuildContext context) {
+    Get.defaultDialog(
+      //titlePadding: EdgeInsets.only(top: 5),
+      contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+      cancelTextColor: controller.isDark.value ? Colors.white : Colors.black87,
+      confirmTextColor: Colors.white,
+      buttonColor: Colors.deepOrange,
+      backgroundColor:
+          controller.isDark.value ? Colors.grey[900] : Colors.white,
+      title: "Send a  resource",
+      content: Column(
+        children: [
+          InputField(
+            showRequired: true,
+            title: "Title",
+            hint: "Enter the title of the resource?",
+            controller: titleResource,
+          ),
+          InputField(
+            showRequired: true,
+            title: "Link",
+            hint: "Enter the link of the resource",
+            controller: linkResource,
+          ),
+          InputField(
+            showRequired: true,
+            title: "Description",
+            hint: "Enter the description of the resource?",
+            controller: descriptionResource,
+            //maxLength: 80,
+            linesCount: 3,
+          ),
+          spacerHeight(16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Select image",
+                style: GoogleFonts.quicksand(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: controller.isDark.value
+                      ? Colors.white
+                      : Colors.black87,
+                )),
+            spacerWidth(18),
+              Container(
+                height: 25,
+                width: 25,
+                decoration: BoxDecoration(
+
+                  borderRadius: BorderRadius.circular(5),
+                  border: Border.all(
+                    color: Colors.deepOrange,
+                    width: 1,
+                  ),
+                ),
+                child: InkWell(
+                  onTap: () async {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    await imageDialog(context);
+                    await Components.uploadFileResource(controller.image.value);
+                  },
+                  child: Icon(
+                    Icons.add_a_photo_rounded,
+                    color:
+                        controller.isDark.value ? Colors.white : Colors.black87,
+                    size: 16,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      titleStyle: GoogleFonts.quicksand(
+        color: controller.isDark.value ? Colors.white : Colors.black87,
+        fontSize: 18,
+        fontWeight: FontWeight.w600,
+      ),
+      //onCancel: (() => Get.back()),
+      onConfirm: () async {
+        Get.back();
+        FocusScope.of(context).requestFocus(FocusNode());
+        ActionFirebase.createResource(ResourceModel(
+          titleResource.text,
+          descriptionResource.text,
+          urlResource,
+          linkResource.text,
+        ));
+
+        Components.createScaffoldMessanger("Data sent successfully", context);
+        // controller.isResourceEnabled.value
+        //     ? FirebaseNotification.sendFirebaseNotification(
+        //         purpose: "Resource",
+        //         title: title.text,
+        //       )
+        //     : null;
       },
     );
   }

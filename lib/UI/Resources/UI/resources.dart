@@ -5,7 +5,10 @@ import 'package:clipboard/clipboard.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:gdsc_app/UI/Profile/Pages/Post/Comm_Resources.dart';
+import 'package:gdsc_app/UI/Profile/Pages/Post/comm_Events.dart';
 import 'package:gdsc_app/Util/dimensions.dart';
 import 'package:get/get.dart';
 import 'package:progress_indicators/progress_indicators.dart';
@@ -31,12 +34,49 @@ class _ResourcesState extends State<Resources> {
   Future? resultsLoaded;
   List allResults = [];
   List resultsList = [];
+  int _counter = 0;
+  ScrollController ?_hideButtonController;
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
+  }
+  var _isVisible;
 
   @override
   void initState() {
     super.initState();
     searchController.addListener(onSearchChanged);
     SystemChannels.textInput.invokeMethod('TextInput.hide');
+
+
+    //scroll monritor
+    _isVisible = true;
+    _hideButtonController = new ScrollController();
+    _hideButtonController!.addListener((){
+      if(_hideButtonController!.position.userScrollDirection == ScrollDirection.reverse){
+        if(_isVisible == true) {
+            /* only set when the previous state is false
+             * Less widget rebuilds
+             */
+            print("**** ${_isVisible} up"); //Move IO away from setState
+            setState((){
+              _isVisible = false;
+            });
+        }
+      } else {
+        if(_hideButtonController!.position.userScrollDirection == ScrollDirection.forward){
+          if(_isVisible == false) {
+              /* only set when the previous state is false
+               * Less widget rebuilds
+               */
+               print("**** ${_isVisible} down"); //Move IO away from setState
+               setState((){
+                 _isVisible = true;
+               });
+           }
+        }
+    }});
   }
 
   @override
@@ -93,8 +133,28 @@ class _ResourcesState extends State<Resources> {
 
   @override
   Widget build(BuildContext context) {
+    const duration = Duration(milliseconds: 500);
     return Obx(
       () => Scaffold(
+
+        floatingActionButton: AnimatedSlide(
+      duration: duration,
+      offset: _isVisible ? Offset.zero : const Offset(0, 2),
+      child: AnimatedOpacity(
+        duration: duration,
+        opacity: _isVisible ? 1 : 0,
+        child: SizedBox(
+          height: 50,
+          child: FloatingActionButton(
+            tooltip: "Add a resource",
+            elevation: 5,
+            backgroundColor: Colors.deepOrange,
+            child: const Icon(Icons.add),
+            onPressed: () => Components.sendResources(context)
+          ),
+        ),
+      ),
+    ),
         backgroundColor:
             controller.isDark.value ? Colors.grey[900] : Colors.white,
         appBar: AppBar(
@@ -134,6 +194,7 @@ class _ResourcesState extends State<Resources> {
               await getResourcesList();
             },
             child: CustomScrollView(
+              controller: _hideButtonController,
               shrinkWrap: true,
               physics: const AlwaysScrollableScrollPhysics(),
               slivers: [
