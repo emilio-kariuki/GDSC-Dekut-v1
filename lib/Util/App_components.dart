@@ -703,15 +703,14 @@ class Components {
                       docs[index].data() as Map<String, dynamic>;
 
                   return ListTile(
-                    onTap : () {
+                    onTap: () {
                       nameLead.text = data['name'];
-                        roleLead.text = data['role'];
-                        emailLead.text = data['email'];
-                        phoneLead.text = data['phone'];
-                        urlLead = data['imageUrl'];
-                        Components.adminLeadBottomSheet(
-                            docs[index].id, urlLead!, context);
-
+                      roleLead.text = data['role'];
+                      emailLead.text = data['email'];
+                      phoneLead.text = data['phone'];
+                      urlLead = data['imageUrl'];
+                      Components.adminLeadBottomSheet(
+                          docs[index].id, urlLead!, context);
                     },
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
@@ -971,13 +970,13 @@ class Components {
 
                   return ListTile(
                     onTap: () {
-                        titleResource.text = data['title'];
-                        descriptionResource.text = data['description'];
-                        linkResource.text = data['link'];
-                        urlResource = data['imageUrl'];
-                        Components.adminResourcesBottomSheet(
-                            docs[index].id, urlResource!, context);
-                      },
+                      titleResource.text = data['title'];
+                      descriptionResource.text = data['description'];
+                      linkResource.text = data['link'];
+                      urlResource = data['imageUrl'];
+                      Components.adminResourcesBottomSheet(
+                          docs[index].id, urlResource!, context);
+                    },
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
                       child: CachedNetworkImage(
@@ -1235,23 +1234,29 @@ class Components {
                 );
               }
               final docs = snapshot.data?.docs;
-              return ListView.builder(
+              return ListView.separated(
+                separatorBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: spacerHeight(2),
+                  );
+                },
                 physics: const AlwaysScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: docs?.length,
+                itemCount: docs!.length,
                 itemBuilder: (context, int index) {
                   Map<String, dynamic> data =
-                      docs![index].data() as Map<String, dynamic>;
+                      docs[index].data() as Map<String, dynamic>;
 
                   return ListTile(
-                     onTap: () {
-                        titleAnnouncement.text = data['title'];
-                        descriptionAnnouncement.text = data['description'];
-                        linkAnnouncement.text = data['link'];
-                        urlAnnouncement = data['imageUrl'];
-                        Components.adminAnnouncementBottomSheet(
-                            docs[index].id, urlAnnouncement!, context);
-                      },
+                    onTap: () {
+                      titleAnnouncement.text = data['title'];
+                      descriptionAnnouncement.text = data['description'];
+                      linkAnnouncement.text = data['link'];
+                      urlAnnouncement = data['imageUrl'];
+                      Components.adminAnnouncementBottomSheet(
+                          docs[index].id, urlAnnouncement!, context);
+                    },
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
                       child: CachedNetworkImage(
@@ -1453,15 +1458,15 @@ class Components {
                       child: InkWell(
                         onTap: () {
                           titleEvent.text = data['title'];
-                        descriptionEvent.text = data['description'];
-                        urlEvent = data['imageUrl'];
-                        venueEvent.text = data['venue'];
-                        controller.selectTime.value = data['time'];
-                        controller.selectedDate.value = data['date'];
-                        organizersEvent.text = data['organizers'];
-                        linkEvent.text = data['link'];
-                        Components.adminEventBottomSheet(
-                            docs[index].id, urlEvent!, context);
+                          descriptionEvent.text = data['description'];
+                          urlEvent = data['imageUrl'];
+                          venueEvent.text = data['venue'];
+                          controller.selectTime.value = data['time'];
+                          controller.selectedDate.value = data['date'];
+                          organizersEvent.text = data['organizers'];
+                          linkEvent.text = data['link'];
+                          Components.adminEventBottomSheet(
+                              docs[index].id, urlEvent!, context);
                         },
                         child: CachedNetworkImage(
                           height: 50,
@@ -1544,15 +1549,41 @@ class Components {
             notification.body,
             NotificationDetails(
               android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                channelDescription: channel.description,
+                mainchannel.id,
+                mainchannel.name,
+                channelDescription: mainchannel.description,
                 timeoutAfter: 3000,
                 onlyAlertOnce: true,
                 color: Colors.blue,
               ),
             ));
       }
+    });
+  }
+
+  static resourceFlutterNotfications() async {
+    var initializationSettingsAndroid =
+        const AndroidInitializationSettings('@minmap/ic_launcher');
+    var initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+                android: AndroidNotificationDetails(
+                    resourceChannel.id, resourceChannel.name,
+                    channelDescription: resourceChannel.description,
+                    timeoutAfter: 4000,
+                    onlyAlertOnce: true,
+                    color: Colors.deepOrange)));
+}
     });
   }
 
@@ -1810,14 +1841,14 @@ class Components {
                   return ListTile(
                     onTap: () {
                       titleMeeting.text = data['title'];
-                        descriptionMeeting.text = data['description'];
-                        urlMeeting = data['imageUrl'];
-                        controller.selectTime.value = data['time'];
-                        controller.selectedDate.value = data['date'];
-                        organizersMeeting.text = data['organizers'];
-                        linkMeeting.text = data['link'];
-                        Components.adminMeetingBottomSheet(
-                            docs[index].id, urlMeeting!, context);
+                      descriptionMeeting.text = data['description'];
+                      urlMeeting = data['imageUrl'];
+                      controller.selectTime.value = data['time'];
+                      controller.selectedDate.value = data['date'];
+                      organizersMeeting.text = data['organizers'];
+                      linkMeeting.text = data['link'];
+                      Components.adminMeetingBottomSheet(
+                          docs[index].id, urlMeeting!, context);
                     },
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
@@ -2110,10 +2141,10 @@ class Components {
               "${description.text}",
               NotificationDetails(
                   android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                channelDescription: channel.description,
-                importance: Importance.high,
+                mainchannel.id,
+                mainchannel.name,
+                channelDescription: mainchannel.description,
+                importance: Importance.low,
                 color: Colors.blue,
                 playSound: true,
               )));
@@ -2730,19 +2761,17 @@ class Components {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text("Select image",
-                style: GoogleFonts.quicksand(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: controller.isDark.value
-                      ? Colors.white
-                      : Colors.black87,
-                )),
-            spacerWidth(18),
+                  style: GoogleFonts.quicksand(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color:
+                        controller.isDark.value ? Colors.white : Colors.black87,
+                  )),
+              spacerWidth(18),
               Container(
                 height: 25,
                 width: 25,
                 decoration: BoxDecoration(
-
                   borderRadius: BorderRadius.circular(5),
                   border: Border.all(
                     color: Colors.deepOrange,
@@ -4154,7 +4183,7 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final ButtonStyle flatButtonStyle = TextButton.styleFrom(
       backgroundColor: controller.isDark.value ? Colors.white : Colors.black87,
-      minimumSize: Size(width ?? 100, height ?? 50),
+      minimumSize: Size(width ?? 80, height ?? 50),
       padding: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(radius ?? 5),

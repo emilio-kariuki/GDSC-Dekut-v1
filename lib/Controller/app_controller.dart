@@ -47,6 +47,7 @@ class AppController extends GetxController {
   var isLeadsEnabled = false.obs;
   var initialProfileName = "User".obs;
   var isObscured = false.obs;
+  var hasConnection = false.obs;
 
   @override
   void onInit() {

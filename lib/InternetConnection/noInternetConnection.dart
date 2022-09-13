@@ -9,9 +9,15 @@ import 'package:gdsc_app/Util/App_components.dart';
 import 'package:gdsc_app/Util/dimensions.dart';
 import 'package:get/get.dart';
 
-class NoInternetScreen extends StatelessWidget {
+class NoInternetScreen extends StatefulWidget {
 
-  NoInternetScreen({super.key});
+  const NoInternetScreen({super.key});
+
+  @override
+  State<NoInternetScreen> createState() => _NoInternetScreenState();
+}
+
+class _NoInternetScreenState extends State<NoInternetScreen> {
   final controller = Get.put(AppController());
 
   @override
@@ -31,7 +37,7 @@ class NoInternetScreen extends StatelessWidget {
             Container(
               height: 45,
               margin: const EdgeInsets.symmetric(horizontal: 40),
-              child: CustomButton(
+              child: TextButton(
                 onPressed: () async {
                   if (await Connectivity().checkConnectivity() !=
                       ConnectivityResult.none) {
@@ -39,8 +45,7 @@ class NoInternetScreen extends StatelessWidget {
                     //     context, MaterialPageRoute(builder: (_) => child));
                   }
                 },
-                buttonText: 'retry'.tr,
-              ),
+                child: Text("Retry"),)
             ),
           ],
         ),
