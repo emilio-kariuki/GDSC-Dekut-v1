@@ -31,38 +31,42 @@ class _EventsState extends State<Events> {
 
   int initCount = 5;
   late final FirebaseMessaging _messaging;
-  StreamSubscription ?_connectionChangeStream;
+  StreamSubscription? _connectionChangeStream;
 
   bool isOffline = false;
 
   Future<void> showScheduledNotification(int id, String channelKey,
-  String title, String body, DateTime interval) async {
-String localTZ = await AwesomeNotifications().getLocalTimeZoneIdentifier();
+      String title, String body, DateTime interval) async {
+    String localTZ = await AwesomeNotifications().getLocalTimeZoneIdentifier();
 
-await AwesomeNotifications().createNotification(
-  content: NotificationContent(
-    id: id,
-    channelKey: channelKey,
-    title: "We are about to start.....",
-    body: "Looking forward to see you there",
-    locked: true,
-    criticalAlert: true,
-    category: NotificationCategory.Alarm,
-
-  ),
-  schedule: NotificationCalendar.fromDate(date: interval),
-  actionButtons: <NotificationActionButton>[
-    NotificationActionButton(key: 'remove', label: 'Stop', buttonType: ActionButtonType.DisabledAction),
-
-  ],
-);}
+    await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: id,
+        channelKey: channelKey,
+        title: "We are about to start.....",
+        body: "Looking forward to see you there",
+        locked: true,
+        criticalAlert: true,
+        category: NotificationCategory.Alarm,
+      ),
+      schedule: NotificationCalendar.fromDate(date: interval),
+      actionButtons: <NotificationActionButton>[
+        NotificationActionButton(
+            key: 'remove',
+            label: 'Stop',
+            buttonType: ActionButtonType.DisabledAction),
+      ],
+    );
+  }
 
   @override
   initState() {
     super.initState();
 
-    ConnectionStatusSingleton connectionStatus = ConnectionStatusSingleton.getInstance();
-    _connectionChangeStream = connectionStatus.connectionChange.listen(connectionChanged);
+    ConnectionStatusSingleton connectionStatus =
+        ConnectionStatusSingleton.getInstance();
+    _connectionChangeStream =
+        connectionStatus.connectionChange.listen(connectionChanged);
   }
 
   void connectionChanged(dynamic hasConnection) {
@@ -73,55 +77,57 @@ await AwesomeNotifications().createNotification(
 
   @override
   Widget build(BuildContext context) {
-    return (isOffline) ? NoInternetScreen() : Obx(
-      () => Scaffold(
-        backgroundColor:
-            controller.isDark.value ? Colors.grey[900] : Colors.white,
-        appBar: AppBar(
-          // leading: const Icon(Icons.home, size: 20,color: Colors.black87,),
-          backgroundColor:
-              controller.isDark.value ? Colors.grey[900] : Colors.white,
-          title: Components.header_3("Events",
-              controller.isDark.value ? Colors.white : Colors.black87),
-          elevation: 0,
-        ),
-        body: SafeArea(
-            child: SingleChildScrollView(
-          //physics: const NeverScrollableScrollPhysics(),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: Components.eventListSlider(context),
+    return controller.hasConnection.value
+        ? Obx(
+            () => Scaffold(
+              backgroundColor:
+                  controller.isDark.value ? Colors.grey[900] : Colors.white,
+              appBar: AppBar(
+                // leading: const Icon(Icons.home, size: 20,color: Colors.black87,),
+                backgroundColor:
+                    controller.isDark.value ? Colors.grey[900] : Colors.white,
+                title: Components.header_3("Events",
+                    controller.isDark.value ? Colors.white : Colors.black87),
+                elevation: 0,
               ),
+              body: SafeArea(
+                  child: SingleChildScrollView(
+                //physics: const NeverScrollableScrollPhysics(),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: Components.eventListSlider(context),
+                    ),
 
-              Components.spacerHeight(15),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
-                  "upcoming Events",
-                  style: GoogleFonts.robotoCondensed(
-                      fontSize: 22,
-                      color: controller.isDark.value
-                          ? Colors.white
-                          : Colors.black),
+                    Components.spacerHeight(15),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        "upcoming Events",
+                        style: GoogleFonts.robotoCondensed(
+                            fontSize: 22,
+                            color: controller.isDark.value
+                                ? Colors.white
+                                : Colors.black),
+                      ),
+                    ),
+                    Components.spacerHeight(15),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(horizontal: 35),
+                    //   child: Components.showDividerLine(),
+                    // ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: Components.eventListCard(context),
+                    ),
+                  ],
                 ),
-              ),
-              Components.spacerHeight(15),
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(horizontal: 35),
-              //   child: Components.showDividerLine(),
-              // ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: Components.eventListCard(context),
-              ),
-            ],
-          ),
-        )),
-      ),
-    );
+              )),
+            ),
+          )
+        : const NoInternetScreen();
   }
 }

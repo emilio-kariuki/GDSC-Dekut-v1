@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gdsc_app/Controller/app_controller.dart';
+import 'package:gdsc_app/InternetConnection/chechConnection.dart';
+import 'package:gdsc_app/InternetConnection/noInternetConnection.dart';
 import 'package:gdsc_app/UI/Announcement/UI/announcement.dart';
 import 'package:gdsc_app/UI/Meetings/UI/meetings.dart';
 import 'package:gdsc_app/UI/Profile/profile.dart';
@@ -30,7 +32,7 @@ class _HomeState extends State<Home> {
   final controller = Get.put(AppController());
   int activeIndex = 0;
   var myGroup = AutoSizeGroup();
-
+   
   @override
   void initState() {
     super.initState();
@@ -41,6 +43,7 @@ class _HomeState extends State<Home> {
     controller.getProfileDetails();
     controller.getThemeStatus();
     Components.flutterNotificationSettings();
+
   }
 
   @override
@@ -134,7 +137,7 @@ class _HomeState extends State<Home> {
       const Events(),
       const Resources(),
       const Announcements(),
-      const Meeting(),
+      const NoInternetScreen(),
       const Account(),
     ];
     return IndexedStack(

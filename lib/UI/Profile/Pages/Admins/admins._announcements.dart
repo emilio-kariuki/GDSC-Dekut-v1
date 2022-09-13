@@ -18,10 +18,10 @@ class _AdminAnnouncementsState extends State<AdminAnnouncements> {
       () => Scaffold(
         backgroundColor:
             controller.isDark.value ? Colors.grey[900] : Colors.white,
-        body: SafeArea(
-            child: SingleChildScrollView(
+        body: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Components.adminAnnouncementListCard(context),
-        )),
+        ),
       ),
     );
   }

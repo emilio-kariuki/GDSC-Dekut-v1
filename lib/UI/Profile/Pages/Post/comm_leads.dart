@@ -57,24 +57,40 @@ final email = TextEditingController();
                 ),
                 Components.spacerHeight(10),
                 Row(
-                  children: [
-                    Components.header_3(
-                        "Select Image",
-                        controller.isDark.value
-                            ? Colors.white
-                            : Colors.black87),
-                    Expanded(child: Container()),
-                    InkWell(
-                      onTap: () async {
-                        await imageDialog();
-                        await Components.uploadFile(image!);
-                      },
-                      child: Icon(
-                        Icons.add_a_photo_outlined,
-                        color: controller.isDark.value
-                            ? Colors.white
-                            : Colors.black87,
-                        size: 20,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Select image",
+                style: GoogleFonts.quicksand(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: controller.isDark.value
+                      ? Colors.white
+                      : Colors.black87,
+                )),
+            Components.spacerWidth(18),
+              Container(
+                height: 25,
+                width: 25,
+                decoration: BoxDecoration(
+
+                  borderRadius: BorderRadius.circular(5),
+                  border: Border.all(
+                    color: Colors.deepOrange,
+                    width: 1,
+                  ),
+                ),
+                      child: InkWell(
+                        onTap: () async {
+                          await imageDialog();
+                          await Components.uploadFile(image!);
+                        },
+                        child: Icon(
+                          Icons.add_a_photo_outlined,
+                          color: controller.isDark.value
+                              ? Colors.white
+                              : Colors.black87,
+                          size: 20,
+                        ),
                       ),
                     ),
                   ],

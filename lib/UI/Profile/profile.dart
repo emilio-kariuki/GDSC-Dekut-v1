@@ -68,9 +68,9 @@ class _AccountState extends State<Account> {
                           () => Get.to(() => const Leads(),
                               duration: const Duration(milliseconds: 100))),
                       Components.showDividerLine(Dimensions.PADDING_SIZE_SMALL),
-                      Components.cardButton(Icons.info_outline_rounded,
-                          "Send a Notification", () => null),
-                      Components.showDividerLine(Dimensions.PADDING_SIZE_SMALL),
+                      // Components.cardButton(Icons.info_outline_rounded,
+                      //     "Send a Notification", () => null),
+                      //Components.showDividerLine(Dimensions.PADDING_SIZE_SMALL),
                       Components.cardButton(
                           Icons.help_outline_sharp,
                           Constants.help,
