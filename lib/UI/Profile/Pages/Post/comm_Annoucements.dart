@@ -210,8 +210,9 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
             dropdownMaxHeight: MediaQuery.of(context).size.height * 0.3,
             hint: Components.header_2("Select one"),
             buttonWidth: MediaQuery.of(context).size.width,
-            dropdownDecoration:
-                BoxDecoration(color: controller.isDark.value ? Colors.grey[900] : Colors.white),
+            dropdownDecoration: BoxDecoration(
+                color:
+                    controller.isDark.value ? Colors.grey[900] : Colors.white),
             items: items
                 .map((item) => DropdownMenuItem<String>(
                       value: item,
@@ -219,8 +220,9 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
                     ))
                 .toList(),
             value: controller.selectedCategory.value,
-            onChanged: (value) =>
-                controller.selectedCategory.value = value.toString(),
+            onChanged: (value) => setState(() {
+              controller.selectedCategory.value = value.toString();
+            }),
           )
         ],
       ),

@@ -8,7 +8,6 @@ List<UserClass> userFromJson(String str) =>
 class UserClass {
   String? name;
   String? email;
-
   String? phone;
   String? github;
   String? linkedin;
@@ -42,6 +41,6 @@ class UserClass {
     userID = json['userID']! as String;
     technology = json['technology']! as String;
     imageUrl = json['imageUrl']! as String;
-    
+
   }
 }

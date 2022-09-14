@@ -11,18 +11,22 @@ class AdminResources extends StatefulWidget {
   State<AdminResources> createState() => _AdminResourcesState();
 }
 
-class _AdminResourcesState extends State<AdminResources> {
+class _AdminResourcesState extends State<AdminResources> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin{
   final controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
     return Obx(() => Scaffold(
         backgroundColor:
             controller.isDark.value ? Colors.grey[900] : Colors.white,
-       
+
         body: SafeArea(
             child: SingleChildScrollView(
               child: Components.adminResourceListCard(context),
             )),
       ),);
   }
+
+  @override
+
+  bool get wantKeepAlive => true;
 }

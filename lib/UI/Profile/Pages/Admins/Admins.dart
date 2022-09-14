@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, must_call_super
 
 import 'package:flutter/material.dart';
+import 'package:gdsc_app/UI/Profile/Pages/Admins/adminNews.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Admins/admin_meeting.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Admins/admins._announcements.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Admins/admins_resources.dart';
@@ -33,8 +34,12 @@ class _AdminState extends State<Admin>
           "Event", controller.isDark.value ? Colors.white : Colors.black87),
     ),
     Tab(
-      child: Components.header_3("News",
+      child: Components.header_3("Groups",
           controller.isDark.value ? Colors.white : Colors.black87),
+    ),
+    Tab(
+      child: Components.header_3(
+          "News", controller.isDark.value ? Colors.white : Colors.black87),
     ),
     Tab(
       child: Components.header_3(
@@ -93,6 +98,7 @@ class _AdminState extends State<Admin>
               children: const [
                 AdminEvents(),
                 AdminAnnouncements(),
+                AdminNews(),
                 AdminResources(),
                 AdminLeads(),
                 AdminMeeting(),

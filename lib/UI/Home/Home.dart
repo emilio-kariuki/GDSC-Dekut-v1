@@ -139,7 +139,7 @@ class _HomeState extends State<Home> {
       const Events(),
       const Resources(),
       const AnnHome(),
-      const NoInternetScreen(),
+      const Meeting(),
       const Account(),
     ];
     return IndexedStack(

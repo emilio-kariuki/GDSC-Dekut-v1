@@ -14,7 +14,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
+
 import '../UI/Events/Model/Event_model.dart';
 
 class AppController extends GetxController {
