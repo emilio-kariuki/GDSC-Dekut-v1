@@ -48,6 +48,7 @@ class AppController extends GetxController {
   var initialProfileName = "User".obs;
   var isObscured = false.obs;
   var hasConnection = false.obs;
+  var selectedCategory = "news".obs;
 
   @override
   void onInit() {
@@ -55,29 +56,29 @@ class AppController extends GetxController {
     getThemeStatus();
   }
 
-  void sendScheduledNotification(int id, String channelKey, String title,
-      String body, DateTime interval) async {
-    String localTZ = await AwesomeNotifications().getLocalTimeZoneIdentifier();
+  // void sendScheduledNotification(int id, String channelKey, String title,
+  //     String body, DateTime interval) async {
+  //   String localTZ = await AwesomeNotifications().getLocalTimeZoneIdentifier();
 
-    AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: id,
-        channelKey: channelKey,
-        title: "We are about to start.....",
-        body: "Looking forward to see you there",
-        locked: true,
-        criticalAlert: true,
-        category: NotificationCategory.Alarm,
-      ),
-      schedule: NotificationCalendar.fromDate(date: interval),
-      actionButtons: <NotificationActionButton>[
-        NotificationActionButton(
-            key: 'remove',
-            label: 'Stop',
-            buttonType: ActionButtonType.DisabledAction),
-      ],
-    );
-  }
+  //   AwesomeNotifications().createNotification(
+  //     content: NotificationContent(
+  //       id: id,
+  //       channelKey: channelKey,
+  //       title: "We are about to start.....",
+  //       body: "Looking forward to see you there",
+  //       locked: true,
+  //       criticalAlert: true,
+  //       category: NotificationCategory.Alarm,
+  //     ),
+  //     schedule: NotificationCalendar.fromDate(date: interval),
+  //     actionButtons: <NotificationActionButton>[
+  //       NotificationActionButton(
+  //           key: 'remove',
+  //           label: 'Stop',
+  //           buttonType: ActionButtonType.DisabledAction),
+  //     ],
+  //   );
+  // }
 
   void sendSpecific() async {
     print("Sending scheduled notfication has started");
@@ -89,7 +90,6 @@ class AppController extends GetxController {
                     AwesomeNotifications().createNotification(
                       content: NotificationContent(
                         id: 1,
-                        //channelKey: channelKey,
                         title: " Today we have an upcoming event.....",
                         body: "Looking forward to see you there",
                         locked: true,
@@ -204,9 +204,9 @@ class AppController extends GetxController {
     }
   }
 
-  Future<void> getImage(ImageSource source) async {
+  Future<void> getImage() async {
     final pickedFile =
-        await picker.pickImage(source: source, imageQuality: 100);
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 100);
 
     if (pickedFile != null) {
       image.value = File(pickedFile.path);

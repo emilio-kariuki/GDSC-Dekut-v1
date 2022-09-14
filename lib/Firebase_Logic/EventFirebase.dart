@@ -51,6 +51,14 @@ class ActionFirebase {
       "imageUrl": ann.imageUrl  ?? Constants.defaultIcon,
     }, SetOptions(merge: true));
   }
+  static void createNews(AnnouncementModel ann) async {
+    firestoreInstance.collection('news').doc().set({
+      "title": ann.title,
+      "description": ann.description,
+      "link": ann.link ?? "No link",
+      "imageUrl": ann.imageUrl  ?? Constants.defaultIcon,
+    }, SetOptions(merge: true));
+  }
 
   static void createResource(ResourceModel res) async {
     firestoreInstance.collection('resources').doc().set({

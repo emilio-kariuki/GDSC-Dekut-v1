@@ -68,7 +68,7 @@ class _PersonaState extends State<Persona> {
                   Components.spacerWidth(20),
                   InkWell(
                       onTap: () async {
-                        await Components.imageDialog(context);
+                        await Components.controller.getImage();
 
                         await Components.uploadFileDetails(
                             controller.image.value);

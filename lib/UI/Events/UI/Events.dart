@@ -35,29 +35,29 @@ class _EventsState extends State<Events> {
 
   bool isOffline = false;
 
-  Future<void> showScheduledNotification(int id, String channelKey,
-      String title, String body, DateTime interval) async {
-    String localTZ = await AwesomeNotifications().getLocalTimeZoneIdentifier();
+  // Future<void> showScheduledNotification(int id, String channelKey,
+  //     String title, String body, DateTime interval) async {
+  //   String localTZ = await AwesomeNotifications().getLocalTimeZoneIdentifier();
 
-    await AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: id,
-        channelKey: channelKey,
-        title: "We are about to start.....",
-        body: "Looking forward to see you there",
-        locked: true,
-        criticalAlert: true,
-        category: NotificationCategory.Alarm,
-      ),
-      schedule: NotificationCalendar.fromDate(date: interval),
-      actionButtons: <NotificationActionButton>[
-        NotificationActionButton(
-            key: 'remove',
-            label: 'Stop',
-            buttonType: ActionButtonType.DisabledAction),
-      ],
-    );
-  }
+  //   await AwesomeNotifications().createNotification(
+  //     content: NotificationContent(
+  //       id: id,
+  //       channelKey: channelKey,
+  //       title: "We are about to start.....",
+  //       body: "Looking forward to see you there",
+  //       locked: true,
+  //       criticalAlert: true,
+  //       category: NotificationCategory.Alarm,
+  //     ),
+  //     schedule: NotificationCalendar.fromDate(date: interval),
+  //     actionButtons: <NotificationActionButton>[
+  //       NotificationActionButton(
+  //           key: 'remove',
+  //           label: 'Stop',
+  //           buttonType: ActionButtonType.DisabledAction),
+  //     ],
+  //   );
+  // }
 
   @override
   initState() {
@@ -92,7 +92,7 @@ class _EventsState extends State<Events> {
               ),
               body: SafeArea(
                   child: SingleChildScrollView(
-                //physics: const NeverScrollableScrollPhysics(),
+                physics: const AlwaysScrollableScrollPhysics(),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,

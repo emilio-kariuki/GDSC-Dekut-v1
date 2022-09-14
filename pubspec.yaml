@@ -72,6 +72,7 @@ dependencies:
   connectivity: ^3.0.6
   clipboard: ^0.1.3
   awesome_notifications: ^0.6.21
+  dropdown_button2: ^1.8.1
 
 dev_dependencies:
   flutter_test:

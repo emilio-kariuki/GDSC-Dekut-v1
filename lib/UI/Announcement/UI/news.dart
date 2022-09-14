@@ -13,14 +13,14 @@ import '../../../Controller/app_controller.dart';
 import '../../../Util/App_Constants.dart';
 import '../../../Util/App_components.dart';
 
-class Announcements extends StatefulWidget {
-  const Announcements({Key? key}) : super(key: key);
+class News extends StatefulWidget {
+  const News({Key? key}) : super(key: key);
 
   @override
-  State<Announcements> createState() => _AnnouncementsState();
+  State<News> createState() => _NewsState();
 }
 
-class _AnnouncementsState extends State<Announcements> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin{
+class _NewsState extends State<News> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin{
   final controller = Get.put(AppController());
   final searchController = TextEditingController();
   final scrollController = ScrollController();
@@ -76,7 +76,7 @@ class _AnnouncementsState extends State<Announcements> with TickerProviderStateM
 
   getResourcesList() async {
     var data = await FirebaseFirestore.instance
-        .collection('announcements')
+        .collection('news')
         .where('title', isLessThanOrEqualTo: 'resource')
         .get();
 

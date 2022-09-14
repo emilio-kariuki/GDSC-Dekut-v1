@@ -28,18 +28,17 @@ getToken() async {
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('Handling a background message ${message.messageId}');
 }
-final controller  = Get.put(AppController());
+
+final controller = Get.put(AppController());
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
 
   await Firebase.initializeApp();
 
   await FirebaseMessaging.instance.subscribeToTopic("Name");
   ConnectionStatusSingleton connectionStatus =
       ConnectionStatusSingleton.getInstance();
-       connectionStatus.initialize();
-
+  connectionStatus.initialize();
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await flutterLocalNotificationsPlugin
@@ -56,7 +55,6 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-
 
   Get.lazyPut<AppController>(() => AppController(), fenix: true);
 
@@ -119,7 +117,6 @@ class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
   final controller = Get.put(AppController());
 
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -137,36 +134,32 @@ class MyApp extends StatelessWidget {
           User? user = FirebaseAuth.instance.currentUser;
 
           if (user != null) {
-            return controller.hasConnection.value
-                ? GetMaterialApp(
-                    onUnknownRoute: (RouteSettings settings) {
-                      return MaterialPageRoute(
-                          builder: (context) => Scaffold(
-                                body: Center(
-                                  child: Text(
-                                      'No route defined for ${settings.name}'),
-                                ),
-                              ));
-                    },
-                    debugShowCheckedModeBanner: false,
-                    theme: ThemeData(
-                      primarySwatch: Colors.blue,
-                    ),
-                    home: const Home(),
-                    color: Colors.blue,
-                  )
-                : const NoInternetScreen();
+            return GetMaterialApp(
+              onUnknownRoute: (RouteSettings settings) {
+                return MaterialPageRoute(
+                    builder: (context) => Scaffold(
+                          body: Center(
+                            child:
+                                Text('No route defined for ${settings.name}'),
+                          ),
+                        ));
+              },
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                primarySwatch: Colors.blue,
+              ),
+              home: const Home(),
+              color: Colors.blue,
+            );
           } else {
-            return controller.hasConnection.value
-                ? GetMaterialApp(
-                    debugShowCheckedModeBanner: false,
-                    theme: ThemeData(
-                      primarySwatch: Colors.blue,
-                    ),
-                    home: const Login(),
-                    color: Colors.blue,
-                  )
-                :const  NoInternetScreen();
+            return GetMaterialApp(
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                primarySwatch: Colors.blue,
+              ),
+              home: const Login(),
+              color: Colors.blue,
+            );
           }
         }
 

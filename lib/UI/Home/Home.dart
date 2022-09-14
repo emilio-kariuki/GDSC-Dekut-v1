@@ -10,6 +10,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gdsc_app/Controller/app_controller.dart';
 import 'package:gdsc_app/InternetConnection/chechConnection.dart';
 import 'package:gdsc_app/InternetConnection/noInternetConnection.dart';
+import 'package:gdsc_app/UI/Announcement/UI/AnnHome.dart';
 import 'package:gdsc_app/UI/Announcement/UI/announcement.dart';
 import 'package:gdsc_app/UI/Meetings/UI/meetings.dart';
 import 'package:gdsc_app/UI/Profile/profile.dart';
@@ -32,7 +33,7 @@ class _HomeState extends State<Home> {
   final controller = Get.put(AppController());
   int activeIndex = 0;
   var myGroup = AutoSizeGroup();
-   
+
   @override
   void initState() {
     super.initState();
@@ -43,6 +44,7 @@ class _HomeState extends State<Home> {
     controller.getProfileDetails();
     controller.getThemeStatus();
     Components.flutterNotificationSettings();
+   // controller.sendSpecific();
 
   }
 
@@ -54,7 +56,7 @@ class _HomeState extends State<Home> {
     String? token = await FirebaseMessaging.instance.getToken();
     print("Token of the app is :$token");
     getToken();
-    controller.sendSpecific();
+
   }
 
   @override
@@ -136,7 +138,7 @@ class _HomeState extends State<Home> {
     List<Widget> pages = [
       const Events(),
       const Resources(),
-      const Announcements(),
+      const AnnHome(),
       const NoInternetScreen(),
       const Account(),
     ];

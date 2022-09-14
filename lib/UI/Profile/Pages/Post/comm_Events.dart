@@ -53,7 +53,7 @@ class _CommunityEventsState extends State<CommunityEvents>
               title: "Title",
               hint: "Enter the title of the event?",
               controller: title,
-              maxLength: 22,
+              maxLength: 28,
             ),
             InputField(
               showRequired: true,
@@ -95,8 +95,8 @@ class _CommunityEventsState extends State<CommunityEvents>
                 ),
                   child: InkWell(
                     onTap: () async {
-                      await imageDialog();
-                      await Components.uploadFile(image!);
+                      await controller.getImage();
+                      await Components.uploadFile(controller.image.value);
                     },
                     child: Icon(
                       Icons.add_a_photo_outlined,
@@ -274,98 +274,6 @@ class _CommunityEventsState extends State<CommunityEvents>
     );
   }
 
-  Future<void> getImage(ImageSource source) async {
-    final image = await picker.pickImage(source: source, imageQuality: 90);
-    try {
-      if (image == null) return;
-
-      final imageTempo = File(image.path);
-      setState(() {
-        this.image = imageTempo;
-      });
-    } on PlatformException catch (e) {
-      Components.showMessage(
-        "Failed to pick image $e",
-      );
-    }
-  }
-
-  Future<String?> imageDialog() async {
-    final size = MediaQuery.of(context).size;
-    return showDialog<String>(
-      context: context,
-      builder: (BuildContext context) => Container(
-        width: size.width * 0.4,
-        height: size.height * 0.16,
-        decoration: BoxDecoration(
-          border: Border.all(
-              color: const Color.fromARGB(255, 14, 14, 20), width: 1),
-          //border: Border.all(color: Color.fromARGB(255, 182, 36, 116),width:1 ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          contentPadding: const EdgeInsets.all(5),
-          title: const Text('choose image from: '),
-          content: SingleChildScrollView(
-            child: ListBody(children: [
-              imageTile(ImageSource.camera, 'Camera', Icons.camera_alt),
-              imageTile(ImageSource.gallery, "Gallery", Icons.photo_library),
-              ListTile(
-                selectedColor: Colors.grey,
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                leading: const Icon(Icons.cancel, color: Colors.black87),
-                title: Text("Cancel",
-                    style: GoogleFonts.quicksand(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    )),
-              ),
-            ]),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget imageTile(ImageSource source, String text, IconData icon) {
-    return ListTile(
-      selectedColor: Colors.grey,
-      onTap: () async {
-        await getImage(source);
-        Get.back();
-      },
-      leading: Icon(icon, color: const Color.fromARGB(255, 0, 0, 0)),
-      title: GestureDetector(
-        onTap: () async {
-          await getImage(source);
-          Get.back();
-        },
-        child: Text(text,
-            style: GoogleFonts.quicksand(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            )),
-      ),
-    );
-  }
-
-  Widget iconImage() {
-    return IconButton(
-        onPressed: () {
-          setState(() {
-            imageDialog();
-          });
-        },
-        icon: Icon(Icons.add_a_photo,
-            size: 20,
-            color: image != null
-                ? Colors.white
-                : const Color.fromARGB(255, 223, 152, 1)));
-  }
 
   @override
   // TODO: implement wantKeepAlive
