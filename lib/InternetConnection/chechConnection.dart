@@ -1,12 +1,7 @@
+// ignore: file_names
 import "dart:io";
 import "dart:async";
-import "package:flutter/material.dart";
 import "package:connectivity/connectivity.dart";
-
-import 'dart:io'; //InternetAddress utility
-import 'dart:async'; //For StreamController/Stream
-
-import 'package:connectivity/connectivity.dart';
 import 'package:gdsc_app/Controller/app_controller.dart';
 import 'package:get/get.dart';
 

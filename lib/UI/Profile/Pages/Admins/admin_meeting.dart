@@ -11,7 +11,7 @@ class AdminMeeting extends StatefulWidget {
   State<AdminMeeting> createState() => _AdminMeetingState();
 }
 
-class _AdminMeetingState extends State<AdminMeeting> {
+class _AdminMeetingState extends State<AdminMeeting>with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   final controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
@@ -26,4 +26,8 @@ class _AdminMeetingState extends State<AdminMeeting> {
       ),
     );
   }
+
+  @override
+
+  bool get wantKeepAlive =>true;
 }

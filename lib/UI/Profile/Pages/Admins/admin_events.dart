@@ -11,10 +11,11 @@ class AdminEvents extends StatefulWidget {
   State<AdminEvents> createState() => _AdminEventsState();
 }
 
-class _AdminEventsState extends State<AdminEvents> {
+class _AdminEventsState extends State<AdminEvents> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   final controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Obx(
       () => Scaffold(
         backgroundColor:
@@ -26,4 +27,8 @@ class _AdminEventsState extends State<AdminEvents> {
       ),
     );
   }
+
+  @override
+
+  bool get wantKeepAlive => true;
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,6 +30,12 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
   final description = TextEditingController();
   File? image;
   final picker = ImagePicker();
+
+  List<String> items = [
+    "news",
+    "group",
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +60,6 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
                   title: "Link",
                   hint: "Enter the link of the annoucement?",
                   controller: link,
-
                 ),
                 InputField(
                   showRequired: true,
@@ -63,35 +69,33 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
                   maxLength: 80,
                   linesCount: 3,
                 ),
-
                 Components.spacerHeight(10),
                 Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Select image",
-                style: GoogleFonts.quicksand(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: controller.isDark.value
-                      ? Colors.white
-                      : Colors.black87,
-                )),
-            Components.spacerWidth(18),
-              Container(
-                height: 25,
-                width: 25,
-                decoration: BoxDecoration(
-
-                  borderRadius: BorderRadius.circular(5),
-                  border: Border.all(
-                    color: Colors.deepOrange,
-                    width: 1,
-                  ),
-                ),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Select image",
+                        style: GoogleFonts.quicksand(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: controller.isDark.value
+                              ? Colors.white
+                              : Colors.black87,
+                        )),
+                    Components.spacerWidth(18),
+                    Container(
+                      height: 25,
+                      width: 25,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(
+                          color: Colors.deepOrange,
+                          width: 1,
+                        ),
+                      ),
                       child: InkWell(
                         onTap: () async {
-                          await imageDialog();
-                          await Components.uploadFile(image!);
+                          await controller.getImage();
+                          await Components.uploadFile(controller.image.value);
                         },
                         child: Icon(
                           Icons.add_a_photo_outlined,
@@ -106,38 +110,47 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
                 ),
                 Components.spacerHeight(10),
                 notificationCard(
-                      iconName: Icons.notifications_active,
-                      action: "Notify about announcement",
-                      widget: Switch(
-                          trackColor: MaterialStateProperty.all(
-                              controller.isDark.value
-                                  ? Colors.white
-                                  : Colors.black54),
-                          thumbColor:
-                              MaterialStateProperty.all(Colors.deepOrange),
-                          value: controller.isAnnouncementEnabled.value,
-                          onChanged: ((value) {
-                            controller.isAnnouncementEnabled.value = value;
-                            print(value);
-                            setState(() {});
-                          }))),
+                    iconName: Icons.notifications_active,
+                    action: "Notify about announcement",
+                    widget: Switch(
+                        trackColor: MaterialStateProperty.all(
+                            controller.isDark.value
+                                ? Colors.white
+                                : Colors.black54),
+                        thumbColor:
+                            MaterialStateProperty.all(Colors.deepOrange),
+                        value: controller.isAnnouncementEnabled.value,
+                        onChanged: ((value) {
+                          controller.isAnnouncementEnabled.value = value;
+                          print(value);
+                          setState(() {});
+                        }))),
+                Components.spacerHeight(10),
+                newsDown(),
                 Components.button("Submit", () {
                   FocusScope.of(context).requestFocus(FocusNode());
-                  ActionFirebase.createAnnouncement(AnnouncementModel(
-                    title.text,
-                    description.text,
-                    link.text ,
-                    url,
-                  ));
+                  controller.selectedCategory.value == "news"
+                      ? ActionFirebase.createNews(AnnouncementModel(
+                          title.text,
+                          description.text,
+                          link.text,
+                          url,
+                        ))
+                      : ActionFirebase.createAnnouncement(AnnouncementModel(
+                          title.text,
+                          description.text,
+                          link.text,
+                          url,
+                        ));
                   Get.back();
                   Components.createScaffoldMessanger(
-                  "Data sent successfully", context);
+                      "Data sent successfully", context);
                   controller.isAnnouncementEnabled.value
-                  ? FirebaseNotification.sendFirebaseNotification(
-                      purpose: "Announcement",
-                      title: title.text,
-                     )
-                  : null;
+                      ? FirebaseNotification.sendFirebaseNotification(
+                          purpose: "Announcement",
+                          title: title.text,
+                        )
+                      : null;
                 }, context)
               ],
             )),
@@ -145,23 +158,7 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
     );
   }
 
-  Future<void> getImage(ImageSource source) async {
-    final image = await picker.pickImage(
-        source: source, imageQuality: 90);
-    try {
-      if (image == null) return;
-
-      final imageTempo = File(image.path);
-      setState(() {
-        this.image = imageTempo;
-      });
-    } on PlatformException catch (e) {
-      Components.showMessage(
-        "Failed to pick image $e",
-      );
-    }
-  }
-    Widget notificationCard(
+  Widget notificationCard(
       {required IconData iconName,
       required String action,
       required Widget widget}) {
@@ -189,70 +186,45 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
     );
   }
 
-  Future<String?> imageDialog() async {
-    final size = MediaQuery.of(context).size;
-     FocusScope.of(context).requestFocus(FocusNode());
-    return showDialog<String>(
-      context: context,
-      builder: (BuildContext context) => Container(
-        width: size.width * 0.4,
-        height: size.height * 0.16,
-        decoration: BoxDecoration(
-          border: Border.all(
-              color: const Color.fromARGB(255, 14, 14, 20), width: 1),
-          //border: Border.all(color: Color.fromARGB(255, 182, 36, 116),width:1 ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          contentPadding: const EdgeInsets.all(5),
-          title: const Text('choose image from: '),
-          content: SingleChildScrollView(
-            child: ListBody(children: [
-              imageTile(ImageSource.camera, 'Camera', Icons.camera_alt),
-              imageTile(ImageSource.gallery, "Gallery", Icons.photo_library),
-              ListTile(
-                selectedColor: Colors.grey,
-                onTap: () {
-                  Get.back();
-                },
-                leading: const Icon(Icons.cancel, color: Colors.black87),
-                title: Text("Cancel",
-                    style: GoogleFonts.quicksand(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    )),
-              ),
-            ]),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget imageTile(ImageSource source, String text, IconData icon) {
-    return ListTile(
-      selectedColor: Colors.grey,
-      onTap: ()  async {
-          await getImage(source);
-          Get.back();
-
-
-      },
-      leading: Icon(icon, color: const Color.fromARGB(255, 0, 0, 0)),
-      title: GestureDetector(
-        onTap: ()  async {
-            await getImage(source);
-            Get.back();
-
-
-        },
-        child: Text(text,
+  Widget newsDown() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Category",
             style: GoogleFonts.quicksand(
-              fontSize: 16,
+                fontSize: 16,
+                color: controller.isDark.value ? Colors.white : Colors.black87,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 0.001),
+          ),
+          DropdownButton2(
+            style: GoogleFonts.quicksand(
+              color: controller.isDark.value ? Colors.white : Colors.black87,
+              fontSize: 18,
               fontWeight: FontWeight.w600,
-            )),
+            ),
+            scrollbarAlwaysShow: true,
+            dropdownMaxHeight: MediaQuery.of(context).size.height * 0.3,
+            hint: Components.header_2("Select one"),
+            buttonWidth: MediaQuery.of(context).size.width,
+            dropdownDecoration: BoxDecoration(
+                color:
+                    controller.isDark.value ? Colors.grey[900] : Colors.white),
+            items: items
+                .map((item) => DropdownMenuItem<String>(
+                      value: item,
+                      child: Components.header_2(item),
+                    ))
+                .toList(),
+            value: controller.selectedCategory.value,
+            onChanged: (value) => setState(() {
+              controller.selectedCategory.value = value.toString();
+            }),
+          )
+        ],
       ),
     );
   }

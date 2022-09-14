@@ -27,11 +27,8 @@ class FirebaseNotification {
     final data = {
       "to": "/topics/Name",
       'notification': {
-
         'title': "New $purpose",
-
         'body': title,
-
       },
       'priority': 'high',
       'data': {

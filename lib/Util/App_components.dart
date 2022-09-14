@@ -1,20 +1,15 @@
 // ignore_for_file: file_names, prefer_const_constructors, must_be_immutable, avoid_print, use_build_context_synchronously, deprecated_member_use
-
 import 'dart:io';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gdsc_app/Controller/app_controller.dart';
@@ -24,7 +19,6 @@ import 'package:gdsc_app/UI/Events/UI/Events.dart';
 import 'package:gdsc_app/UI/Notification/pushNotification.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Admins/Admins.dart';
 import 'package:gdsc_app/UI/Profile/Pages/FeedBack/Model/feedback.dart';
-
 import 'package:gdsc_app/UI/Profile/Pages/Post/Post.dart';
 import 'package:gdsc_app/UI/Resources/Model/resources_model.dart';
 import 'package:gdsc_app/Util/App_Constants.dart';
@@ -32,7 +26,6 @@ import 'package:gdsc_app/Util/dimensions.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as path;
 import '../main.dart';
@@ -1208,10 +1201,9 @@ class Components {
       }),
     );
   }
-
-  static Widget adminAnnouncementListCard(BuildContext context) {
+    static Widget adminNewsListCard(BuildContext context) {
     final Stream<QuerySnapshot> detailStream =
-        FirebaseFirestore.instance.collection('announcements').snapshots();
+        FirebaseFirestore.instance.collection('news').snapshots();
     return SizedBox(
       width: MediaQuery.of(context).size.width * 2,
       height: MediaQuery.of(context).size.height,
@@ -1242,8 +1234,118 @@ class Components {
                   );
                 },
                 physics: const AlwaysScrollableScrollPhysics(),
-                shrinkWrap: true,
+                shrinkWrap: false,
                 itemCount: docs!.length,
+                itemBuilder: (context, int index) {
+                  Map<String, dynamic> data =
+                      docs[index].data() as Map<String, dynamic>;
+
+                  return ListTile(
+                    onTap: () {
+                      titleAnnouncement.text = data['title'];
+                      descriptionAnnouncement.text = data['description'];
+                      linkAnnouncement.text = data['link'];
+                      urlAnnouncement = data['imageUrl'];
+                      Components.adminNewsBottomSheet(
+                          docs[index].id, urlAnnouncement!, context);
+                    },
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: CachedNetworkImage(
+                        height: 50,
+                        width: 50,
+                        fit: BoxFit.cover,
+                        imageUrl: data['imageUrl'] ?? Constants.announceLogo,
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                CircularProgressIndicator(
+                                    strokeWidth: 1,
+                                    value: downloadProgress.progress),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
+                    ),
+                    title: Text(
+                      data['title'],
+                      style: TextStyle(
+                        color: controller.isDark.value
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
+                    ),
+                    // subtitle: Text(data['description'],
+                    //     style: TextStyle(
+                    //         color: controller.isDark.value
+                    //             ? Colors.white
+                    //             : Colors.black87)),
+                    trailing: InkWell(
+                      onTap: () {
+                        titleAnnouncement.text = data['title'];
+                        descriptionAnnouncement.text = data['description'];
+                        linkAnnouncement.text = data['link'];
+                        urlAnnouncement = data['imageUrl'];
+                        Components.adminAnnouncementBottomSheet(
+                            docs[index].id, urlAnnouncement!, context);
+                      },
+                      child: Icon(
+                        Icons.edit,
+                        size: 18,
+                        color: controller.isDark.value
+                            ? Colors.white
+                            : Colors.black87,
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: const CircularProgressIndicator(),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  static Widget adminAnnouncementListCard(BuildContext context) {
+    final Stream<QuerySnapshot> detailStream =
+        FirebaseFirestore.instance.collection('announcements').snapshots();
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 2,
+      height: MediaQuery.of(context).size.height,
+      child: Obx(() {
+        return Visibility(
+          visible: controller.isLoading.value,
+          replacement: StreamBuilder<QuerySnapshot>(
+            stream: detailStream,
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                print("loading");
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const CircularProgressIndicator(),
+                  ),
+                );
+              }
+              final docs = snapshot.data!.docs;
+              return ListView.separated(
+                separatorBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: spacerHeight(2),
+                  );
+                },
+                physics: const AlwaysScrollableScrollPhysics(),
+                shrinkWrap: false,
+                itemCount: docs.length,
                 itemBuilder: (context, int index) {
                   Map<String, dynamic> data =
                       docs[index].data() as Map<String, dynamic>;
@@ -1441,13 +1543,14 @@ class Components {
                   ),
                 );
               }
-              final docs = snapshot.data?.docs;
+              final docs = snapshot.data!.docs;
               return ListView.separated(
                 separatorBuilder: (context, index) {
                   return spacerHeight(10);
                 },
                 shrinkWrap: true,
-                itemCount: docs!.length,
+               // reverse: true,
+                itemCount: docs.length,
                 itemBuilder: (context, int index) {
                   Map<String, dynamic> data =
                       docs[index].data() as Map<String, dynamic>;
@@ -1623,15 +1726,16 @@ class Components {
               }
               final docs = snapshot.data?.docs;
 
-              return ListView.builder(
+              return ListView.separated(
+                separatorBuilder: (context, index) => spacerHeight(2),
                 physics: NeverScrollableScrollPhysics(),
-                reverse: false,
+                //reverse: true,
                 dragStartBehavior: DragStartBehavior.start,
-                shrinkWrap: true,
-                itemCount: docs?.length,
+                shrinkWrap: false,
+                itemCount: docs!.length,
                 itemBuilder: (context, int index) {
                   Map<String, dynamic> data =
-                      docs![index].data() as Map<String, dynamic>;
+                      docs[index].data() as Map<String, dynamic>;
                   // print(
                   //     "The actual time today is : ${DateFormat.yMMMd().parse(now).toString().substring(0, 10)}");
                   // print(
@@ -2335,7 +2439,7 @@ class Components {
                       Expanded(child: Container()),
                       InkWell(
                         onTap: () async {
-                          await imageDialog(context);
+                          await controller.getImage();
                           await Components.uploadFile(image!);
                         },
                         child: Icon(
@@ -2437,6 +2541,37 @@ class Components {
       isDismissible: true,
     );
   }
+    static adminNewsBottomSheet(
+      String id, String url, BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    Get.bottomSheet(
+      elevation: 0,
+
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+      Container(
+          height: size.height * 0.13,
+          color: controller.isDark.value ? Colors.grey[900] : Colors.white,
+          child: Row(
+            children: [
+              Expanded(
+                  child: button("Edit", () async {
+                Get.back();
+                await editAnnouncement(id, context);
+              }, context)),
+              Expanded(
+                  child: button("Delete", () async {
+                ActionFirebase.deleteDoc(id, 'news');
+                await FirebaseStorage.instance.refFromURL(url).delete();
+                Get.back();
+              }, context))
+            ],
+          )),
+      //barrierColor: Colors.red[50],
+      isDismissible: true,
+    );
+  }
 
   static adminAnnouncementBottomSheet(
       String id, String url, BuildContext context) {
@@ -2505,7 +2640,7 @@ class Components {
               InkWell(
                 onTap: () async {
                   FocusScope.of(context).requestFocus(FocusNode());
-                  await imageDialog(context);
+                  await controller.getImage();
                   await Components.uploadFileLead(controller.image.value);
                 },
                 child: Icon(
@@ -2687,7 +2822,7 @@ class Components {
               InkWell(
                 onTap: () async {
                   FocusScope.of(context).requestFocus(FocusNode());
-                  await imageDialog(context);
+                  await controller.getImage();
                   await Components.uploadFileAnnouncement(
                       controller.image.value);
                 },
@@ -2781,7 +2916,7 @@ class Components {
                 child: InkWell(
                   onTap: () async {
                     FocusScope.of(context).requestFocus(FocusNode());
-                    await imageDialog(context);
+                    await controller.getImage();
                     await Components.uploadFileResource(controller.image.value);
                   },
                   child: Icon(
@@ -2813,6 +2948,10 @@ class Components {
         ));
 
         Components.createScaffoldMessanger("Data sent successfully", context);
+        titleResource.clear();
+        descriptionResource.clear();
+        linkResource.clear();
+        
         // controller.isResourceEnabled.value
         //     ? FirebaseNotification.sendFirebaseNotification(
         //         purpose: "Resource",
@@ -2863,7 +3002,7 @@ class Components {
               InkWell(
                 onTap: () async {
                   FocusScope.of(context).requestFocus(FocusNode());
-                  await imageDialog(context);
+                  await controller.getImage();
                   await Components.uploadFileResource(controller.image.value);
                 },
                 child: Icon(
@@ -2946,7 +3085,7 @@ class Components {
                       InkWell(
                         onTap: () async {
                           FocusScope.of(context).requestFocus(FocusNode());
-                          await imageDialog(context);
+                          await controller.getImage();
                           await Components.uploadFileMeeting(
                               controller.image.value);
                         },
@@ -3062,7 +3201,7 @@ class Components {
                       InkWell(
                         onTap: () async {
                           FocusScope.of(context).requestFocus(FocusNode());
-                          await imageDialog(context);
+                          await controller.getImage();
                           await Components.uploadFileEvent(
                               controller.image.value);
                         },
@@ -3201,73 +3340,8 @@ class Components {
     );
   }
 
-  static Future<String?> imageDialog(BuildContext context) async {
-    final size = MediaQuery.of(context).size;
-    return showDialog<String>(
-      context: context,
-      builder: (BuildContext context) => Container(
-        width: size.width * 0.4,
-        height: size.height * 0.16,
-        decoration: BoxDecoration(
-          border: Border.all(
-              color: const Color.fromARGB(255, 14, 14, 20), width: 1),
-          //border: Border.all(color: Color.fromARGB(255, 182, 36, 116),width:1 ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          contentPadding: const EdgeInsets.all(5),
-          title: const Text('choose image from: '),
-          content: SingleChildScrollView(
-            child: ListBody(children: [
-              imageTile(
-                  ImageSource.camera, 'Camera', Icons.camera_alt, context),
-              imageTile(
-                  ImageSource.gallery, "Gallery", Icons.photo_library, context),
-              ListTile(
-                selectedColor: Colors.grey,
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                leading: const Icon(Icons.cancel, color: Colors.black87),
-                title: Text("Cancel",
-                    style: GoogleFonts.quicksand(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    )),
-              ),
-            ]),
-          ),
-        ),
-      ),
-    );
-  }
 
-  static Widget imageTile(
-      ImageSource source, String text, IconData icon, BuildContext context) {
-    return ListTile(
-      selectedColor: Colors.grey,
-      onTap: () async {
-        await controller.getImage(source);
-        Get.back();
 
-        controller.update();
-      },
-      leading: Icon(icon, color: const Color.fromARGB(255, 0, 0, 0)),
-      title: GestureDetector(
-        onTap: () async {
-          await controller.getImage(source);
-          Get.back();
-        },
-        child: Text(text,
-            style: GoogleFonts.quicksand(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            )),
-      ),
-    );
-  }
 
   static Widget eventListSlider(BuildContext context) {
     final Stream<QuerySnapshot> detailStream =

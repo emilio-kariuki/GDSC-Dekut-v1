@@ -3,14 +3,14 @@ import 'package:gdsc_app/Controller/app_controller.dart';
 import 'package:gdsc_app/Util/App_components.dart';
 import 'package:get/get.dart';
 
-class AdminAnnouncements extends StatefulWidget {
-  const AdminAnnouncements({Key? key}) : super(key: key);
+class AdminNews extends StatefulWidget {
+  const AdminNews({Key? key}) : super(key: key);
 
   @override
-  State<AdminAnnouncements> createState() => _AdminAnnouncementsState();
+  State<AdminNews> createState() => _AdminNewsState();
 }
 
-class _AdminAnnouncementsState extends State<AdminAnnouncements>with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+class _AdminNewsState extends State<AdminNews>with TickerProviderStateMixin, AutomaticKeepAliveClientMixin{
   final controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
@@ -20,11 +20,12 @@ class _AdminAnnouncementsState extends State<AdminAnnouncements>with TickerProvi
             controller.isDark.value ? Colors.grey[900] : Colors.white,
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          child: Components.adminAnnouncementListCard(context),
+          child: Components.adminNewsListCard(context),
         ),
       ),
     );
   }
+
 
   @override
 

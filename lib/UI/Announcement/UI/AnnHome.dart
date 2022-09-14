@@ -1,7 +1,8 @@
 // ignore_for_file: prefer_const_constructors, must_call_super
 
 import 'package:flutter/material.dart';
-import 'package:gdsc_app/UI/Profile/Pages/Admins/adminNews.dart';
+import 'package:gdsc_app/UI/Announcement/UI/announcement.dart';
+import 'package:gdsc_app/UI/Announcement/UI/news.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Admins/admin_meeting.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Admins/admins._announcements.dart';
 import 'package:gdsc_app/UI/Profile/Pages/Admins/admins_resources.dart';
@@ -13,17 +14,15 @@ import 'package:gdsc_app/Util/dimensions.dart';
 import 'package:get/get.dart';
 
 import '../../../../Controller/app_controller.dart';
-import 'admin_events.dart';
-import 'admin_leads.dart';
 
-class Admin extends StatefulWidget {
-  const Admin({Key? key}) : super(key: key);
+class AnnHome extends StatefulWidget {
+  const AnnHome({Key? key}) : super(key: key);
 
   @override
-  State<Admin> createState() => _AdminState();
+  State<AnnHome> createState() => _AnnHomeState();
 }
 
-class _AdminState extends State<Admin>
+class _AnnHomeState extends State<AnnHome>
     with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   static var controller = Get.put(AppController());
   late TabController tabController;
@@ -31,27 +30,11 @@ class _AdminState extends State<Admin>
   List<Tab> tabs = <Tab>[
     Tab(
       child: Components.header_3(
-          "Event", controller.isDark.value ? Colors.white : Colors.black87),
-    ),
-    Tab(
-      child: Components.header_3("Groups",
-          controller.isDark.value ? Colors.white : Colors.black87),
-    ),
-    Tab(
-      child: Components.header_3(
           "News", controller.isDark.value ? Colors.white : Colors.black87),
     ),
     Tab(
       child: Components.header_3(
-          "Resources", controller.isDark.value ? Colors.white : Colors.black87),
-    ),
-    Tab(
-      child: Components.header_3(
-          "Leads", controller.isDark.value ? Colors.white : Colors.black87),
-    ),
-    Tab(
-      child: Components.header_3(
-          "Virtual", controller.isDark.value ? Colors.white : Colors.black87),
+          "Groups", controller.isDark.value ? Colors.white : Colors.black87),
     ),
   ];
   @override
@@ -64,7 +47,7 @@ class _AdminState extends State<Admin>
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: tabs.length,
-      child: Scaffold(
+      child: Obx(() => Scaffold(
           backgroundColor:
               controller.isDark.value ? Colors.grey[900] : Colors.white,
           appBar: AppBar(
@@ -72,21 +55,21 @@ class _AdminState extends State<Admin>
                 color:
                     controller.isDark.value ? Colors.white : Colors.grey[900],
                 size: 20),
-            title: Components.header_2(
-              "Admin",
-            ),
+            title: Components.header_2("GDSC News"),
             centerTitle: true,
             backgroundColor:
                 controller.isDark.value ? Colors.grey[900] : Colors.white,
             elevation: 0,
             bottom: TabBar(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+              physics: BouncingScrollPhysics(),
+              padding: EdgeInsets.symmetric(
+                  horizontal: Dimensions.PADDING_SIZE_SMALL),
               tabs: tabs,
               //controller: tabController,
               indicatorWeight: 2,
               indicator: BoxDecoration(
                 color: Colors.deepOrange,
-                borderRadius: BorderRadius.circular(50),
+                borderRadius: BorderRadius.circular(40),
               ),
               indicatorSize: TabBarIndicatorSize.tab,
               indicatorColor:
@@ -96,15 +79,11 @@ class _AdminState extends State<Admin>
           body: SafeArea(
             child: TabBarView(
               children: const [
-                AdminEvents(),
-                AdminAnnouncements(),
-                AdminNews(),
-                AdminResources(),
-                AdminLeads(),
-                AdminMeeting(),
+                News(),
+                Announcements(),
               ],
             ),
-          )),
+          ))),
     );
   }
 

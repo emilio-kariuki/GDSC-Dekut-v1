@@ -11,18 +11,22 @@ class AdminLeads extends StatefulWidget {
   State<AdminLeads> createState() => _AdminLeadsState();
 }
 
-class _AdminLeadsState extends State<AdminLeads> {
+class _AdminLeadsState extends State<AdminLeads> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   final controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
     return Obx(() => Scaffold(
         backgroundColor:
             controller.isDark.value ? Colors.grey[900] : Colors.white,
-       
+
         body: SafeArea(
             child: SingleChildScrollView(
               child: Components.adminLeadsListCard(context),
             )),
       ),);
   }
+
+  @override
+
+  bool get wantKeepAlive => true;
 }
