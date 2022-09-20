@@ -1201,7 +1201,8 @@ class Components {
       }),
     );
   }
-    static Widget adminNewsListCard(BuildContext context) {
+
+  static Widget adminNewsListCard(BuildContext context) {
     final Stream<QuerySnapshot> detailStream =
         FirebaseFirestore.instance.collection('news').snapshots();
     return SizedBox(
@@ -1549,7 +1550,7 @@ class Components {
                   return spacerHeight(10);
                 },
                 shrinkWrap: true,
-               // reverse: true,
+                // reverse: true,
                 itemCount: docs.length,
                 itemBuilder: (context, int index) {
                   Map<String, dynamic> data =
@@ -1686,7 +1687,7 @@ class Components {
                     timeoutAfter: 4000,
                     onlyAlertOnce: true,
                     color: Colors.deepOrange)));
-}
+      }
     });
   }
 
@@ -1701,8 +1702,9 @@ class Components {
   }
 
   static Widget eventListCard(BuildContext context) {
-    final Stream<QuerySnapshot> detailStream =
-        FirebaseFirestore.instance.collection('events').snapshots();
+    final Stream<QuerySnapshot> detailStream = (FirebaseFirestore.instance
+        .collection('events')
+      .orderBy('date', descending: true).snapshots()) ;
     return SizedBox(
       width: MediaQuery.of(context).size.width * 2,
       height: MediaQuery.of(context).size.height,
@@ -1716,7 +1718,7 @@ class Components {
                 return Text('Error: ${snapshot.error}');
               }
               if (snapshot.connectionState == ConnectionState.waiting) {
-                print("loading");
+
                 return Center(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -1749,34 +1751,34 @@ class Components {
                           .toString()
                           .substring(0, 10);
                   print("Check is the dates matching : $isMatching");
-                  AwesomeNotifications().createNotification(
-                    content: NotificationContent(
-                      id: 1,
-                      //icon: data['imageUrl'],
-                      //channelKey: channelKey,
-                      title: data['title'],
-                      body: "Looking forward to see you there",
-                      locked: false,
-                      criticalAlert: false,
-                      category: NotificationCategory.Alarm, channelKey: 'base',
-                    ),
-                    schedule: NotificationCalendar.fromDate(
-                      date: (DateFormat.yMMMd().parse(data['date']).toString())
-                                  .substring(0, 10) ==
-                              (DateFormat.yMMMd().parse(now).toString())
-                                  .substring(0, 10)
-                          ? DateTime.now().add(Duration(seconds: 5))
-                          : DateFormat.yMMMd().parse(data['date']),
-                      // ignore: unrelated_type_equality_checks
-                      // date:
-                    ),
-                    actionButtons: <NotificationActionButton>[
-                      NotificationActionButton(
-                          key: 'remove',
-                          label: 'Stop',
-                          buttonType: ActionButtonType.DisabledAction),
-                    ],
-                  );
+                  // AwesomeNotifications().createNotification(
+                  //   content: NotificationContent(
+                  //     id: 1,
+                  //     //icon: data['imageUrl'],
+                  //     //channelKey: channelKey,
+                  //     title: data['title'],
+                  //     body: "Looking forward to see you there",
+                  //     locked: false,
+                  //     criticalAlert: false,
+                  //     category: NotificationCategory.Alarm, channelKey: 'base',
+                  //   ),
+                  //   schedule: NotificationCalendar.fromDate(
+                  //     date: (DateFormat.yMMMd().parse(data['date']).toString())
+                  //                 .substring(0, 10) ==
+                  //             (DateFormat.yMMMd().parse(now).toString())
+                  //                 .substring(0, 10)
+                  //         ? DateTime.now().add(Duration(seconds: 5))
+                  //         : DateFormat.yMMMd().parse(data['date']),
+                  //     // ignore: unrelated_type_equality_checks
+                  //     // date:
+                  //   ),
+                  //   actionButtons: <NotificationActionButton>[
+                  //     NotificationActionButton(
+                  //         key: 'remove',
+                  //         label: 'Stop',
+                  //         buttonType: ActionButtonType.DisabledAction),
+                  //   ],
+                  // );
                   return ListTile(
                     onTap: () async {
                       String url = data['link'];
@@ -2541,8 +2543,8 @@ class Components {
       isDismissible: true,
     );
   }
-    static adminNewsBottomSheet(
-      String id, String url, BuildContext context) {
+
+  static adminNewsBottomSheet(String id, String url, BuildContext context) {
     final size = MediaQuery.of(context).size;
     Get.bottomSheet(
       elevation: 0,
@@ -2951,7 +2953,7 @@ class Components {
         titleResource.clear();
         descriptionResource.clear();
         linkResource.clear();
-        
+
         // controller.isResourceEnabled.value
         //     ? FirebaseNotification.sendFirebaseNotification(
         //         purpose: "Resource",
@@ -3339,9 +3341,6 @@ class Components {
       },
     );
   }
-
-
-
 
   static Widget eventListSlider(BuildContext context) {
     final Stream<QuerySnapshot> detailStream =

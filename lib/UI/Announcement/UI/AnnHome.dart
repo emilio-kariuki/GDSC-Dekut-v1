@@ -30,11 +30,11 @@ class _AnnHomeState extends State<AnnHome>
   List<Tab> tabs = <Tab>[
     Tab(
       child: Components.header_3(
-          "News", controller.isDark.value ? Colors.white : Colors.black87),
+          "News", Colors.black87),
     ),
     Tab(
       child: Components.header_3(
-          "Groups", controller.isDark.value ? Colors.white : Colors.black87),
+          "Groups",  Colors.black87),
     ),
   ];
   @override

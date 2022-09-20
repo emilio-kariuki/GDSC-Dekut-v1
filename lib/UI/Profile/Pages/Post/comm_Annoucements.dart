@@ -142,6 +142,7 @@ class _CommunityAnnoucementsState extends State<CommunityAnnoucements> {
                           link.text,
                           url,
                         ));
+                  
                   Get.back();
                   Components.createScaffoldMessanger(
                       "Data sent successfully", context);
