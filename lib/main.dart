@@ -107,7 +107,7 @@ const AndroidNotificationChannel resourceChannel = AndroidNotificationChannel(
   'resource_channel',
   'resource channel Notifications',
   description: 'this channel is used for resource notifications',
-  importance: Importance.min,
+  importance: Importance.high,
 );
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
