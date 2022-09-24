@@ -55,7 +55,7 @@ class _HomeState extends State<Home> {
     controller.getProfileImage();
     String? token = await FirebaseMessaging.instance.getToken();
     print("Token of the app is :$token");
-    getToken();
+
 
   }
 
@@ -148,3 +148,5 @@ class _HomeState extends State<Home> {
     );
   }
 }
+
+

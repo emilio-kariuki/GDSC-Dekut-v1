@@ -62,9 +62,9 @@ class _FeedBackState extends State<FeedBack> {
                         "Your feedback is highly appreciatedd",
                         NotificationDetails(
                             android: AndroidNotificationDetails(
-                          mainchannel.id,
-                          mainchannel.name,
-                          channelDescription: mainchannel.description,
+                          mainChannel.id,
+                          mainChannel.name,
+                          channelDescription: mainChannel.description,
                           importance: Importance.low,
                           color: Colors.blue,
                           playSound: true,

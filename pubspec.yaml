@@ -64,7 +64,6 @@ dependencies:
   twitter_login: ^4.2.3
   flutter_launcher_icons: ^0.10.0
   contactus: ^1.2.0
-
   dots_indicator: ^2.1.0
   progress_indicators: ^1.0.0
   flutter_local_notifications: ^9.8.0+1
