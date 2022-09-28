@@ -21,10 +21,6 @@ User? the_User;
 String userName = '';
 String userEmail = '';
 String? token;
-getToken() async {
-  token = (await FirebaseMessaging.instance.getToken())!;
-}
-
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('Handling a background message ${message.messageId}');
 }
@@ -44,13 +40,14 @@ void main() async {
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(mainchannel);
+      ?.createNotificationChannel(mainChannel);
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true,
     badge: true,
     sound: true,
   );
+ 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -58,55 +55,16 @@ void main() async {
 
   Get.lazyPut<AppController>(() => AppController(), fenix: true);
 
-  AwesomeNotifications().initialize(
-      // set the icon to null if you want to use the default app icon
-      null,
-      [
-        NotificationChannel(
-            channelGroupKey: 'basic_channel_group',
-            channelKey: 'base',
-            channelName: 'Basic notifications',
-            channelDescription: 'Notification channel for basic tests',
-            defaultColor: const Color(0xFF9D50DD),
-            ledColor: Colors.white)
-      ],
-      // Channel groups are only visual and are not required
-      channelGroups: [
-        NotificationChannelGroup(
-            channelGroupkey: 'basic_channel_group',
-            channelGroupName: 'Basic group')
-      ],
-      debug: true);
-  await AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-    if (!isAllowed) {
-      AwesomeNotifications().requestPermissionToSendNotifications();
-    }
-  });
-  AwesomeNotifications()
-      .actionStream
-      .listen((ReceivedNotification receivedNotification) {
-    Navigator.of(Get.context!).pushNamed('/NotificationPage', arguments: {
-      // your page params. I recommend you to pass the
-      // entire *receivedNotification* object
-      //id: receivedNotification.id,
-    });
-  });
+
 
   runApp(MyApp());
 }
 
-const AndroidNotificationChannel mainchannel = AndroidNotificationChannel(
+const AndroidNotificationChannel mainChannel = AndroidNotificationChannel(
   'high_importance_channel', // id
   'High Importance Notifications', // title
   description:
       'this channel is used for important notifications.', // description
-  importance: Importance.high,
-);
-
-const AndroidNotificationChannel resourceChannel = AndroidNotificationChannel(
-  'resource_channel',
-  'resource channel Notifications',
-  description: 'this channel is used for resource notifications',
   importance: Importance.high,
 );
 
@@ -169,3 +127,8 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+// how to pick image in flutter web?
+
+
+

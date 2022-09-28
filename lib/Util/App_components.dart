@@ -1653,43 +1653,45 @@ class Components {
             notification.body,
             NotificationDetails(
               android: AndroidNotificationDetails(
-                mainchannel.id,
-                mainchannel.name,
-                channelDescription: mainchannel.description,
+                mainChannel.id,
+                mainChannel.name,
+                channelDescription: mainChannel.description,
                 timeoutAfter: 3000,
                 onlyAlertOnce: true,
                 color: Colors.blue,
+                importance: Importance.high,
               ),
             ));
       }
     });
   }
 
-  static resourceFlutterNotfications() async {
-    var initializationSettingsAndroid =
-        const AndroidInitializationSettings('@minmap/ic_launcher');
-    var initializationSettings =
-        InitializationSettings(android: initializationSettingsAndroid);
-    flutterLocalNotificationsPlugin.initialize(initializationSettings);
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
+  // static resourceFlutterNotfications() async {
+  //   var initializationSettingsAndroid =
+  //       const AndroidInitializationSettings('@minmap/ic_launcher');
+  //   var initializationSettings =
+  //       InitializationSettings(android: initializationSettingsAndroid);
+  //   flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //     RemoteNotification? notification = message.notification;
+  //     AndroidNotification? android = message.notification?.android;
 
-      if (notification != null && android != null) {
-        flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-                android: AndroidNotificationDetails(
-                    resourceChannel.id, resourceChannel.name,
-                    channelDescription: resourceChannel.description,
-                    timeoutAfter: 4000,
-                    onlyAlertOnce: true,
-                    color: Colors.deepOrange)));
-      }
-    });
-  }
+  //     if (notification != null && android != null) {
+  //       flutterLocalNotificationsPlugin.show(
+  //           notification.hashCode,
+  //           notification.title,
+  //           notification.body,
+  //           NotificationDetails(
+  //               android: AndroidNotificationDetails(
+  //                   mainChannel.id, mainChannel.name,
+  //                   channelDescription: mainChannel.description,
+  //                   timeoutAfter: 4000,
+  //                   onlyAlertOnce: true,
+  //                   importance: Importance.high,
+  //                   color: Colors.deepOrange)));
+  //     }
+  //   });
+  // }
 
   static createScaffoldMessanger(String text, BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -2247,9 +2249,9 @@ class Components {
               "${description.text}",
               NotificationDetails(
                   android: AndroidNotificationDetails(
-                mainchannel.id,
-                mainchannel.name,
-                channelDescription: mainchannel.description,
+                mainChannel.id,
+                mainChannel.name,
+                channelDescription: mainChannel.description,
                 importance: Importance.low,
                 color: Colors.blue,
                 playSound: true,
