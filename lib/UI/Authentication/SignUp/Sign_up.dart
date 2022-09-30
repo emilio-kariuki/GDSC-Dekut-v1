@@ -144,17 +144,22 @@ class _RegisterState extends State<Register> {
                         userID = value!.uid;
                         return value;
                       });
-                      if (user != null) {
-                        print("USER IS NOT NULL");
+                      if (user == null) {
+                        print("USER IS NULL");
+                        userID = user!.uid;
+                        the_User = user;
+                        userName = user.displayName!;
+                        userEmail = user.email!;
+                        Get.offAll(() => const Home(),duration:const Duration(milliseconds: 100));
+
+
+                      }
+                      print("USER IS NULL");
                         userID = user.uid;
                         the_User = user;
                         userName = user.displayName!;
                         userEmail = user.email!;
-                        createUser(
-                            UserClass(user.displayName!, user.email!, 'empty', 'empty', 'empty', 'empty',user.uid,'empty',Constants.defaultIcon),
-                            user.uid);
-                        Get.offAll(() => const Home(),duration:const Duration(milliseconds: 100));
-                      }
+                      Get.offAll(() => const Home(),duration:const Duration(milliseconds: 100));
 
                       setState(() {
                         _isSigningIn = false;

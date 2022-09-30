@@ -63,7 +63,7 @@ const AndroidNotificationChannel mainChannel = AndroidNotificationChannel(
   'High Importance Notifications', // title
   description:
       'this channel is used for important notifications.', // description
-  importance: Importance.high,
+  importance: Importance.max,
 );
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =

@@ -111,34 +111,28 @@ class _LoginState extends State<Login> {
                         _isSigningIn = true;
                       });
 
-                      User? user = await Authentication.signInWithGoogle(
+                        User? user = await Authentication.signInWithGoogle(
                               context: context)
                           .then((value) {
                         userID = value!.uid;
                         return value;
                       });
+                      if (user == null) {
+                        print("USER IS NULL");
+                        userID = user!.uid;
+                        the_User = user;
+                        userName = user.displayName!;
+                        userEmail = user.email!;
+                        Get.offAll(() => const Home(),duration:const Duration(milliseconds: 100));
 
-                      if (user != null) {
-                        print("USER IS NOT NULL");
+
+                      }
+                      print("USER IS NULL");
                         userID = user.uid;
                         the_User = user;
                         userName = user.displayName!;
                         userEmail = user.email!;
-                        createUser(
-                            UserClass(
-                                user.displayName!,
-                                user.email!,
-                                'empty',
-                                'empty',
-                                'empty',
-                                'empty',
-                                user.uid,
-                                'empty',
-                                Constants.defaultIcon),
-                            user.uid);
-
-                        Get.offAll(() => const Home());
-                      }
+                      Get.offAll(() => const Home(),duration:const Duration(milliseconds: 100));
 
                       setState(() {
                         _isSigningIn = false;
