@@ -6,14 +6,14 @@ class Constants {
   static String google = "lib/Assets/svg/google.svg";
   static String twitter = "lib/Assets/svg/twitter.svg";
   static String profile = "lib/Assets/images/profile.jpg";
- 
+
   static String no_internet = "lib/Assets/images/no_internet.png";
   static String confirmAdmin = "Are you an admin?";
   static String adminPassword = "q";
   static String cancel = "Cancel";
   static String announceLogo =
       "https://firebasestorage.googleapis.com/v0/b/apt-rite-346310.appspot.com/o/profile.jpg?alt=media&token=1f3f8ce7-20d4-4f4d-ab33-0477d07bc6ad";
-  static String defaultIcon = "https://firebasestorage.googleapis.com/v0/b/apt-rite-346310.appspot.com/o/AdobeStock_38137330_Preview.jpeg?alt=media&token=16558485-a225-431e-a1c3-8202a0e76e69";
+  static String defaultIcon = "https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,h_180,q_auto:good,w_180/v1/gcs/platform-data-dsc/contentbuilder/favicon.png";
   static String email = "Email";
   static String password = "Password";
   static String confirmPassword = "Confirm Password";

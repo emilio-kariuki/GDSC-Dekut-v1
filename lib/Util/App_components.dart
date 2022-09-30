@@ -215,7 +215,7 @@ class Components {
                       controller.isDark.value ? Colors.white : Colors.black87),
                   header_3(userEmail,
                       controller.isDark.value ? Colors.white : Colors.black54),
-                  header_3(controller.stack.value,
+                  header_3(technology ?? "Newbie",
                       controller.isDark.value ? Colors.white : Colors.black54),
                   showDividerLine(3),
                 ],

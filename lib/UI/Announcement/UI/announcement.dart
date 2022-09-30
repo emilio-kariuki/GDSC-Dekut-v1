@@ -20,7 +20,8 @@ class Announcements extends StatefulWidget {
   State<Announcements> createState() => _AnnouncementsState();
 }
 
-class _AnnouncementsState extends State<Announcements> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin{
+class _AnnouncementsState extends State<Announcements>
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   final controller = Get.put(AppController());
   final searchController = TextEditingController();
   final scrollController = ScrollController();
@@ -134,176 +135,163 @@ class _AnnouncementsState extends State<Announcements> with TickerProviderStateM
               await getResourcesList();
             },
             child: CustomScrollView(
-                 //controller: listController,
-                 shrinkWrap: true,
-                 physics: const AlwaysScrollableScrollPhysics(),
-                 slivers: [
-                   SliverList(
-                     delegate: SliverChildBuilderDelegate(
-                       (context, index) {
-                         Map<String, dynamic> data = resultsList[index]
-                             .data() as Map<String, dynamic>;
+              //controller: listController,
+              shrinkWrap: true,
+              physics: const AlwaysScrollableScrollPhysics(),
+              slivers: [
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      Map<String, dynamic> data =
+                          resultsList[index].data() as Map<String, dynamic>;
 
-                         return Column(
-                           children: [
-                             ListTile(
-                               onTap: () async {
-                                 FocusScope.of(context)
-                                     .requestFocus(FocusNode());
-                                 String url = data['link'];
-                                 if (await canLaunchUrl(Uri.parse(url))) {
-                                   await launch(url,
-                                       // forceWebView: true,
-                                       // enableJavaScript: true,
-                                       // enableDomStorage: true,
-                                       forceSafariVC: false);
-                                 } else {
-                                   Components.showMessage(
-                                       "Cannot launch url");
-                                   throw 'Could not launch $url';
-                                 }
-                               },
-                               leading: ClipRRect(
-                                 borderRadius: BorderRadius.circular(50),
-                                 child: InkWell(
-                                   onTap: () {
-                                     FocusScope.of(context)
-                                         .requestFocus(FocusNode());
-                                     Navigator.of(context).push(
-                                       PageRouteBuilder(
-                                         opaque: true,
-                                         barrierDismissible: false,
-                                         pageBuilder:
-                                             (BuildContext context, _, __) {
-                                           return Scaffold(
-                                             backgroundColor:
-                                                 controller.isDark.value
-                                                     ? Colors.grey[900]
-                                                     : Colors.white,
-                                             body: SafeArea(
-                                               child: Column(
-                                                 mainAxisAlignment:
-                                                     MainAxisAlignment
-                                                         .center,
-                                                 children: <Widget>[
-                                                   Align(
-                                                     alignment:
-                                                         Alignment.topRight,
-                                                     child: IconButton(
-                                                       onPressed: () =>
-                                                           Navigator.of(
-                                                                   context)
-                                                               .pop(),
-                                                       icon: const Icon(Icons
-                                                           .cancel_sharp),
-                                                       color: controller
-                                                               .isDark.value
-                                                           ? Colors.white
-                                                           : Colors.black87,
-                                                     ),
-                                                   ),
-                                                   Expanded(
-                                                     child:
-                                                         InteractiveViewer(
-                                                       scaleEnabled: true,
-                                                       panEnabled: true,
-                                                       child: Hero(
-                                                         tag: resultsList[
-                                                                 index]
-                                                             .id,
-                                                         child: Center(
-                                                           child:
-                                                               CachedNetworkImage(
-                                                             //height: 300,
-                                                             width: MediaQuery.of(
-                                                                     context)
-                                                                 .size
-                                                                 .width,
-                                                             fit:
-                                                                 BoxFit.fill,
-                                                             filterQuality:
-                                                                 FilterQuality
-                                                                     .high,
-                                                             imageUrl: data[
-                                                                     'imageUrl'] ??
-                                                                 Constants
-                                                                     .announceLogo,
-                                                             // placeholder: (context, url) =>
-                                                             //     const CupertinoActivityIndicator(),
-                                                           ),
-                                                         ),
-                                                       ),
-                                                     ),
-                                                   ),
-                                                 ],
-                                               ),
-                                             ),
-                                           );
-                                         },
-                                       ),
-                                     );
-                                   },
-                                   child: Hero(
-                                     tag: resultsList[index].id,
-                                     child: CachedNetworkImage(
-                                       height: 50,
-                                       width: 50,
-                                       fit: BoxFit.cover,
-                                       imageUrl: data['imageUrl'] ??
-                                           Constants.announceLogo,
-                                       progressIndicatorBuilder: (context,
-                                               url, downloadProgress) =>
-                                           CircularProgressIndicator(
-                                               strokeWidth: 1,
-                                               value: downloadProgress
-                                                   .progress),
-                                       errorWidget: (context, url, error) =>
-                                           const Icon(Icons.error),
-                                     ),
-                                   ),
-                                 ),
-                               ),
-                               title: Text(
-                                 data['title'],
-                                 style: TextStyle(
-                                   color: controller.isDark.value
-                                       ? Colors.white
-                                       : Colors.black87,
-                                 ),
-                               ),
-                               subtitle: Text(
-                                   data['description'].length > 35
-                                       ? data['description']
-                                               .substring(0, 35) +
-                                           "..."
-                                       : data['description'],
-                                   style: TextStyle(
-                                       color: controller.isDark.value
-                                           ? Colors.white
-                                           : Colors.black87)),
-                               // trailing: Icon(
-                               //   Icons.link,
-                               //   size: 18,
-                               //   color: controller.isDark.value
-                               //       ? Colors.white
-                               //       : Colors.black87,
-                               // ),
-                             ),
-                             Padding(
-                               padding:
-                                   const EdgeInsets.symmetric(horizontal: 8),
-                               child: Components.showDividerLine(12),
-                             ),
-                           ],
-                         );
-                       },
-                       childCount: resultsList.length,
-                     ),
-                   )
-
-
-                ],
-              ),
+                      return Column(
+                        children: [
+                          ListTile(
+                            onTap: () async {
+                              FocusScope.of(context).requestFocus(FocusNode());
+                              String url = data['link'];
+                              if (await canLaunchUrl(Uri.parse(url))) {
+                                await launch(url,
+                                    // forceWebView: true,
+                                    // enableJavaScript: true,
+                                    // enableDomStorage: true,
+                                    forceSafariVC: false);
+                              } else {
+                                Components.showMessage("Cannot launch url");
+                                throw 'Could not launch $url';
+                              }
+                            },
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: InkWell(
+                                onTap: () {
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode());
+                                  Navigator.of(context).push(
+                                    PageRouteBuilder(
+                                      opaque: true,
+                                      barrierDismissible: false,
+                                      pageBuilder:
+                                          (BuildContext context, _, __) {
+                                        return Scaffold(
+                                          backgroundColor:
+                                              controller.isDark.value
+                                                  ? Colors.grey[900]
+                                                  : Colors.white,
+                                          body: SafeArea(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Align(
+                                                  alignment: Alignment.topRight,
+                                                  child: IconButton(
+                                                    onPressed: () =>
+                                                        Navigator.of(context)
+                                                            .pop(),
+                                                    icon: const Icon(
+                                                        Icons.cancel_sharp),
+                                                    color:
+                                                        controller.isDark.value
+                                                            ? Colors.white
+                                                            : Colors.black87,
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: InteractiveViewer(
+                                                    scaleEnabled: true,
+                                                    panEnabled: true,
+                                                    child: Hero(
+                                                      tag:
+                                                          resultsList[index].id,
+                                                      child: Center(
+                                                        child:
+                                                            CachedNetworkImage(
+                                                          //height: 300,
+                                                          width: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .width,
+                                                          fit: BoxFit.fill,
+                                                          filterQuality:
+                                                              FilterQuality
+                                                                  .high,
+                                                          imageUrl: data[
+                                                                  'imageUrl'] ??
+                                                              Constants
+                                                                  .announceLogo,
+                                                          // placeholder: (context, url) =>
+                                                          //     const CupertinoActivityIndicator(),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                                child: Hero(
+                                  tag: resultsList[index].id,
+                                  child: CachedNetworkImage(
+                                    height: 50,
+                                    width: 50,
+                                    fit: BoxFit.cover,
+                                    imageUrl: data['imageUrl'] ??
+                                        Constants.announceLogo,
+                                    progressIndicatorBuilder: (context, url,
+                                            downloadProgress) =>
+                                        CircularProgressIndicator(
+                                            strokeWidth: 1,
+                                            value: downloadProgress.progress),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            title: Text(
+                              data['title'],
+                              style: TextStyle(
+                                color: controller.isDark.value
+                                    ? Colors.white
+                                    : Colors.black87,
+                              ),
+                            ),
+                            subtitle: Text(
+                                data['description'].length > 35
+                                    ? data['description'].substring(0, 35) +
+                                        "..."
+                                    : data['description'],
+                                style: TextStyle(
+                                    color: controller.isDark.value
+                                        ? Colors.white
+                                        : Colors.black87)),
+                            // trailing: Icon(
+                            //   Icons.link,
+                            //   size: 18,
+                            //   color: controller.isDark.value
+                            //       ? Colors.white
+                            //       : Colors.black87,
+                            // ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: Components.showDividerLine(12),
+                          ),
+                        ],
+                      );
+                    },
+                    childCount: resultsList.length,
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -311,6 +299,5 @@ class _AnnouncementsState extends State<Announcements> with TickerProviderStateM
   }
 
   @override
-
   bool get wantKeepAlive => true;
 }

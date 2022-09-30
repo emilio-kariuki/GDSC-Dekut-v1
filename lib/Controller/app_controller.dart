@@ -2,7 +2,6 @@
 
 import 'dart:io';
 
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gdsc_app/Firebase_Logic/EventFirebase.dart';
@@ -165,6 +164,7 @@ class AppController extends GetxController {
         .then((snapshot) async {
       print("The tech is ${snapshot['technology']}");
       initialProfileName.value = snapshot['username'];
+      technology = snapshot['technology'] ?? "Newbie";
       stack.value = snapshot['technology'];
       nameDetails.text = snapshot['username'];
       emailDetails.text = snapshot['email'];
