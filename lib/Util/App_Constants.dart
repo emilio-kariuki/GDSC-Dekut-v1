@@ -6,11 +6,7 @@ class Constants {
   static String google = "lib/Assets/svg/google.svg";
   static String twitter = "lib/Assets/svg/twitter.svg";
   static String profile = "lib/Assets/images/profile.jpg";
-  static String twitterProfile = "lib/Assets/images/twitter.png";
-  static String githubProfile = "lib/Assets/images/github.png";
-  static String whatsappProfile = "lib/Assets/images/whatsapp.png";
-  static String gmailProfile = "lib/Assets/images/gmail.png";
-  static String linkedinProfile = "lib/Assets/images/linkedin.png";
+ 
   static String no_internet = "lib/Assets/images/no_internet.png";
   static String confirmAdmin = "Are you an admin?";
   static String adminPassword = "q";

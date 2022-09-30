@@ -1,6 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, unused_element, avoid_print
 
-import 'package:awesome_notifications/awesome_notifications.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -47,7 +47,7 @@ void main() async {
     badge: true,
     sound: true,
   );
- 
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,

@@ -29,12 +29,10 @@ class _AnnHomeState extends State<AnnHome>
   int index = 0;
   List<Tab> tabs = <Tab>[
     Tab(
-      child: Components.header_3(
-          "News", Colors.black87),
+      child: Components.header_3("News", Colors.black87),
     ),
     Tab(
-      child: Components.header_3(
-          "Groups",  Colors.black87),
+      child: Components.header_3("Groups", Colors.black87),
     ),
   ];
   @override
@@ -64,7 +62,16 @@ class _AnnHomeState extends State<AnnHome>
               physics: BouncingScrollPhysics(),
               padding: EdgeInsets.symmetric(
                   horizontal: Dimensions.PADDING_SIZE_SMALL),
-              tabs: tabs,
+              tabs: [
+                Tab(
+                  child: Components.header_3("News",
+                      controller.isDark.value ? Colors.white : Colors.black87),
+                ),
+                Tab(
+                  child: Components.header_3("Groups",
+                      controller.isDark.value ? Colors.white : Colors.black87),
+                ),
+              ],
               //controller: tabController,
               indicatorWeight: 2,
               indicator: BoxDecoration(
