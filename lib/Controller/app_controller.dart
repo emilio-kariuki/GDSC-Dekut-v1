@@ -2,7 +2,6 @@
 
 import 'dart:io';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gdsc_app/Firebase_Logic/EventFirebase.dart';
@@ -80,45 +79,45 @@ class AppController extends GetxController {
   //   );
   // }
 
-  void sendSpecific() async {
-    print("Sending scheduled notfication has started");
-    await FirebaseFirestore.instance
-        .collection('events')
-        .get()
-        .then((querySnapshot) => {
-              querySnapshot.docs.map((doc) => {
-                    AwesomeNotifications().createNotification(
-                      content: NotificationContent(
-                        id: 1,
-                        title: " Today we have an upcoming event.....",
-                        body: "Looking forward to see you there",
-                        locked: true,
-                        criticalAlert: true,
-                        category: NotificationCategory.Alarm,
-                        channelKey: 'base',
-                      ),
-                      schedule: NotificationCalendar.fromDate(
-                          // ignore: unrelated_type_equality_checks
-                          date: (DateFormat.yMMMd()
-                                          .parse(doc['date'])
-                                          .toString())
-                                      .substring(0, 10) ==
-                                  (DateFormat.yMMMd()
-                                          .parse(Components.now)
-                                          .toString())
-                                      .substring(0, 10)
-                              ? DateTime.now().add(const Duration(seconds: 5))
-                              : DateFormat.yMMMd().parse(doc['date'])),
-                      actionButtons: <NotificationActionButton>[
-                        NotificationActionButton(
-                            key: 'remove',
-                            label: 'Stop',
-                            buttonType: ActionButtonType.DisabledAction),
-                      ],
-                    ),
-                  })
-            });
-  }
+  // void sendSpecific() async {
+  //   print("Sending scheduled notfication has started");
+  //   await FirebaseFirestore.instance
+  //       .collection('events')
+  //       .get()
+  //       .then((querySnapshot) => {
+  //             querySnapshot.docs.map((doc) => {
+  //                   AwesomeNotifications().createNotification(
+  //                     content: NotificationContent(
+  //                       id: 1,
+  //                       title: " Today we have an upcoming event.....",
+  //                       body: "Looking forward to see you there",
+  //                       locked: true,
+  //                       criticalAlert: true,
+  //                       category: NotificationCategory.Alarm,
+  //                       channelKey: 'base',
+  //                     ),
+  //                     schedule: NotificationCalendar.fromDate(
+  //                         // ignore: unrelated_type_equality_checks
+  //                         date: (DateFormat.yMMMd()
+  //                                         .parse(doc['date'])
+  //                                         .toString())
+  //                                     .substring(0, 10) ==
+  //                                 (DateFormat.yMMMd()
+  //                                         .parse(Components.now)
+  //                                         .toString())
+  //                                     .substring(0, 10)
+  //                             ? DateTime.now().add(const Duration(seconds: 5))
+  //                             : DateFormat.yMMMd().parse(doc['date'])),
+  //                     actionButtons: <NotificationActionButton>[
+  //                       NotificationActionButton(
+  //                           key: 'remove',
+  //                           label: 'Stop',
+  //                           buttonType: ActionButtonType.DisabledAction),
+  //                     ],
+  //                   ),
+  //                 })
+  //           });
+  // }
 
   //   await AwesomeNotifications().createNotification(
   //   content: NotificationContent(
@@ -165,6 +164,7 @@ class AppController extends GetxController {
         .then((snapshot) async {
       print("The tech is ${snapshot['technology']}");
       initialProfileName.value = snapshot['username'];
+      technology = snapshot['technology'] ?? "Newbie";
       stack.value = snapshot['technology'];
       nameDetails.text = snapshot['username'];
       emailDetails.text = snapshot['email'];

@@ -74,14 +74,14 @@ class _HomeState extends State<Home> {
       Icons.home,
       Icons.layers,
       Icons.notifications,
-      Icons.missed_video_call_outlined,
+     // Icons.missed_video_call_outlined,
       Icons.person,
     ];
     List<String> names = [
       "Events",
       "Resources",
       "News",
-      "Virtual",
+     //"Virtual",
       "Profile",
     ];
     return AnimatedBottomNavigationBar.builder(
@@ -139,7 +139,7 @@ class _HomeState extends State<Home> {
       const Events(),
       const Resources(),
       const AnnHome(),
-      const Meeting(),
+      //const Meeting(),
       const Account(),
     ];
     return IndexedStack(

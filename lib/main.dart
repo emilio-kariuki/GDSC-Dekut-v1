@@ -1,6 +1,5 @@
 // ignore_for_file: non_constant_identifier_names, unused_element, avoid_print
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -21,6 +20,7 @@ User? the_User;
 String userName = '';
 String userEmail = '';
 String? token;
+String? technology;
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('Handling a background message ${message.messageId}');
 }
@@ -47,15 +47,13 @@ void main() async {
     badge: true,
     sound: true,
   );
- 
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
 
   Get.lazyPut<AppController>(() => AppController(), fenix: true);
-
-
 
   runApp(MyApp());
 }
@@ -65,7 +63,7 @@ const AndroidNotificationChannel mainChannel = AndroidNotificationChannel(
   'High Importance Notifications', // title
   description:
       'this channel is used for important notifications.', // description
-  importance: Importance.high,
+  importance: Importance.max,
 );
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =

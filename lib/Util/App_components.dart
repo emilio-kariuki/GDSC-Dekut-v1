@@ -1,7 +1,7 @@
 // ignore_for_file: file_names, prefer_const_constructors, must_be_immutable, avoid_print, use_build_context_synchronously, deprecated_member_use
 import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -215,7 +215,7 @@ class Components {
                       controller.isDark.value ? Colors.white : Colors.black87),
                   header_3(userEmail,
                       controller.isDark.value ? Colors.white : Colors.black54),
-                  header_3(controller.stack.value,
+                  header_3(technology ?? "Newbie",
                       controller.isDark.value ? Colors.white : Colors.black54),
                   showDividerLine(3),
                 ],
@@ -2950,18 +2950,12 @@ class Components {
           urlResource,
           linkResource.text,
         ));
+        await FirebaseNotification.sendResourceNotification(purpose: titleResource.text, title : descriptionResource.text);
 
-        Components.createScaffoldMessanger("Data sent successfully", context);
+        await Components.createScaffoldMessanger("Data sent successfully", context);
         titleResource.clear();
         descriptionResource.clear();
         linkResource.clear();
-
-        // controller.isResourceEnabled.value
-        //     ? FirebaseNotification.sendFirebaseNotification(
-        //         purpose: "Resource",
-        //         title: title.text,
-        //       )
-        //     : null;
       },
     );
   }

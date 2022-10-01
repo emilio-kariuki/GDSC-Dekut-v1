@@ -27,7 +27,7 @@ class FirebaseNotification {
     final data = {
       "to": "/topics/Name",
       'notification': {
-        'title': "New $purpose",
+        'title': purpose,
         'body': title,
       },
       'priority': 'high',
@@ -37,13 +37,53 @@ class FirebaseNotification {
         'id': '1',
         'status': 'done',
       },
-      
+
     };
 
     final headers = {
       'Content-Type': 'application/json',
       'Authorization':
           'key=AAAAta6X3Qk:APA91bGweK3WrC4RhucqVV29O__UAyeCbu-Jen34MTdaxlzux6QvwENfPCRwoPXMDnHQJTJ_f3lsvafud24OnQzbri2o12Y_YB7dXWdPcA71aHc00Cds5ZnF_JEw6MyBdG6UUe-jBouQ',
+    };
+
+    final response = await client.post(
+      Uri.parse(postUrl),
+      headers: headers,
+      encoding: Encoding.getByName('utf-8'),
+      body: json.encode(data),
+    );
+
+    if (response.statusCode == 200) {
+      print('Notification sent successfully.');
+      Components.createScaffoldMessanger("Message sent successfully", Get.context!);
+    } else {
+      print('Notification sent failed.');
+    }
+  }
+    static Future<void> sendResourceNotification(
+      {required String purpose,required String title}) async {
+    const postUrl = 'https://fcm.googleapis.com/fcm/send';
+
+    final data = {
+      "to": "/topics/Name",
+      'notification': {
+        'title': purpose,
+        'body': title,
+      },
+      'priority': 'high',
+      'data': {
+        "type": "notification",
+        'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+        'id': '1',
+        'status': 'done',
+      },
+
+    };
+
+    final headers = {
+      'Content-Type': 'application/json',
+      'Authorization':
+          'key=	AAAAta6X3Qk:APA91bEX3uPzQ9vdmC_LvwLntJkn2HTK6zTK7JS-xep17h5AClbya347sAVoeK4DS9U6jEwywTVB9221H6zbG-2W2cWXQb3CEG5sa0Umd2S6zrNxiBdkILKyM0or8YOvn0Vw5q4Yyk6G',
     };
 
     final response = await client.post(
