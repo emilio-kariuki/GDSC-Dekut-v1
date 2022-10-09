@@ -64,11 +64,11 @@ class _AnnHomeState extends State<AnnHome>
                   horizontal: Dimensions.PADDING_SIZE_SMALL),
               tabs: [
                 Tab(
-                  child: Components.header_3("News",
+                  child: Components.header_3("Groups",
                       controller.isDark.value ? Colors.white : Colors.black87),
                 ),
                 Tab(
-                  child: Components.header_3("Groups",
+                  child: Components.header_3("News",
                       controller.isDark.value ? Colors.white : Colors.black87),
                 ),
               ],
@@ -86,8 +86,9 @@ class _AnnHomeState extends State<AnnHome>
           body: SafeArea(
             child: TabBarView(
               children: const [
-                News(),
                 Announcements(),
+                News(),
+
               ],
             ),
           ))),

@@ -16,6 +16,7 @@ class UserClass {
   String? technology;
   String? imageUrl;
 
+
   UserClass(this.name, this.email, this.phone, this.github, this.linkedin,
       this.twitter, this.userID, this.technology, this.imageUrl);
 
@@ -44,3 +45,4 @@ class UserClass {
 
   }
 }
+//how to intergrate bank payment in flutter?
