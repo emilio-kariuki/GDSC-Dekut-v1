@@ -1,16 +1,15 @@
-# gdsc_app
+# GDSC DeKUT
+GDSC DeKUT is a community based mobile application built on the flutter framework to help unite the tech Community in `Dedan Kimathi University` by helping the get access to upcoming events, resources, news, tech groups, and the leads contacts to allow them to contact them incase of any challenge in their learning process.
+> The app is built courtesy of [GDSC](https://gdsc.community.dev/dedan-kimathi-university-of-technology/)
 
-This is a gdsc community application
+> **Note**
+> The app is not built only for GDSC but the whole tech community or anybody that feels they need to get access to resources to help them learn new and cool things
 
-## Getting Started
+**The app is on PlayStore**
+You can find the application here
 
-This project is a starting point for a Flutter application.
+*[![Play Store Badge](https://developer.android.com/images/brand/en_app_rgb_wo_60.png)](https://play.google.com/store/apps/details?id=com.gdsc.gdsc_app&hl=en&gl=US)*
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Event Page
+All the events that are upcoming in the tech community can be found in the `event page`
+file:///home/emilio/Downloads/Screenshot_20221109-165831.jpg 
