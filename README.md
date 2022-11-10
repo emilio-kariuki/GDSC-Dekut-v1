@@ -80,5 +80,10 @@ In the `news` page the members are given the ability to get acess to the groups 
 
 <img src="https://github.com/emilio-kariuki/GDSC_DEKUT/blob/master/groups.jpg" alt="Event" width= 300 height= 600>
 
+### Feel Free to contribute
+You can `fork` the repo and feel free to contribute 
+
+> **Note**
+> You can reach me up on email `emilio113kariuki@gmail.com` or twitter `@EG_Kariuki`
 
 
